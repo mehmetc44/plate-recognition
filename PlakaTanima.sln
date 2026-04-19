@@ -1,0 +1,59 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.31903.59
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Core", "Core", "{ADD58912-E95C-404E-8EDD-041B3066B90B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PlakaTanima.Domain", "Core\PlakaTanima.Domain\PlakaTanima.Domain.csproj", "{B1287736-A73D-431F-A682-EF5EC200A2CD}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PlakaTanima.Application", "Core\PlakaTanima.Application\PlakaTanima.Application.csproj", "{4DAE70AF-C75B-48E8-AC2F-808EC93FB77C}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Infrastructure", "Infrastructure", "{C6398B02-C7D7-4050-99AB-068B747942E1}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PlakaTanima.Infrastructure", "Infrastructure\PlakaTanima.Infrastructure\PlakaTanima.Infrastructure.csproj", "{D85D789D-F3F9-4209-8630-D2F9731B707A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PlakaTanima.Persistence", "Infrastructure\PlakaTanima.Persistence\PlakaTanima.Persistence.csproj", "{618362AE-85EA-4E3C-A064-2F6686BC582F}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Presentation", "Presentation", "{6E7E2D1D-E040-45E7-90BB-1891A08C2B4B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PlakaTanima.WebUI", "Presentation\PlakaTanima.WebUI\PlakaTanima.WebUI.csproj", "{11AF514D-3057-47E6-A24B-7BAA3BF1B9CC}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{B1287736-A73D-431F-A682-EF5EC200A2CD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B1287736-A73D-431F-A682-EF5EC200A2CD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B1287736-A73D-431F-A682-EF5EC200A2CD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B1287736-A73D-431F-A682-EF5EC200A2CD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4DAE70AF-C75B-48E8-AC2F-808EC93FB77C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4DAE70AF-C75B-48E8-AC2F-808EC93FB77C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4DAE70AF-C75B-48E8-AC2F-808EC93FB77C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4DAE70AF-C75B-48E8-AC2F-808EC93FB77C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D85D789D-F3F9-4209-8630-D2F9731B707A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D85D789D-F3F9-4209-8630-D2F9731B707A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D85D789D-F3F9-4209-8630-D2F9731B707A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D85D789D-F3F9-4209-8630-D2F9731B707A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{618362AE-85EA-4E3C-A064-2F6686BC582F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{618362AE-85EA-4E3C-A064-2F6686BC582F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{618362AE-85EA-4E3C-A064-2F6686BC582F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{618362AE-85EA-4E3C-A064-2F6686BC582F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{11AF514D-3057-47E6-A24B-7BAA3BF1B9CC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{11AF514D-3057-47E6-A24B-7BAA3BF1B9CC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{11AF514D-3057-47E6-A24B-7BAA3BF1B9CC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{11AF514D-3057-47E6-A24B-7BAA3BF1B9CC}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{B1287736-A73D-431F-A682-EF5EC200A2CD} = {ADD58912-E95C-404E-8EDD-041B3066B90B}
+		{4DAE70AF-C75B-48E8-AC2F-808EC93FB77C} = {ADD58912-E95C-404E-8EDD-041B3066B90B}
+		{D85D789D-F3F9-4209-8630-D2F9731B707A} = {C6398B02-C7D7-4050-99AB-068B747942E1}
+		{618362AE-85EA-4E3C-A064-2F6686BC582F} = {C6398B02-C7D7-4050-99AB-068B747942E1}
+		{11AF514D-3057-47E6-A24B-7BAA3BF1B9CC} = {6E7E2D1D-E040-45E7-90BB-1891A08C2B4B}
+	EndGlobalSection
+EndGlobal
