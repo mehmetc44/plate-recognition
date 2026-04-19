@@ -4,11 +4,11 @@ using PlakaTanima.WebUI.Models;
 
 namespace PlakaTanima.WebUI.Controllers;
 
-public class HomeController : Controller
+public class GalleryController : Controller
 {
-    private readonly ILogger<HomeController> _logger;
+    private readonly ILogger<GalleryController> _logger;
 
-    public HomeController(ILogger<HomeController> logger)
+    public GalleryController(ILogger<GalleryController> logger)
     {
         _logger = logger;
     }

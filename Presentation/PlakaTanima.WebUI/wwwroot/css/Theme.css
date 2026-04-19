@@ -1,0 +1,32 @@
+:root {
+  /* Arka Planlar */
+  --bg-main: #1e1e1e;       /* Ana arka plan (koyu gri) */
+  --bg-panel: #252526;      /* Sol/Sağ paneller */
+  --bg-header: #2d2d30;     /* Navbar arka planı */
+  --bg-dark: #111111;       /* Kameraların ve Tabloların arkasındaki en koyu alan */
+  --button-bg: #333333;     /* Butonların genel zemin rengi */
+  
+  /* Metin Renkleri */
+  --text-light: #ffffff;    /* Başlıklar ve aktif metinler */
+  --text-muted: #cccccc;    /* Normal pasif metinler */
+  --text-black: #000000;    /* Siyah metin (gerekirse) */
+  
+  /* Link ve Buton Renkleri */
+  --link: #a9a9a9;          /* Menü linkleri */
+  --link-hover: #ffffff;    /* Üzerine gelince beyazla parlasın */
+  
+  /* Vurgu (Accent) Renkleri */
+  --active: #d32f2f;        /* Profesyonel kırmızı */
+  --accent-blue: #007acc;   /* VMS mavisi */
+  --info: #3498db;          /* Açık mavi bilgi rengi */
+  
+  /* Durum (Status) Renkleri - Yeni Eklendi */
+  --success: #2ecc71;       /* Yeşil (Normal Geçiş / Giriş) */
+  --danger: #e74c3c;        /* Kırmızı (Kara Liste / Çıkış) */
+  --warning: #f1c40f;       /* Altın Sarısı (VIP / Özel) */
+  
+  /* Diğer */
+  --border: #3e3e42;        /* Paneller arası ince çizgi rengi */
+}
+
+

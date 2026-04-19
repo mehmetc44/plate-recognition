@@ -1,0 +1,30 @@
+/* =========================================
+   2. SEARCH LAYOUT & ACTIONS (ANA YERLEŞİM)
+========================================= */
+.advanced-search-actions { display: flex; align-items: center; gap: 10px; }
+.advanced-search-filters { background-color: var(--bg-header); border: 1px solid var(--border); border-radius: 8px; padding: 15px; margin-bottom: 20px; }
+.filter-row { display: grid; grid-template-columns: 1.3fr 1fr 1fr 1fr; gap: 15px; align-items: end; }
+.filter-group { display: flex; flex-direction: column; gap: 8px; }
+
+/* =========================================
+   3. TYPOGRAPHY & META (METİN VE BİLGİ)
+========================================= */
+.filter-label { color: var(--text-muted); font-size: 12px; font-weight: 600; letter-spacing: 0.5px; text-transform: uppercase; }
+.filter-meta { display: flex; justify-content: space-between; align-items: center; margin-top: 12px; padding-top: 10px; border-top: 1px solid var(--border); font-size: 12px; }
+.filter-count { color: var(--text-light); }
+.filter-hint { color: var(--text-muted); font-style: italic; }
+
+/* =========================================
+   4. INPUTS & ICONS (KONTROLLER VE İKONLAR)
+========================================= */
+.filter-control { position: relative; }
+.filter-icon { position: absolute; left: 12px; top: 50%; transform: translateY(-50%); color: var(--text-muted); font-size: 14px; pointer-events: none; }
+.filter-input { width: 100%; background-color: var(--bg-dark); border: 1px solid var(--border); color: var(--text-light); padding: 10px 12px 10px 35px; border-radius: 4px; outline: none; font-size: 13px; transition: border-color 0.2s ease; }
+.filter-input:focus { border-color: var(--info); }
+select.filter-input { appearance: none; background-image: linear-gradient(45deg, transparent 50%, var(--text-muted) 50%), linear-gradient(135deg, var(--text-muted) 50%, transparent 50%); background-position: calc(100% - 15px) center, calc(100% - 10px) center; background-size: 5px 5px; background-repeat: no-repeat; }
+
+/* =========================================
+   5. RESPONSIVE (MOBİL UYUMLULUK)
+========================================= */
+@media (max-width: 1024px) { .filter-row { grid-template-columns: 1fr 1fr; } }
+@media (max-width: 600px) { .filter-row { grid-template-columns: 1fr; } }

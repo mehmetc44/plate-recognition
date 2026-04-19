@@ -1,0 +1,52 @@
+# Proje Tanıtım Dokümanı: Akıllı Plaka Tanıma ve Takip Sistemi (PTS)
+
+Bu doküman, geliştirilmekte olan Plaka Tanıma Sistemi (PTS) projesinin modüllerini, kullanıcı akışını ve teknik arayüz gereksinimlerini tanımlar.
+
+## 1. Proje Genel Bakışı ve Kapsamı
+Proje, bir "yapay zeka modeli eğitme" projesi DEĞİLDİR. Plaka tanıma (LPR/ANPR), araç tespiti ve canlı video akışı işlemleri doğrudan donanım tarafında (Hikvision kameraları) gerçekleşir. 
+
+Bu projenin ana amacı: Hikvision SDK'sı üzerinden gelen hazır verileri (canlı RTSP akışları, okunmuş plaka metinleri, geçiş anı fotoğrafları ve zaman damgalarını) yakalamak, veritabanına kaydetmek ve son kullanıcıya modern, hızlı bir web arayüzü (Dashboard) sunmaktır.
+
+## 2. Sayfa Yapısı ve Modüller
+
+### Sayfa 1: Canlı Akış (Dashboard)
+Bu sayfa, sistemin ana kontrol merkezidir:
+* Sol Panel (Sidebar): Aktif Hikvision kameralarının listelendiği ağaç yapısı.
+* Orta Panel (Ana Görünüm): 
+  - Video Modu: SDK'dan alınan canlı görüntülerin grid (1'li, 4'lü, 12'li) yapısında izlenmesi.
+  - Liste Modu: Video akışı yerine, SDK'dan o an düşen araç geçiş loglarının anlık tablo (Live Table) olarak gösterilmesi.
+* Sağ Panel: En son tespit edilen araçların donuk fotoğrafları, plaka bilgileri ve durum etiketleri (VIP, Kara Liste vb.) kartlar halinde akar.
+
+### Sayfa 2: Galeri Sayfası
+Anlık tespitlerin görsel takibi için tasarlanmıştır:
+* Ekran 12 adet görüntü kutusuna bölünmüştür.
+* Her kutu, seçili kameradan geçen SON aracın Hikvision'dan alınan fotoğrafını (snapshot) gösterir.
+
+### Sayfa 3: Gelişmiş Arama
+Geçmişe dönük veritabanı sorgularının yapıldığı bölümdür:
+* Plaka No, Tarih/Saat Aralığı ve Kategori (VIP, Kara Liste, Normal) bazlı filtreleme.
+* Sonuçlar veri tablosu olarak listelenir.
+
+### Sayfa 4: Araç Bilgileri (Detay Sayfası)
+Arama listesinden bir araca tıklandığında açılan detay modülüdür:
+* Sol Üst: Geçiş anına ait fotoğraf.
+* Sağ Üst: Araca ait veritabanı kayıtları ve olay anının geçmiş video kaydını (playback) Hikvision NVR/Kamerası üzerinden çağıran "Video İzle" butonu.
+* Alt Bölüm: Aracın tüm tarihsel geçiş logları.
+
+### Sayfa 5: Plaka Yönetimi (CRUD Sayfası)
+Kullanıcının veritabanını yönettiği sayfadır:
+* Plakaların sisteme eklenmesi, güncellenmesi ve silinmesi.
+* Plakalara durum etiketi (Özel, Kara Liste, Normal) atanması.
+
+### Sayfa 6: Sistem Ayarları
+Kamera entegrasyon ayarlarının yapıldığı sayfadır:
+* Hikvision cihazlarının IP, Port, Kullanıcı Adı ve Şifre bilgilerinin girilmesi.
+* Genel web arayüzü konfigürasyonları.
+
+## 3. Teknik Detaylar ve Mimari
+* Backend Mimari: ASP.NET Core 8.0 MVC.
+* Veritabanı Yönetimi: Entity Framework Core (Code First veya DbFirst).
+* Frontend: Bootstrap tabanlı, özel CSS Utility sistemi (Tailwind benzeri) ile güçlendirilmiş responsive tasarım. Sayfa içi güncellemeler için Partial View yapısı kullanılır.
+* İşletim Sistemi: Geliştirme ortamı Fedora Linux'tur.
+* Veri Entegrasyonu: Hikvision SDK. Kamera bağlantıları, canlı yayın (Live View) ve alarm logları (geçiş etkinlikleri) tamamen SDK üzerinden beslenir.
+* Canlı Arayüz: Frontend tarafında tablo ve kart güncellemeleri SignalR veya AJAX (Fetch API) ile sayfa yenilenmeden yapılır.

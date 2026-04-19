@@ -1,8 +1,18 @@
 ﻿@{
-    ViewData["Title"] = "Home Page";
+    ViewData["Title"] = "Canlı Akış";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
-</div>
+<main>
+    <partial name="_SidebarPartial" />
+    <div class="main-panel" id="mainPanel">
+    <partial name="_LiveViewPartial" />
+    <partial name="_CarListPartial" />        
+    </div>
+    <partial name="_RightPanelPartial" />
+</main>
+    @section PageStyles {
+        <link rel="stylesheet" href="~/css/index.css" />
+    }
+    @section PageScripts {
+        <script src="~/js/Index.js"></script>
+    }
