@@ -13,6 +13,7 @@ public class GalleryController : Controller
         _logger = logger;
     }
 
+    
     public IActionResult Index()
     {
         

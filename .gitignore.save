@@ -1,0 +1,24 @@
+# Build folders
+bin/
+obj/
+
+# User files
+*.user
+*.suo
+
+# Rider / VS Code / VS
+.vs/
+.vscode/
+.idea/
+
+# Logs
+*.log
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Environment files
+appsettings.Development.json
+
+
