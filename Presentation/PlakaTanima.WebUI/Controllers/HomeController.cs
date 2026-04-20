@@ -3,17 +3,21 @@ using Microsoft.AspNetCore.Mvc;
 using PlakaTanima.WebUI.Models;
 using PlakaTanima.Domain.Entities;
 using PlakaTanima.Domain.Enums;
+using PlakaTanima.Application.Abstract.Services;
+using System.Text;
 namespace PlakaTanima.WebUI.Controllers;
 
 public class HomeController : Controller
 {
+    private readonly ICameraService _cameraService;
     private readonly ILogger<HomeController> _logger;
     private List<Camera> cameras;
     private List<Vehicle> vehicles;
 
 
-    public HomeController(ILogger<HomeController> logger)
+    public HomeController(ILogger<HomeController> logger, ICameraService cameraService)
     {
+        _cameraService = cameraService;
         cameras = new List<Camera>(){
             new Camera(){IP="192.168.1.100", Name="Kamera 1", viewLink="~/img/kamera1.jpg", username="admin", password="password"},
             new Camera(){IP="192.168.1.101", Name="Kamera 2", viewLink="~/img/kamera2.jpg", username="admin", password="password"},
@@ -38,7 +42,29 @@ public class HomeController : Controller
     }
 
 
+    [HttpGet]
+    public async Task GetStream(CancellationToken ct)
+    {
+        // Tarayıcıya "sana sürekli yenilenen bir parça gönderiyorum" diyoruz
+        Response.ContentType = "multipart/x-mixed-replace; boundary=--frame";
 
+        try
+        {
+            await foreach (var frame in _cameraService.GetLiveStreamAsync(ct))
+            {
+                await Response.Body.WriteAsync(Encoding.ASCII.GetBytes("--frame\r\n"), ct);
+                await Response.Body.WriteAsync(Encoding.ASCII.GetBytes("Content-Type: image/jpeg\r\n"), ct);
+                await Response.Body.WriteAsync(Encoding.ASCII.GetBytes($"Content-Length: {frame.Length}\r\n\r\n"), ct);
+                await Response.Body.WriteAsync(frame, ct);
+                await Response.Body.WriteAsync(Encoding.ASCII.GetBytes("\r\n"), ct);
+                await Response.Body.FlushAsync(ct);
+            }
+        }
+        catch (OperationCanceledException)
+        {
+            // Kullanıcı sayfayı kapattığında buraya düşer, normal bir durum.
+        }
+    }
 
     public IActionResult Index()
     {

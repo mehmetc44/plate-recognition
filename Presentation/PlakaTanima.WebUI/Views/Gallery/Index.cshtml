@@ -1,61 +1,74 @@
 <div class="main-panel">
-            <div class="view-toolbar">
-                <div class="last-sync"><i class="fas fa-sync-alt"></i> Son Güncelleme: 09:40</div>
-                <button class="btn-icon" title="Yenile"><i class="fas fa-redo"></i></button>
+    <div class="view-toolbar">
+        <div class="last-sync"><i class="fas fa-sync-alt"></i> Son Güncelleme: 09:40</div>
+        <button class="btn-icon" title="Yenile"><i class="fas fa-redo"></i></button>
+    </div>
+
+    <div class="gallery-grid">
+        <div class="video-slot" id="slot-2">
+            <div class="camera-overlay-info"></div>
+            <div class="no-signal">Kamera Seçin</div>
+        </div>
+        <div class="video-slot" id="slot-2">
+            <div class="camera-overlay-info"></div>
+            <div class="no-signal">Kamera Seçin</div>
+        </div>
+        <div class="video-slot" id="slot-2">
+            <div class="camera-overlay-info"></div>
+            <div class="no-signal">Kamera Seçin</div>
+        </div>
+        <div class="video-slot" id="slot-2">
+            <div class="camera-overlay-info"></div>
+            <div class="no-signal">Kamera Seçin</div>
+        </div>
+        <div class="video-slot" id="slot-2">
+            <div class="camera-overlay-info"></div>
+            <div class="no-signal">Kamera Seçin</div>
+        </div>
+        <div class="video-slot" id="slot-2">
+            <div class="camera-overlay-info"></div>
+            <div class="no-signal">Kamera Seçin</div>
+        </div>
+        <div class="video-slot" id="slot-2">
+            <div class="camera-overlay-info"></div>
+            <div class="no-signal">Kamera Seçin</div>
+        </div>
+        <div class="video-slot" id="slot-2">
+            <div class="camera-overlay-info"></div>
+            <div class="no-signal">Kamera Seçin</div>
+        </div>
+        <div class="video-slot" id="slot-2">
+            <div class="camera-overlay-info"></div>
+            <div class="no-signal">Kamera Seçin</div>
+        </div>
+        <div class="video-slot" id="slot-2">
+            <div class="camera-overlay-info"></div>
+            <div class="no-signal">Kamera Seçin</div>
+        </div>
+        <div class="video-slot" id="slot-2">
+            <div class="camera-overlay-info"></div>
+            <div class="no-signal">Kamera Seçin</div>
+        </div>
+        <div class="video-slot" id="slot-2"
+             style="position: relative; width: 100%; height: 300px; background: #000; overflow: hidden;">
+            <div class="camera-overlay-info"
+                 style="position: absolute; top: 10px; left: 10px; color: white; z-index: 10; font-weight: bold; text-shadow: 1px 1px 2px black;">
+                30 Ağustos Giriş (10.10.155.77)
             </div>
 
-            <div class="gallery-grid">
-                <div class="video-slot" id="slot-2">
-                    <div class="camera-overlay-info"></div>
-                    <div class="no-signal">Kamera Seçin</div>
-                </div>
-                <div class="video-slot" id="slot-2">
-                    <div class="camera-overlay-info"></div>
-                    <div class="no-signal">Kamera Seçin</div>
-                </div>
-                <div class="video-slot" id="slot-2">
-                    <div class="camera-overlay-info"></div>
-                    <div class="no-signal">Kamera Seçin</div>
-                </div>
-                <div class="video-slot" id="slot-2">
-                    <div class="camera-overlay-info"></div>
-                    <div class="no-signal">Kamera Seçin</div>
-                </div>
-                <div class="video-slot" id="slot-2">
-                    <div class="camera-overlay-info"></div>
-                    <div class="no-signal">Kamera Seçin</div>
-                </div>
-                <div class="video-slot" id="slot-2">
-                    <div class="camera-overlay-info"></div>
-                    <div class="no-signal">Kamera Seçin</div>
-                </div>
-                <div class="video-slot" id="slot-2">
-                    <div class="camera-overlay-info"></div>
-                    <div class="no-signal">Kamera Seçin</div>
-                </div>
-                <div class="video-slot" id="slot-2">
-                    <div class="camera-overlay-info"></div>
-                    <div class="no-signal">Kamera Seçin</div>
-                </div>
-                <div class="video-slot" id="slot-2">
-                    <div class="camera-overlay-info"></div>
-                    <div class="no-signal">Kamera Seçin</div>
-                </div>
-                <div class="video-slot" id="slot-2">
-                    <div class="camera-overlay-info"></div>
-                    <div class="no-signal">Kamera Seçin</div>
-                </div>
-                <div class="video-slot" id="slot-2">
-                    <div class="camera-overlay-info"></div>
-                    <div class="no-signal">Kamera Seçin</div>
-                </div>
-                <div class="video-slot" id="slot-2">
-                    <div class="camera-overlay-info"></div>
-                    <div class="no-signal">Kamera Seçin</div>
-                </div>
+            <img src="/Home/GetStream?ip=10.10.155.77"
+                 style="width: 100%; height: 100%; object-fit: cover; display: block;"
+                 onload="document.querySelector('#slot-2 .no-signal').style.display='none';"
+                 onerror="this.style.display='none'; document.querySelector('#slot-2 .no-signal').style.display='block'; document.querySelector('#slot-2 .no-signal').innerText='Sinyal Yok';" />
 
+            <div class="no-signal"
+                 style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); color: #666;">
+                Kamera Seçin
             </div>
         </div>
-    @section PageStyles {
-        <link rel="stylesheet" href="~/css/Gallery.css" />
-    }
+
+    </div>
+</div>
+@section PageStyles {
+    <link rel="stylesheet" href="~/css/Gallery.css" />
+}

@@ -1,7 +1,11 @@
+using PlakaTanima.Application.Abstract.Services;
+using PlakaTanima.Infrastructure.Services;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
+builder.Services.AddSingleton<ICameraService, CameraService>();
 
 var app = builder.Build();
 
