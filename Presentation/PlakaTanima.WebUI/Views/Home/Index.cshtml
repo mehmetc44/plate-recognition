@@ -5,16 +5,23 @@
 @model LiveViewModel
 
 <main>
-    <partial name="_SidebarPartial" />
-    <div class="main-panel" id="mainPanel">
-    <partial name="_LiveViewPartial" />
-    <partial name="_CarListPartial" />        
+    @await Component.InvokeAsync("CameraList", new { cameras = Model.cameras })
+    <div class="content-area" id="contentArea">
+        <partial name="_ToolBoxPartial" />
+        @await Component.InvokeAsync("LiveStream")
+        @await Component.InvokeAsync("PlateStream")
+        @await Component.InvokeAsync("LiveTableStream")
     </div>
-    <partial name="_RightPanelPartial" />
+
+    @await Component.InvokeAsync("DetectionFeed")
 </main>
-    @section PageStyles {
-        <link rel="stylesheet" href="~/css/index.css" />
-    }
-    @section PageScripts {
-        <script src="~/js/Index.js"></script>
-    }
+
+@section PageStyles {
+    <link rel="stylesheet" href="~/css/Index.css" />
+}
+
+@section PageScripts {
+    <script src="~/js/Index.js"></script>
+    <script src="~/js/Camera-Stream.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
+}

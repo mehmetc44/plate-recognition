@@ -1,0 +1,103 @@
+<div class="hidden" id="liveTableStreamContainer">
+    <div class="table-header">
+
+
+        <div class="header-text">
+            <h2>Canlı Araç Akışı</h2>
+        </div>
+
+
+
+        <!-- CENTER CONTROLS -->
+        <div class="header-controls">
+
+            <!-- SEARCH -->
+            <div class="search-box">
+                <i class="fas fa-search"></i>
+                <input type="text" id="plateSearch" placeholder="Plaka ara...">
+            </div>
+            <!-- FILTER -->
+            <div class="filter-group">
+                <button class="filter-btn active" data-filter="all">Hepsi</button>
+                <button class="filter-btn" data-filter="vip">VIP</button>
+                <button class="filter-btn" data-filter="normal">Normal</button>
+                <button class="filter-btn" data-filter="blacklist">Kara Liste</button>
+            </div>
+
+            <!-- AUTOSCROLL TOGGLE -->
+            <label class="toggle">
+                <input type="checkbox" id="autoScrollToggle" checked>
+                <span>Auto Scroll</span>
+            </label>
+
+        </div>
+
+
+    </div>
+
+    <div class="table-wrapper">
+        <table class="table-area">
+
+            <thead>
+                <tr>
+                    <th>Plaka</th>
+                    <th>Geçiş Noktası</th>
+                    <th>Yön</th>
+                    <th>Tarih & Saat</th>
+                    <th>Durum</th>
+                    <th>İşlem</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                <tr data-type="vip">
+                    <td><span class="plate-label">21 AAA 001</span></td>
+                    <td>Ana Giriş</td>
+                    <td class="text-success">
+                        <i class="fas fa-arrow-right"></i> Giriş
+                    </td>
+                    <td>19.03.2026 21:10:45</td>
+                    <td><span class="badge vip">Özel</span></td>
+                    <td>
+                        <button class="inspect-btn">
+                            <i class="fas fa-eye"></i>
+                            İncele
+                        </button>
+                    </td>
+                </tr>
+
+                <tr data-type="normal">
+                    <td><span class="plate-label">34 ABC 123</span></td>
+                    <td>Otopark Çıkış</td>
+                    <td class="text-danger">
+                        <i class="fas fa-arrow-left"></i> Çıkış
+                    </td>
+                    <td>19.03.2026 21:05:12</td>
+                    <td><span class="badge normal">Normal</span></td>
+                    <td>
+                        <button class="inspect-btn">
+                            <i class="fas fa-eye"></i>
+                            İncele
+                        </button>
+                    </td>
+                </tr>
+
+                <tr data-type="blacklist">
+                    <td><span class="plate-label">06 XYZ 987</span></td>
+                    <td>Arka Kapı</td>
+                    <td class="text-success">
+                        <i class="fas fa-arrow-right"></i> Giriş
+                    </td>
+                    <td>19.03.2026 20:58:30</td>
+                    <td><span class="badge blacklist">Kara Liste</span></td>
+                    <td>
+                        <button class="inspect-btn">
+                            <i class="fas fa-exclamation-circle"></i>
+                            İncele
+                        </button>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>

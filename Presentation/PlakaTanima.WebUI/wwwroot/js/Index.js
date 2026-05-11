@@ -1,185 +1,237 @@
-// --- AĞAÇ YAPISI (TREE VIEW) ---
-const toggler = document.getElementsByClassName("tree-node");
-for (let i = 0; i < toggler.length; i++) {
-    toggler[i].addEventListener("click", function () {
-        const nestedList = this.nextElementSibling;
-        const caret = this.querySelector('.caret');
-        if (nestedList) {
-            nestedList.classList.toggle("active-tree");
-            caret.classList.toggle("caret-down");
-        }
+const liveTableStreamContainer = document.getElementById("liveTableStreamContainer");
+const navLive = document.getElementById("navLiveStream");
+const navPlate = document.getElementById("navPlateStream");
+
+const liveContainer = document.getElementById("liveStreamContainer");
+const plateContainer = document.getElementById("plateStreamContainer");
+
+const btnToggleRight = document.getElementById('btnToggleRight');
+const rightPanel = document.getElementById('detectionFeed');
+
+const viewButtons = document.querySelectorAll(".view-button");
+
+document.querySelectorAll(".nvr-toggle").forEach(node => {
+    node.addEventListener("click", () => {
+        const parentLi = node.closest("li");
+        const nested = parentLi.querySelector(".nested");
+        const caret = node.querySelector(".caret");
+
+        const willOpen = !nested.classList.contains("open");
+
+        nested.classList.toggle("open", willOpen);
+        caret.classList.toggle("open", willOpen);
     });
+});
+
+/* Ana Ekran - Canlı İzleme ve Plaka Akışı Arası Geçiş */
+// Live Stream tıklandığında
+function hideViewButtons() {
+    viewButtons.forEach(btn => btn.classList.add("hidden"));
 }
 
-// --- GÖRÜNÜM KONTROLLERİ VE HTML ELEMENTLERİ ---
-const liveViewContainer = document.getElementById('liveView');
-const liveTableContainer = document.getElementById('liveTableContainer'); // Tablo alanı
-let slots = document.querySelectorAll('.video-slot');
+function showViewButtons() {
+    viewButtons.forEach(btn => btn.classList.remove("hidden"));
+}
+navLive.addEventListener("click", function () {
+    liveContainer.classList.remove("hidden");
+    plateContainer.classList.add("hidden");
 
-const btn1View = document.getElementById('btn1View');
-const btn4View = document.getElementById('btn4View');
-const btn12View = document.getElementById('btn12View');
-const btnTableView = document.getElementById('btnTableView'); // Yeni tablo butonu
+    navLive.classList.add("active-link");
+    navPlate.classList.remove("active-link");
+    showViewButtons();
+});
+function closeTableIfOpen() {
+    liveTableStreamContainer.classList.add("hidden");
+}
+// Plate Stream tıklandığında
+navPlate.addEventListener("click", function () {
 
-// Kamerayı slota yükleyen ortak fonksiyon
-function loadCameraToSlot(slot, camName, camId) {
-    const infoDiv = slot.querySelector('.camera-overlay-info');
-    const signalDiv = slot.querySelector('.no-signal');
+    liveContainer.classList.add("hidden");
+    plateContainer.classList.remove("hidden");
 
-    const now = new Date();
-    const timeString = now.toLocaleTimeString('tr-TR');
+    closeTableIfOpen();
 
-    infoDiv.innerHTML = `${timeString} <br> ${camName} (IP: 10.9.99.${camId})`;
-    signalDiv.innerHTML = "<i class='fas fa-spinner fa-spin'></i> Bağlanıyor...";
-    slot.style.background = "#111";
+    navPlate.classList.add("active-link");
+    navLive.classList.remove("active-link");
 
-    setTimeout(() => {
-        signalDiv.innerHTML = "";
-        slot.style.background = "radial-gradient(circle, #2a4b6b 0%, #111 100%)";
-    }, 800);
+    hideViewButtons();
+});
+
+
+
+/*Sağdaki Detection Feed kısmını açıp kapatan kısım */
+
+
+// ilk durum: açık
+let rightPanelOpen = true;
+
+function setRightPanel(state) {
+    rightPanelOpen = state;
+
+    rightPanel.classList.toggle("hidden", !state);
+    btnToggleRight.classList.toggle("active", state);
 }
 
-// Aktif slotu belirleme
-function setActiveSlot(selectedSlot) {
-    slots.forEach(slot => slot.classList.remove('active-slot'));
-    selectedSlot.classList.add('active-slot');
+btnToggleRight.addEventListener("click", () => {
+    setRightPanel(!rightPanelOpen);
+});
+
+// başlangıç state'i uygula
+setRightPanel(true);
+/*==============================================================================================*/
+/*==============================================================================================*/
+/* İzleme ekranını 1, 4, 12'li grid çevirme */
+let currentView = 1;
+function showGrid() {
+    liveTableStreamContainer.classList.add("hidden");
+    liveContainer.classList.remove("hidden");
 }
 
-// Bir slota tıklama ve sürükle-bırak olaylarını ekleyen fonksiyon
-function attachSlotEvents(slot) {
-    slot.addEventListener('click', function () {
-        setActiveSlot(this);
-    });
-
-    slot.addEventListener('dragover', function (e) {
-        e.preventDefault();
-        this.classList.add('drag-over');
-    });
-
-    slot.addEventListener('dragleave', function (e) {
-        this.classList.remove('drag-over');
-    });
-
-    slot.addEventListener('drop', function (e) {
-        e.preventDefault();
-        this.classList.remove('drag-over');
-        setActiveSlot(this);
-
-        const camName = e.dataTransfer.getData('camName');
-        const camId = e.dataTransfer.getData('camId');
-        if (camName && camId) {
-            loadCameraToSlot(this, camName, camId);
-        }
-    });
+function showTable() {
+    liveContainer.classList.add("hidden");
+    liveTableStreamContainer.classList.remove("hidden");
 }
 
-// Başlangıçta var olan slota olayları tanımla
-if (slots.length > 0) {
-    attachSlotEvents(slots[0]);
-}
+function renderGrid(count) {
+    showGrid();
 
-// Görünümü ayarlayan ve DOM'dan gereksiz slotları SİLEN/ÜRETEN ana fonksiyon
-function setViewMode(gridClass, activeBtn, visibleCount) {
-    // 1. Tüm butonların aktifliğini kaldırıp tıklananı aktif yap
-    [btn1View, btn4View, btn12View, btnTableView].forEach(btn => {
-        if (btn) btn.classList.remove('active-btn');
-    });
-    if (activeBtn) activeBtn.classList.add('active-btn');
+    let className = "";
 
-    // 2. Tablo alanını gizle, Kameraları göster
-    if (liveTableContainer) liveTableContainer.style.display = 'none';
-    if (liveViewContainer) liveViewContainer.style.display = 'grid'; // flex yerine grid kullandım çünkü CSS'te ızgara yapın var
+    if (count === 1) className = "grid-1";
+    if (count === 4) className = "grid-4";
+    if (count === 12) className = "grid-12";
 
-    // 3. FAZLALIKLARI SİL (Örn: 4'lüden 1'liye geçerken 3 tanesini HTML'den siler)
-    while (liveViewContainer.children.length > visibleCount) {
-        liveViewContainer.removeChild(liveViewContainer.lastChild);
-    }
+    liveContainer.innerHTML = "";
+    liveContainer.className = `live-stream-container ${className}`;
 
-    // 4. EKSİKLERİ YARAT (Örn: 1'liden 4'lüye geçerken 3 tane yeni yaratır)
-    while (liveViewContainer.children.length < visibleCount) {
-        const nextId = liveViewContainer.children.length + 1;
-        const newSlot = document.createElement('div');
-        newSlot.className = 'video-slot';
-        newSlot.id = `slot-${nextId}`;
-        newSlot.innerHTML = `
-            <div class="camera-overlay-info"></div>
+    for (let i = 1; i <= count; i++) {
+
+        const slot = document.createElement("div");
+        slot.className = "video-slot drop-zone";
+        slot.dataset.slotId = i;
+
+        slot.innerHTML = `
+            <div class="camera-overlay-info">
+                <div>Kamera ${i}</div>
+                <div>Boş Slot</div>
+            </div>
             <div class="no-signal">Kamera Seçin</div>
         `;
-        attachSlotEvents(newSlot);
-        liveViewContainer.appendChild(newSlot);
+
+        // 🔥 DROP ENABLE
+        slot.addEventListener("dragover", (e) => {
+            e.preventDefault();
+        });
+
+        slot.addEventListener("drop", (e) => {
+            e.preventDefault();
+
+            const cameraId = e.dataTransfer.getData("cameraId");
+            attachCameraToSlot(slot, cameraId);
+        });
+
+        liveContainer.appendChild(slot);
+    }
+}
+
+/*LiveTableStream'i açıp kapatma*/
+function setTableView() {
+    showTable();
+}
+/*Butonları aktif pasif yapma*/
+
+function setActiveButton(activeId) {
+    viewButtons.forEach(btn => btn.classList.remove("active"));
+    document.getElementById(activeId).classList.add("active");
+}
+
+document.getElementById("btn1View").addEventListener("click", () => {
+    renderGrid(1);
+    setActiveButton("btn1View");
+});
+
+document.getElementById("btn4View").addEventListener("click", () => {
+    renderGrid(4);
+    setActiveButton("btn4View");
+});
+
+document.getElementById("btn12View").addEventListener("click", () => {
+    renderGrid(12);
+    setActiveButton("btn12View");
+});
+
+document.getElementById("btnTableView").addEventListener("click", () => {
+    setTableView();
+    setActiveButton("btnTableView");
+});
+
+/*==============================================================================================*/
+/*==============================================================================================*/
+/* SÜRÜKLE BIRAK KISMI - DRAG & DROP */
+
+/* Kamera öğelerini sürüklenebilir yapma */
+document.querySelectorAll(".camera-item").forEach(cam => {
+    cam.setAttribute("draggable", true);
+
+    cam.addEventListener("dragstart", (e) => {
+        e.dataTransfer.setData("cameraId", cam.dataset.cameraId);
+    });
+});
+
+/* DROP ZONE'ları aktif etme (SÜRÜKLEME EFEKTİ)*/
+document.querySelectorAll(".drop-zone").forEach(slot => {
+    slot.addEventListener("dragenter", () => {
+        slot.classList.add("dragover");
+    });
+
+    slot.addEventListener("dragleave", () => {
+        slot.classList.remove("dragover");
+    });
+
+    slot.addEventListener("drop", () => {
+        slot.classList.remove("dragover");
+    });
+});
+/* Bir kamerayı slot'a yerleştirme fonksiyonu (Görüntü getirme fonksiyonu)*/
+function attachCameraToSlot(slot, cameraId) {
+
+    const existingStream = slot.dataset.stream;
+
+    // 🔥 1. Aynı kamera tekrar bağlanmasın
+    if (existingStream === String(cameraId)) {
+        console.log("Aynı kamera zaten bağlı:", cameraId);
+        return;
     }
 
-    // 5. Slot listemizi güncelle
-    slots = document.querySelectorAll('.video-slot');
+    // 🔥 2. Eski stream'i temizle
+    if (existingStream) {
+        disconnectHlsStream(existingStream);
+    }
 
-    // 6. CSS Grid class'ını güncelle
-    liveViewContainer.className = 'live-view-container';
-    if (gridClass) liveViewContainer.classList.add(gridClass);
-}
+    // slot state update
+    slot.dataset.stream = cameraId;
 
-// --- BUTON TIKLAMALARI ---
-btn1View.addEventListener('click', () => {
-    setViewMode(null, btn1View, 1);
-    setActiveSlot(slots[0]);
-});
+    // UI reset
+    slot.innerHTML = "";
 
-btn4View.addEventListener('click', () => {
-    setViewMode('grid-4', btn4View, 4);
-});
+    // overlay
+    const overlay = document.createElement("div");
+    overlay.className = "camera-overlay-info";
+    overlay.innerHTML = `
+        <div>Kamera ${cameraId}</div>
+        <div>CANLI AKTİF</div>
+    `;
+    slot.appendChild(overlay);
 
-if (btn12View) {
-    btn12View.addEventListener('click', () => {
-        setViewMode('grid-12', btn12View, 12);
-    });
-}
+    // video
+    const video = document.createElement("video");
+    video.autoplay = true;
+    video.muted = true;
+    video.playsInline = true;
+    video.className = "live-video";
 
-// --- YENİ EKLENEN TABLO BUTONUNUN TIKLANMA OLAYI ---
-if (btnTableView) {
-    btnTableView.addEventListener('click', () => {
-        // Tüm butonların aktifliğini kaldırıp tablo butonunu aktif yap
-        [btn1View, btn4View, btn12View, btnTableView].forEach(btn => {
-            if (btn) btn.classList.remove('active-btn');
-        });
-        btnTableView.classList.add('active-btn');
+    slot.appendChild(video);
 
-        // Kamera div'ini GİZLE, Tablo div'ini GÖSTER
-        if (liveViewContainer) liveViewContainer.style.display = 'none';
-        if (liveTableContainer) liveTableContainer.style.display = 'block';
-    });
-}
-
-// --- KAMERA LİSTESİ OLAYLARI (Sürükleme ve Tıklama) ---
-const cameraItems = document.querySelectorAll('.camera-item');
-
-cameraItems.forEach(item => {
-    item.setAttribute('draggable', 'true');
-
-    item.addEventListener('dragstart', function (e) {
-        e.dataTransfer.setData('camName', this.getAttribute('data-name'));
-        e.dataTransfer.setData('camId', this.getAttribute('data-id'));
-    });
-
-    item.addEventListener('click', function () {
-        cameraItems.forEach(c => c.classList.remove('selected'));
-        this.classList.add('selected');
-
-        const camName = this.getAttribute('data-name');
-        const camId = this.getAttribute('data-id');
-
-        const activeSlot = document.querySelector('.video-slot.active-slot');
-        if (!activeSlot) return;
-
-        loadCameraToSlot(activeSlot, camName, camId);
-    });
-});
-
-// --- SAĞ PANEL AÇ/KAPAT ---
-const btnToggleRight = document.getElementById('btnToggleRight');
-const rightPanel = document.getElementById('right');
-
-if (btnToggleRight && rightPanel) {
-    btnToggleRight.addEventListener('click', () => {
-        rightPanel.classList.toggle('hidden');
-        btnToggleRight.classList.toggle('active-btn');
-    });
+    // 🔥 STREAM BAĞLAMA (ENGINE)
+    connectHlsStream(video, cameraId);
 }

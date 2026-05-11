@@ -1,32 +1,98 @@
+
 :root {
-  /* Arka Planlar */
-  --bg-main: #1e1e1e;       /* Ana arka plan (koyu gri) */
-  --bg-panel: #252526;      /* Sol/Sağ paneller */
-  --bg-header: #2d2d30;     /* Navbar arka planı */
-  --bg-dark: #111111;       /* Kameraların ve Tabloların arkasındaki en koyu alan */
-  --button-bg: #333333;     /* Butonların genel zemin rengi */
-  
-  /* Metin Renkleri */
-  --text-light: #ffffff;    /* Başlıklar ve aktif metinler */
-  --text-muted: #cccccc;    /* Normal pasif metinler */
-  --text-black: #000000;    /* Siyah metin (gerekirse) */
-  
-  /* Link ve Buton Renkleri */
-  --link: #a9a9a9;          /* Menü linkleri */
-  --link-hover: #ffffff;    /* Üzerine gelince beyazla parlasın */
-  
-  /* Vurgu (Accent) Renkleri */
-  --active: #d32f2f;        /* Profesyonel kırmızı */
-  --accent-blue: #007acc;   /* VMS mavisi */
-  --info: #3498db;          /* Açık mavi bilgi rengi */
-  
-  /* Durum (Status) Renkleri - Yeni Eklendi */
-  --success: #2ecc71;       /* Yeşil (Normal Geçiş / Giriş) */
-  --danger: #e74c3c;        /* Kırmızı (Kara Liste / Çıkış) */
-  --warning: #f1c40f;       /* Altın Sarısı (VIP / Özel) */
-  
-  /* Diğer */
-  --border: #3e3e42;        /* Paneller arası ince çizgi rengi */
+  /* =========================
+     SURFACE (Arka Plan Katmanları)
+     ========================= */
+  --surface-0: #ffffff;   /* En açık (base) */
+  --surface-1: #f5f5f5;   /* Ana arka plan */
+  --surface-2: #eeeeee;   /* Kartlar / paneller */
+  --surface-3: #e0e0e0;   /* Header / navbar */
+  --surface-4: #d6d6d6;   /* Hover / button yüzeyi */
+  --surface-black: #000000; /* Aynı kalır (kritik durumlar) */
+
+  /* =========================
+     TEXT
+     ========================= */
+  --text-primary: #1a1a1a;   /* Ana metin (pure black değil, daha soft) */
+  --text-secondary: #555555; /* İkincil metin */
+  --text-inverse: #ffffff;   /* Koyu zemin üstü */
+
+  /* =========================
+     INTERACTION (Link / UI)
+     ========================= */
+  --link: #393939;        /* Biraz daha koyu mavi (okunabilirlik için) */
+  --link-hover: #292929;
+
+  /* =========================
+     BRAND / ACCENT
+     ========================= */
+  --accent-primary: #007acc; /* Aynı kalabilir */
+  --accent-active: #c62828;  /* Light mode için biraz koyulaştırıldı */
+
+  /* =========================
+     STATUS COLORS
+     ========================= */
+  --success: #1e8549;
+  --success-light: #2ecc71;
+  --success-dark: #186c3d;
+  --danger: #c0392b;
+  --danger-light: #e74c3c;
+  --danger-dark: #922b21;
+  --warning: #a38200;
+  --warning-dark: #7a5c00;
+  --warning-light: #d9b300;
+  --info: #2e86c1;
+  /* =========================
+     BORDER / DIVIDER
+     ========================= */
+  --border-subtle: #cccccd; /* Açık temaya uygun divider */
 }
+[data-theme="dark"] {
+  /* =========================
+     SURFACE (Arka Plan Katmanları)
+     ========================= */
+  --surface-0: #111111;   /* bg dark En koyu (video, arka layer) */
+  --surface-1: #1e1e1e;   /* bg main Ana arka plan */
+  --surface-2: #252526;   /* bg panel Kartlar / paneller */
+  --surface-3: #2d2d30;   /* bg header Üst katmanlar (navbar vs.) */
+  --surface-4: #333333;   /* bg button / hover yüzey */
+  --surface-black: #000000; /* bg black Sinyal yok, kritik durumlar için */
+  /* =========================
+     TEXT
+     ========================= */
+  --text-primary: #ffffff;   /* text light Ana metin */
+  --text-secondary: #cccccc; /* text muted İkincil metin */
+  --text-inverse: #000000;   /* text black Açık zeminlerde kullanılacak */
 
+  /* =========================
+     INTERACTION (Link / UI)
+     ========================= */
+  --link: #a9a9a9;        /* Normal link */
+  --link-hover: #ffffff;  /* Hover */
+  
+  /* =========================
+     BRAND / ACCENT
+     ========================= */
+  --accent-primary: #007acc; /* Ana vurgu (blue) */
+  --accent-active: #d32f2f;  /* Kritik vurgu */
 
+  /* =========================
+     STATUS COLORS
+     ========================= */
+  --success: #1e8549;
+  --success-light: #2ecc71;
+  --success-dark: #186c3d;
+  --danger: #c0392b;
+  --danger-light: #e74c3c;
+  --danger-dark: #922b21;
+  --warning: #a38200;
+  --warning-dark: #7a5c00;
+  --warning-light: #d9b300;
+
+  --info: #3498db;
+
+  /* =========================
+     BORDER / DIVIDER
+     ========================= */
+  --border-subtle: #3e3e42; /* border İnce çizgiler */
+}

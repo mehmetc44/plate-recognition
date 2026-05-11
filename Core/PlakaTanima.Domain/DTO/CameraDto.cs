@@ -1,10 +1,11 @@
 using System;
 
-namespace PlakaTanima.Domain.Entities;
+namespace PlakaTanima.Domain.DTO;
 
-public class Camera
+public class CameraDto
 {
     public string Name { get; set; }
     public string IP { get; set; }
     public string StreamId { get; set; }
+
 }

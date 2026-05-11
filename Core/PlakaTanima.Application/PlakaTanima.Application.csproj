@@ -5,11 +5,16 @@
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="MediatR" Version="14.1.0" />
     <PackageReference Include="Microsoft.Extensions.Hosting.Abstractions" Version="10.0.6" />
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Workers/" />
+    <Folder Include="Abstract/Jobs/" />
+    <Folder Include="Abstract/Repositories/" />
+    <Folder Include="Features/" />
+    <Folder Include="Features/Commands/" />
+    <Folder Include="Features/Handlers/" />
   </ItemGroup>
 
   <PropertyGroup>

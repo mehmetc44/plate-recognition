@@ -1,28 +1,40 @@
 <header class="navbar">
-    <a href="#" class="logo">
-        <i class="fas"></i> Platar
-    </a>
+        <a href="#" class="logo">
+            <i class="fas"></i> Platar
+        </a>
 
-    <ul class="nav-links" id="navLinks">
-        <li>
-            <a asp-controller="Home" asp-action="Index" id="navLive">
-                <i class="fas fa-video"></i> Canlı Akış
-            </a>
-        </li>
+        <ul class="nav-links" id="navLinks">
+            <li>
+                <a asp-controller="Home" asp-action="Index" class="active" id="navLive">
+                    <i class="fas fa-video"></i> Canlı Akış
+                </a>
+            </li>
 
-        <li>
-            <a asp-controller="Gallery" asp-action="Index" id="navGallery">
-                <i class="fas fa-th"></i> Galeri
-            </a>
-        </li>
-        <li><a asp-controller="Search" asp-action="Index" id="navQuery">
-            <i class="fas fa-search"></i> Gelişmiş Sorgu</a></li>
-        <li><a asp-controller="WatchList" asp-action="Index" id="navDatabase"><i class="fas fa-database"></i> Plaka Yönetimi</a></li>
-        <li><a asp-controller="Settings" asp-action="Index" id="navSettings"><i class="fas fa-cog"></i> Ayarlar</a></li>
-    </ul>
+            <li>
+                <a href="gelismisSorgu.html" id="navQuery">
+                    <i class="fas fa-search"></i> Gelişmiş Sorgu
+                </a>
+            </li>
 
-    <div class="user-profile">
-        <i class="fas fa-user-circle"></i>
-        <span>Admin</span>
-    </div>
-</header>
+            <li>
+                <a href="watchlist.html" id="navDatabase">
+                    <i class="fas fa-database"></i> Plaka Yönetimi
+                </a>
+            </li>
+
+            <li>
+                <a href="settings.html" id="navSettings">
+                    <i class="fas fa-cog"></i> Ayarlar
+                </a>
+            </li>
+
+            <li>
+                <button id="themeToggle">🌙 Dark / ☀️ Light</button>
+            </li>
+        </ul>
+
+        <div class="user-profile">
+            <i class="fas fa-user-circle"></i>
+            <span>Admin</span>
+        </div>
+    </header>
