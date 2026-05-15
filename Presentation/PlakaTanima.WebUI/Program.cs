@@ -8,6 +8,9 @@ using PlakaTanima.Persistence.Repositories;
 using PlakaTanima.Application.Abstract.Jobs;
 using PlakaTanima.Infrastructure.Jobs;
 using PlakaTanima.Application.Features.Commands;
+// Yeni eklenen katmanların namespace'leri
+using PlakaTanima.SignalR.Hubs;
+using PlakaTanima.SignalR.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -15,7 +18,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
 
-// 2. Hangfire Konfigürasyonu (Job'ları PostgreSQL'de tutacak)
+// 2. Hangfire Konfigürasyonu
 builder.Services.AddHangfire(config => config
     .SetDataCompatibilityLevel(CompatibilityLevel.Version_180)
     .UseSimpleAssemblyNameTypeSerializer()
@@ -25,27 +28,29 @@ builder.Services.AddHangfire(config => config
         options.UseNpgsqlConnection(builder.Configuration.GetConnectionString("DefaultConnection"));
     }));
 
-// 3. Hangfire Sunucusunu Başlat (Arka plan iş motoru)
 builder.Services.AddHangfireServer();
+
+// --- SİNYAL VE BİLDİRİM SERVİSLERİ (YENİ) ---
+builder.Services.AddSignalR();
+// Application katmanındaki interface'i, SignalR katmanındaki somut sınıfa bağlıyoruz
+builder.Services.AddScoped<IPlateNotificationService, SignalRPlateNotificationService>();
 
 // MVC Servisleri
 builder.Services.AddControllersWithViews();
-// 1. Repository Kaydı (Interface'i somut sınıfa bağlıyoruz)
-builder.Services.AddScoped<ILprEventRepository, LprEventRepository>();
 
-// 2. Hangfire Job Kaydı
+// --- DEPENDENCY INJECTION KAYITLARI ---
+builder.Services.AddScoped<ILprEventRepository, LprEventRepository>();
 builder.Services.AddScoped<IEventProcessingJob, EventProcessingJob>();
 
-// 3. MediatR Kaydı (Application katmanındaki tüm handler'ları otomatik bulur)
+// MediatR Kaydı
 builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(typeof(CreateLprEventCommand).Assembly));
 
 var app = builder.Build();
 
-// HTTP Request Pipeline Yapılandırması
+// HTTP Request Pipeline
 if (!app.Environment.IsDevelopment())
 {
     app.UseExceptionHandler("/Home/Error");
-    // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
     app.UseHsts();
 }
 
@@ -56,8 +61,11 @@ app.UseRouting();
 
 app.UseAuthorization();
 
-// 4. Hangfire Dashboard'u Aktif Et
+// 4. Hangfire Dashboard
 app.UseHangfireDashboard("/hangfire");
+
+// --- HUB ENDPOINT TANIMLAMASI (YENİ) ---
+app.MapHub<PlateHub>("/plateHub");
 
 app.MapControllerRoute(
     name: "default",

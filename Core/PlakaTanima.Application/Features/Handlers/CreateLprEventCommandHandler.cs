@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 using MediatR;
 using PlakaTanima.Domain.Entities;
 using PlakaTanima.Application.Features.Commands;
-using PlakaTanima.Application.Abstract.Repositories; // DbContext yerine Repository geldi!
+using PlakaTanima.Application.Abstract.Repositories; 
 
 namespace PlakaTanima.Application.Features.Handlers;
 
@@ -26,7 +26,7 @@ public class CreateLprEventCommandHandler : IRequestHandler<CreateLprEventComman
             Id = Guid.NewGuid(),
             Plate = payload.Plate ?? "UNKNOWN",
             CameraName = payload.CameraName ?? "UNKNOWN",
-            Timestamp = payload.Timestamp != default ? payload.Timestamp : DateTime.UtcNow,
+            Timestamp = payload.Timestamp != default ? payload.Timestamp.ToUniversalTime() : DateTime.UtcNow,
             Confidence = payload.Confidence,
             CreatedAt = DateTime.UtcNow
         };
@@ -45,7 +45,8 @@ public class CreateLprEventCommandHandler : IRequestHandler<CreateLprEventComman
             newEvent.RawEvent = new LprRawEvent
             {
                 Id = Guid.NewGuid(),
-                RawJson = System.Text.Json.JsonSerializer.Serialize(payload.Raw),
+                // DÜZELTİLEN KISIM: Artık serileştirme yapmıyoruz, Controller'dan gelen string'i direkt alıyoruz!
+                RawJson = payload.Raw.ToString() ?? "{}",
                 RawXml = string.Empty 
             };
         }

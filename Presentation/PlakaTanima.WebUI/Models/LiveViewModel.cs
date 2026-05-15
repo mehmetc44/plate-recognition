@@ -6,6 +6,6 @@ namespace PlakaTanima.WebUI.Models;
 
 public class LiveViewModel
 {
-    public List<CameraDto> cameras;
-    public List<Vehicle> vehicles; 
+    public List<CameraDto>? cameras;
+    public List<Vehicle>? vehicles; 
 }
