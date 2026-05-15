@@ -14,21 +14,21 @@ public class SignalRPlateNotificationService : IPlateNotificationService
         _hubContext = hubContext;
     }
 
-    public async Task SendNewPlateAsync(LprEventDto plateData)
-    {
-        // Client tarafına (JS) gönderilecek objeyi DTO'daki yeni alanlara göre genişletiyoruz
-        await _hubContext.Clients.All.SendAsync("NewPlateDetected", new
-        {
-            EventId = plateData.EventId,
-            Plate = plateData.Plate,
-            Camera = plateData.CameraName,
-            // UI'da güzel görünmesi için formatlıyoruz
-            Timestamp = plateData.Timestamp.ToString("HH:mm:ss"),
-            // Yüzdelik olarak göstermek isteyebilirsin (Örn: %98.5)
-            Confidence = plateData.Confidence.ToString("F1"), 
-            // Görüntüleri doğrudan aktarıyoruz
-            PlateImage = plateData.Images?.Plate,
-            VehicleImage = plateData.Images?.Vehicle
-        });
-    }
+    public async Task SendNewPlateAsync(LprEventDto data)
+{
+    await _hubContext.Clients.All.SendAsync("NewPlateDetected", new {
+        plate = data.Plate,
+        camera = data.CameraName,
+        time = data.Timestamp.ToString("HH:mm:ss"),
+        fullTime = data.Timestamp.ToString("yyyy-MM-dd HH:mm:ss"),
+        vType = data.VehicleType,
+        vColor = data.VehicleColor,
+        vBrand = data.VehicleBrand,
+        dir = data.Direction,
+        // Resimler
+        imgPlate = data.Images?.Plate,
+        imgVehicle = data.Images?.Vehicle,
+        imgFull = data.Images?.Full
+    });
+}
 }

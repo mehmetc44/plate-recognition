@@ -55,7 +55,7 @@
 .vehicle-card:hover { background-color: var(--surface-2); transform: translateY(-2px); }
 
 .card-img-wrapper { width: 100%; height: 140px; position: relative; border-bottom: 1px solid var(--border-subtle); overflow: hidden; }
-.vehicle-img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.3s ease; }
+.vehicle-img { width: 100%; height: 150px; object-fit: cover; transition: transform 0.3s ease; }
 .vehicle-card:hover .vehicle-img { transform: scale(1.05); }
 .vehicle-info { padding: 12px; display: flex; flex-direction: column; gap: 12px; align-items: center; }
 .entry-details { width: 100%; display: flex; justify-content: space-between; align-items: center; font-size: 0.85rem; font-weight: 500; background-color: var(--surface-0); padding: 6px 10px; border-radius: 4px; border: 1px solid var(--border-subtle); }
