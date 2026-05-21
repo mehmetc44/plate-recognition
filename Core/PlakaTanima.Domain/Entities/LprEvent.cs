@@ -9,8 +9,7 @@ public class LprEvent
     public string Plate { get; set; } = string.Empty;
     public string CameraName { get; set; } = string.Empty;
     public DateTime Timestamp { get; set; }
-    
-    // Altı çizilen Confidence burada!
+
     public decimal Confidence { get; set; } 
     public DateTime CreatedAt { get; set; }
     

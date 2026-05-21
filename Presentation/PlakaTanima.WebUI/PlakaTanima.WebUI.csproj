@@ -5,6 +5,8 @@
     <ProjectReference Include="..\..\Infrastructure\PlakaTanima.Infrastructure\PlakaTanima.Infrastructure.csproj" />
     <ProjectReference Include="..\..\Infrastructure\PlakaTanima.Persistence\PlakaTanima.Persistence.csproj" />
     <ProjectReference Include="..\..\Infrastructure\PlakaTanima.SignalR\PlakaTanima.SignalR.csproj" />
+    <ProjectReference Include="..\..\Infrastructure\PlakaTanima.Stream\PlakaTanima.Stream.csproj" />
+    <ProjectReference Include="..\..\Infrastructure\PlakaTanima.Alarm\PlakaTanima.Alarm.csproj" />
   </ItemGroup>
 
   <ItemGroup>
