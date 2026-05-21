@@ -10,5 +10,11 @@ public class CameraAlarmAlert
     public string VehicleBrand { get; set; } = "Unknown";
     public string MovingDirection { get; set; } = "Unknown";
     public string Country { get; set; } = "Turkey";
-    public Dictionary<string, string> RawMetadata { get; set; } = new();
+    public string PlateColor { get; set; } = "Unknown";        // Yeni eklenen
+    public string ListLibraryName { get; set; } = "otherList";  // Yeni eklenen
+
+    // Resimlerin ham byte dizileri
+    public byte[]? VehicleImageBytes { get; set; }     
+    public byte[]? PlateImageBytes { get; set; }       
+    public byte[]? FullSceneImageBytes { get; set; }   
 }
