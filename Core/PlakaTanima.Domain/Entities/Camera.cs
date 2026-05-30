@@ -1,11 +1,15 @@
-using System;
+using PlakaTanima.Domain.Enums;
 
-namespace PlakaTanima.Domain.Entities;
 public class Camera
 {
-    public string Name { get; set; } = default!;
-    public string Type { get; set; } = default!; // Hikvision, Dahua, RTSP
-    public string Ip { get; set; } = default!;
-    public string Username { get; set; } = default!;
-    public string Password { get; set; } = default!;
+    public Guid Id { get; set; }
+    public string Name { get; set; }
+    public string GateName { get; set; }
+    public string Ip { get; set; }
+    public int Port { get; set; }
+    public int StreamChannel { get; set; }
+    public string Username { get; set; }
+    public string Password { get; set; }
+    public CameraStatus Status { get; set; }
+    public DateTime? LastCheckedAt { get; set; }
 }

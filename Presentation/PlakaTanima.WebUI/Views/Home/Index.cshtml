@@ -1,8 +1,6 @@
 ﻿@{
     ViewData["Title"] = "Canlı Akış";
 }
-@using PlakaTanima.WebUI.Models
-@model LiveViewModel
 
 <main>
     @await Component.InvokeAsync("CameraList", new { cameras = Model.cameras })

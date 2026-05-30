@@ -1,6 +1,4 @@
 using Microsoft.Extensions.DependencyInjection;
-using PlakaTanima.Application.Abstract.Services;
-using PlakaTanima.SignalR.Services;
 
 namespace PlakaTanima.SignalR;
 
@@ -11,9 +9,6 @@ public static class DependencyInjection
     {
         services.AddSignalR();
 
-        services.AddScoped<
-            IPlateNotificationService,
-            SignalRPlateNotificationService>();
 
         return services;
     }

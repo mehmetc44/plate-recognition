@@ -1,7 +1,5 @@
 using System.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
-using PlakaTanima.WebUI.Models;
-
 namespace PlakaTanima.WebUI.Controllers;
 
 public class SearchController : Controller
