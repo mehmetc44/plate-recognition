@@ -11,6 +11,7 @@ public class AppDbContext : DbContext
     {
     }
 
+    public DbSet<Camera> Cameras { get; set; }
     public DbSet<LprEvent> LprEvents { get; set; }
     public DbSet<LprImage> LprImages { get; set; }
     

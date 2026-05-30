@@ -1,8 +1,9 @@
+using PlakaTanima.Domain.Entities.Common;
 using PlakaTanima.Domain.Enums;
 
-public class Camera
+namespace PlakaTanima.Domain.Entities;
+public class Camera : BaseEntity
 {
-    public Guid Id { get; set; }
     public string Name { get; set; }
     public string GateName { get; set; }
     public string Ip { get; set; }
