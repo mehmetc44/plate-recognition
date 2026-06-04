@@ -5,11 +5,11 @@ using PlakaTanima.Persistence.Contexts;
 
 namespace PlakaTanima.Persistence.Repositories.LocationRepositories;
 
-public class LocationReadRepository: ReadRepository<Location> , ILocationReadRepository
+public class LocationReadRepository : ReadRepository<Location>, ILocationReadRepository
 {
-    public LocationReadRepository(AppDbContext context): base(context)
+    public LocationReadRepository(AppDbContext context) : base(context)
     {
-        
+
     }
     public async Task<List<Location>> GetAllAsync()
     {
@@ -17,5 +17,25 @@ public class LocationReadRepository: ReadRepository<Location> , ILocationReadRep
             .AsNoTracking()
             .OrderBy(x => x.Name)
             .ToListAsync();
+    }
+    public async Task<bool> ExistsByNameAsync(
+    string name,
+    Guid? excludeId = null)
+    {
+        var query = Table.AsQueryable();
+
+        if (excludeId.HasValue)
+        {
+            query = query.Where(x => x.Id != excludeId.Value);
+        }
+
+        return await query.AnyAsync(x => x.Name == name);
+    }
+    public async Task<bool> HasCameraAsync(Guid locationId)
+    {
+        return await Table
+            .AnyAsync(x =>
+                x.Id == locationId &&
+                x.Cameras.Any());
     }
 }

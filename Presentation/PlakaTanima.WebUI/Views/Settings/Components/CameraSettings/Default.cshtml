@@ -7,63 +7,68 @@
         <div class="camera-tree-panel">
             <div class="tree-header">
                 <h3><i class="fas fa-map-marker-alt"></i> Lokasyonlar</h3>
-                <button id="globalAddLocationBtn" class="btn-icon-sm" title="Yeni Lokasyon"><i
-                    class="fas fa-plus"></i></button>
-                </div>
-                <div class="camera-list-search">
-                    <i class="fas fa-search search-icon"></i>
-                    <input type="text" id="locationSearchTree" placeholder="Lokasyon ara...">
-                </div>
-                <ul class="camera-tree" id="locationTree">
-                    <!-- Dinamik ağaç buraya gelecek -->
-                    @foreach (var location in Model)
-                    {
-                        <li data-id="@location.Id">@location.Name</li>
-                    }
-                </ul>
+                <button id="globalAddLocationBtn" class="btn-icon-sm" title="Yeni Lokasyon"><i class="fas fa-plus"></i></button>
             </div>
-
-            <!-- Sağ detay paneli -->
-            <div class="location-detail-panel" id="locationDetailPanel">
-                <div class="location-detail-card" id="locationDetailCard">
-                    <div class="detail-header">
-                        <h2 id="detailLocationName">Lokasyon seçin</h2>
-                        <div class="detail-actions">
-                            <button id="editLocationBtn" class="btn-outline-sm" disabled><i class="fas fa-edit"></i>
-                                Düzenle</button>
-                                <button id="deleteLocationBtn" class="btn-outline-sm danger" disabled><i
-                                    class="fas fa-trash"></i> Sil</button>
-                                </div>
-                            </div>
-                            <div class="detail-field">
-                                <label>Açıklama</label>
-                                <p id="detailLocationDesc">Bir lokasyon seçtiğinizde detaylar burada görünür.</p>
-                            </div>
-                            <div class="camera-section-header">
-                                <h3><i class="fas fa-video"></i> Kameralar</h3>
-                                <button id="addCameraFromDetailBtn" class="btn-primary-sm" disabled><i class="fas fa-plus"></i>
-                                    Kamera Ekle</button>
-                                </div>
-                                <div class="camera-table-wrapper">
-                                    <table class="camera-table">
-                                        <thead>
-                                            <tr>
-                                                <th>ID</th>
-                                                <th>Adı</th>
-                                                <th>IP Adresi</th>
-                                                <th>Port</th>
-                                                <th>Durum</th>
-                                                <th>İşlemler</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody id="detailCameraTableBody">
-                                            <tr>
-                                                <td colspan="6">Lokasyon seçin</td>
-                                            </tr>
-                                        </tbody>
-                                    </table>
-                                </div>
-                            </div>
+            <div class="camera-list-search">
+                <i class="fas fa-search search-icon"></i>
+                <input type="text" id="locationSearchTree" placeholder="Lokasyon ara...">
+            </div>
+            <ul class="camera-tree" id="locationTree">
+                @foreach (var loc in Model)
+                {
+                    <li data-id="@loc.Id">
+                        <div class="tree-node" data-id="@loc.Id">
+                            <span class="caret"></span>
+                            <i class="fas fa-map-marker-alt"></i>
+                            <span>@loc.Name</span>
                         </div>
+                        <ul class="nested">
+                                <li class="camera-leaf empty">Kamera yok</li>
+                        </ul>
+                    </li>
+                }
+            </ul>
+        </div>
+
+        <!-- Sağ detay paneli (Razor ile doldurulacak) -->
+        <div class="location-detail-panel" id="locationDetailPanel">
+            <div class="location-detail-card">
+                <div class="detail-header">
+                    <h2 id="detailLocationName">Lokasyon seçin</h2>
+                    <div class="detail-actions">
+                        <button id="editLocationBtn" class="btn-outline-sm" disabled><i class="fas fa-edit"></i> Düzenle</button>
+                        <button id="deleteLocationBtn" class="btn-outline-sm danger" disabled><i class="fas fa-trash"></i> Sil</button>
                     </div>
-                </section>
+                </div>
+                <div class="detail-field">
+                    <label>Açıklama</label>
+                    <p id="detailLocationDesc">Bir lokasyon seçin</p>
+                </div>
+                <div class="camera-section-header">
+                    <h3><i class="fas fa-video"></i> Kameralar</h3>
+                    <button id="addCameraFromDetailBtn" class="btn-primary-sm" disabled><i class="fas fa-plus"></i> Kamera Ekle</button>
+                </div>
+                <div class="camera-table-wrapper">
+                    <table class="camera-table">
+                        <thead><tr><th>ID</th><th>Adı</th><th>IP</th><th>Port</th><th>Durum</th><th>İşlem</th></thead>
+                        <tbody id="detailCameraTableBody"><tr><td colspan="6">Lokasyon seçin</td></tr></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Lokasyon Ekleme Modal -->
+<div id="locationModal" class="modal" style="display:none;">
+    <div class="modal-content">
+        <div class="modal-header"><span>Lokasyon Ekle</span><span class="close-modal">&times;</span></div>
+        <div class="modal-body">
+            <div class="form-group"><label>Lokasyon Adı</label><input type="text" id="locationNameInput" class="modal-input" /></div>
+            <div class="form-group"><label>Açıklama</label><textarea id="locationDescInput" class="modal-input" rows="3"></textarea></div>
+        </div>
+        <div class="modal-footer"><button id="saveLocationBtn" class="btn-save-modal">Kaydet</button><button class="btn-cancel-modal">İptal</button></div>
+    </div>
+</div>
+
+

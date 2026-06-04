@@ -1,5 +1,6 @@
 using MediatR;
 using PlakaTanima.Application.Repositories.LocationRepositories;
+using PlakaTanima.Domain.Entities;
 
 namespace PlakaTanima.Application.Features.Locations.Commands.CreateLocation;
 
@@ -17,10 +18,19 @@ public class CreateLocationCommandHandler
         _locationWriteRepository = locationWriteRepository;
     }
 
-    public async Task<Guid> Handle(
-        CreateLocationCommand request,
-        CancellationToken cancellationToken)
+    public async Task<Guid> Handle(CreateLocationCommand request, CancellationToken cancellationToken)
     {
-        throw new NotImplementedException();
+        var location = new Location
+        {
+            Id = Guid.NewGuid(),
+            Name = request.Name,
+            Description = request.Description,
+            CreatedAt = DateTime.UtcNow,
+        };
+
+        await _locationWriteRepository.AddAsync(location);
+        await _locationWriteRepository.SaveAsync();
+
+        return location.Id;
     }
 }
