@@ -1,52 +1,61 @@
-# Proje Tanıtım Dokümanı: Akıllı Plaka Tanıma ve Takip Sistemi (PTS)
+PLATAR - ANPR Yönetim Sistemi
 
-Bu doküman, geliştirilmekte olan Plaka Tanıma Sistemi (PTS) projesinin modüllerini, kullanıcı akışını ve teknik arayüz gereksinimlerini tanımlar.
+AMAÇ
 
-## 1. Proje Genel Bakışı ve Kapsamı
-Proje, bir "yapay zeka modeli eğitme" projesi DEĞİLDİR. Plaka tanıma (LPR/ANPR), araç tespiti ve canlı video akışı işlemleri doğrudan donanım tarafında (Hikvision kameraları) gerçekleşir. 
+Hikvision ANPR kameralarından gelen ISAPI alarm streamlerini dinleyen,
+olayları işleyen, araçları VIP/Kara Liste/Normal olarak sınıflandıran,
+görselleri MinIO’da saklayan, PostgreSQL’e kaydeden ve SignalR üzerinden
+Angular arayüzüne gerçek zamanlı aktaran bir sistem.
 
-Bu projenin ana amacı: Hikvision SDK'sı üzerinden gelen hazır verileri (canlı RTSP akışları, okunmuş plaka metinleri, geçiş anı fotoğrafları ve zaman damgalarını) yakalamak, veritabanına kaydetmek ve son kullanıcıya modern, hızlı bir web arayüzü (Dashboard) sunmaktır.
+GENEL MİMARİ
 
-## 2. Sayfa Yapısı ve Modüller
+Hikvision Kamera │ ▼ ISAPI Alert Stream │ ▼ Camera Connection │ ▼
+Multipart Reader │ ▼ XML Parser + Image Parser │ ▼ Event Correlator │ ▼
+Raw ANPR Event │ ▼ Channel Queue │ ▼ Event Processor ├── Plate Matcher
+├── MinIO Upload ├── PostgreSQL Save └── SignalR Publish │ ▼ Angular UI
 
-### Sayfa 1: Canlı Akış (Dashboard)
-Bu sayfa, sistemin ana kontrol merkezidir:
-* Sol Panel (Sidebar): Aktif Hikvision kameralarının listelendiği ağaç yapısı.
-* Orta Panel (Ana Görünüm): 
-  - Video Modu: SDK'dan alınan canlı görüntülerin grid (1'li, 4'lü, 12'li) yapısında izlenmesi.
-  - Liste Modu: Video akışı yerine, SDK'dan o an düşen araç geçiş loglarının anlık tablo (Live Table) olarak gösterilmesi.
-* Sağ Panel: En son tespit edilen araçların donuk fotoğrafları, plaka bilgileri ve durum etiketleri (VIP, Kara Liste vb.) kartlar halinde akar.
+ONION ARCHITECTURE
 
-### Sayfa 2: Galeri Sayfası
-Anlık tespitlerin görsel takibi için tasarlanmıştır:
-* Ekran 12 adet görüntü kutusuna bölünmüştür.
-* Her kutu, seçili kameradan geçen SON aracın Hikvision'dan alınan fotoğrafını (snapshot) gösterir.
+PlakaTanima │ ├── Core │ ├── PlakaTanima.Domain │ └──
+PlakaTanima.Application │ ├── Infrastructure │ ├──
+PlakaTanima.Infrastructure │ └── PlakaTanima.Persistence │ └──
+Presentation └── PlakaTanima.WebUI
 
-### Sayfa 3: Gelişmiş Arama
-Geçmişe dönük veritabanı sorgularının yapıldığı bölümdür:
-* Plaka No, Tarih/Saat Aralığı ve Kategori (VIP, Kara Liste, Normal) bazlı filtreleme.
-* Sonuçlar veri tablosu olarak listelenir.
+SPRINTLER
 
-### Sayfa 4: Araç Bilgileri (Detay Sayfası)
-Arama listesinden bir araca tıklandığında açılan detay modülüdür:
-* Sol Üst: Geçiş anına ait fotoğraf.
-* Sağ Üst: Araca ait veritabanı kayıtları ve olay anının geçmiş video kaydını (playback) Hikvision NVR/Kamerası üzerinden çağıran "Video İzle" butonu.
-* Alt Bölüm: Aracın tüm tarihsel geçiş logları.
+Sprint 1 - Kamera Altyapısı [ ] Camera Entity [ ] Camera Repository [ ]
+Camera CRUD [ ] CameraManager [ ] CameraConnection [ ] Digest
+Authentication [ ] Reconnect Mekanizması [ ] Runtime Kamera
+Ekleme/Güncelleme/Silme
 
-### Sayfa 5: Plaka Yönetimi (CRUD Sayfası)
-Kullanıcının veritabanını yönettiği sayfadır:
-* Plakaların sisteme eklenmesi, güncellenmesi ve silinmesi.
-* Plakalara durum etiketi (Özel, Kara Liste, Normal) atanması.
+Sprint 2 - Stream Parsing [ ] MultipartReader [ ] XmlPacket Modeli [ ]
+ImagePacket Modeli [ ] Stream Testleri [ ] Gerçek Kamera Testi
 
-### Sayfa 6: Sistem Ayarları
-Kamera entegrasyon ayarlarının yapıldığı sayfadır:
-* Hikvision cihazlarının IP, Port, Kullanıcı Adı ve Şifre bilgilerinin girilmesi.
-* Genel web arayüzü konfigürasyonları.
+Sprint 3 - ANPR Correlation [ ] XmlParser [ ] ImageParser [ ]
+RawAnprEvent Modeli [ ] EventCorrelator [ ] XML + Görsel Eşleştirme
 
-## 3. Teknik Detaylar ve Mimari
-* Backend Mimari: ASP.NET Core 8.0 MVC.
-* Veritabanı Yönetimi: Entity Framework Core (Code First veya DbFirst).
-* Frontend: Bootstrap tabanlı, özel CSS Utility sistemi (Tailwind benzeri) ile güçlendirilmiş responsive tasarım. Sayfa içi güncellemeler için Partial View yapısı kullanılır.
-* İşletim Sistemi: Geliştirme ortamı Fedora Linux'tur.
-* Veri Entegrasyonu: Hikvision SDK. Kamera bağlantıları, canlı yayın (Live View) ve alarm logları (geçiş etkinlikleri) tamamen SDK üzerinden beslenir.
-* Canlı Arayüz: Frontend tarafında tablo ve kart güncellemeleri SignalR veya AJAX (Fetch API) ile sayfa yenilenmeden yapılır.
+Sprint 4 - Event Pipeline [ ] Channel Altyapısı [ ] Raw Event Queue [ ]
+Event Processor [ ] Backpressure Kontrolü [ ] Hata Yönetimi
+
+Sprint 5 - Araç Yönetimi [ ] Vehicle Entity [ ] Vehicle Repository [ ]
+Vehicle CRUD [ ] VehicleCategory Enum [ ] PlateMatcher
+
+Sprint 6 - MinIO [ ] MinIO Client [ ] Bucket Yönetimi [ ] Görsel Upload
+[ ] Path Üretimi [ ] Görsel Erişim Testleri
+
+Sprint 7 - PostgreSQL [ ] AnprEvent Entity [ ] JsonB Mapping [ ] Event
+Persist [ ] Migrationlar
+
+Sprint 8 - SignalR [ ] Alarm Hub [ ] Event Broadcast [ ] DTO Tasarımı [
+] Client Testleri
+
+Sprint 9 - Angular [ ] Canlı Alarm Ekranı [ ] Alarm Akışı [ ] VIP
+Görünümü [ ] Blacklist Görünümü [ ] Event Geçmişi
+
+Sprint 10 - MediaMTX [ ] Kamera RTSP Yönetimi [ ] MediaMTX Entegrasyonu
+[ ] Canlı İzleme Sayfası [ ] WebRTC/HLS Yayını
+
+MEVCUT DURUM
+
+[x] Gereksinim Analizi [x] Genel Mimari Tasarımı [x] Onion Yerleşimi [x]
+Sprint Planlaması [ ] Sprint 1 Başlangıcı

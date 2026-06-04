@@ -17,33 +17,28 @@ public class WriteRepository<T> : IWriteRepository<T>
 
     protected DbSet<T> Table => _context.Set<T>();
 
-    public async Task<bool> AddAsync(T entity)
+    public async Task AddAsync(T entity)
     {
-        var entry = await Table.AddAsync(entity);
-        return entry.State == EntityState.Added;
+        await Table.AddAsync(entity);
     }
 
-    public async Task<bool> AddRangeAsync(List<T> entities)
+    public async Task AddRangeAsync(IEnumerable<T> entities)
     {
         await Table.AddRangeAsync(entities);
-        return true;
     }
 
-    public bool Update(T entity)
+    public void Update(T entity)
     {
-        var entry = Table.Update(entity);
-        return entry.State == EntityState.Modified;
+        Table.Update(entity);
     }
 
-    public bool Remove(T entity)
+    public void Remove(T entity)
     {
-        var entry = Table.Remove(entity);
-        return entry.State == EntityState.Deleted;
+        Table.Remove(entity);
     }
 
-    public bool RemoveRange(List<T> entities)
+    public async Task<int> SaveAsync()
     {
-        Table.RemoveRange(entities);
-        return true;
+        return await _context.SaveChangesAsync();
     }
 }

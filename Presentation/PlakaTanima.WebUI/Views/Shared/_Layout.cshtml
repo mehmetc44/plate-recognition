@@ -15,9 +15,7 @@
 
 <body>
     @await Html.PartialAsync("_Navbar")
-    <main>
         @RenderBody()
-    </main>
      @RenderSection("PageScripts", required: false)
     <script src="~/js/Script.js"></script>
 </body>

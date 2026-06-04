@@ -1,10 +1,11 @@
-using System.Linq.Expressions;
 using Microsoft.EntityFrameworkCore;
 using PlakaTanima.Application.Repositories;
 using PlakaTanima.Domain.Entities.Common;
 using PlakaTanima.Persistence.Contexts;
+using System.Linq.Expressions;
 
 namespace PlakaTanima.Persistence.Repositories;
+
 public class ReadRepository<T> : IReadRepository<T>
     where T : BaseEntity
 {
@@ -17,16 +18,19 @@ public class ReadRepository<T> : IReadRepository<T>
 
     protected DbSet<T> Table => _context.Set<T>();
 
-    public IQueryable<T> GetAll(bool tracking = true)
+    public IQueryable<T> GetAll(bool tracking = false)
     {
         var query = Table.AsQueryable();
+
         if (!tracking)
             query = query.AsNoTracking();
 
         return query;
     }
 
-    public IQueryable<T> GetWhere(Expression<Func<T, bool>> predicate, bool tracking = true)
+    public IQueryable<T> Where(
+        Expression<Func<T, bool>> predicate,
+        bool tracking = false)
     {
         var query = Table.Where(predicate);
 
@@ -36,17 +40,9 @@ public class ReadRepository<T> : IReadRepository<T>
         return query;
     }
 
-    public async Task<T?> GetSingleAsync(Expression<Func<T, bool>> predicate, bool tracking = true)
-    {
-        var query = Table.AsQueryable();
-
-        if (!tracking)
-            query = query.AsNoTracking();
-
-        return await query.FirstOrDefaultAsync(predicate);
-    }
-
-    public async Task<T?> GetByIdAsync(Guid id, bool tracking = true)
+    public async Task<T?> GetByIdAsync(
+        Guid id,
+        bool tracking = false)
     {
         var query = Table.AsQueryable();
 
@@ -54,5 +50,17 @@ public class ReadRepository<T> : IReadRepository<T>
             query = query.AsNoTracking();
 
         return await query.FirstOrDefaultAsync(x => x.Id == id);
+    }
+
+    public async Task<T?> FirstOrDefaultAsync(
+        Expression<Func<T, bool>> predicate,
+        bool tracking = false)
+    {
+        var query = Table.AsQueryable();
+
+        if (!tracking)
+            query = query.AsNoTracking();
+
+        return await query.FirstOrDefaultAsync(predicate);
     }
 }

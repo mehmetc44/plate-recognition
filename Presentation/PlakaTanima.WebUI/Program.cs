@@ -1,7 +1,6 @@
 using PlakaTanima.Persistence;
 using PlakaTanima.Infrastructure;
 using PlakaTanima.SignalR.Hubs;
-using PlakaTanima.WebUI.HostedServices;
 using PlakaTanima.SignalR;
 using PlakaTanima.WebUI;
 using PlakaTanima.Alarm;
@@ -14,7 +13,6 @@ builder.Services.AddPersistenceDI(builder.Configuration);
 builder.Services.AddInfrastructureDI(builder.Configuration);
 builder.Services.AddSignalRDI();
 builder.Services.AddWebUIDI(builder.Configuration);
-builder.Services.AddAlarmDI();
 
 
 var app = builder.Build();

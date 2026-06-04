@@ -1,0 +1,23 @@
+using MediatR;
+using Microsoft.AspNetCore.Mvc;
+using PlakaTanima.Application.Features.Locations.Queries.GetLocationList;
+using System.Threading.Tasks;
+
+namespace PlakaTanima.WebUI.ViewComponents.Settings
+{
+    public class CameraSettingsViewComponent : ViewComponent
+    {
+        private readonly IMediator _mediator;
+
+        public CameraSettingsViewComponent(IMediator mediator)
+        {
+            _mediator = mediator;
+        }
+
+        public async Task<IViewComponentResult> InvokeAsync()
+        {
+            var locations = await _mediator.Send(new GetLocationListQuery());
+            return View(locations);
+        }
+    }
+}

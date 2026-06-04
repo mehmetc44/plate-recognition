@@ -3,7 +3,7 @@
 }
 
 <main>
-    @await Component.InvokeAsync("CameraList", new { cameras = Model.cameras })
+    @await Component.InvokeAsync("CameraList")
     <div class="content-area" id="contentArea">
         <partial name="_ToolBoxPartial" />
         @await Component.InvokeAsync("LiveStream")

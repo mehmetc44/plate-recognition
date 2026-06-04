@@ -1,17 +1,16 @@
-using System;
 using PlakaTanima.Domain.Entities.Common;
 
 namespace PlakaTanima.Application.Repositories;
 
 public interface IWriteRepository<T> where T : BaseEntity
 {
-    Task<bool> AddAsync(T entity);
+    Task AddAsync(T entity);
 
-    Task<bool> AddRangeAsync(List<T> entities);
+    Task AddRangeAsync(IEnumerable<T> entities);
 
-    bool Update(T entity);
+    void Update(T entity);
 
-    bool Remove(T entity);
+    void Remove(T entity);
 
-    bool RemoveRange(List<T> entities);
+    Task<int> SaveAsync();
 }
