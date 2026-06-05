@@ -8,4 +8,5 @@ public interface ILocationReadRepository
     Task<List<Location>> GetAllAsync();
     Task<bool> ExistsByNameAsync(string name,Guid? excludeId = null);
     Task<bool> HasCameraAsync(Guid locationId);
+    Task<List<Location>> GetAllWithCamerasAsync();
 }

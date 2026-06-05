@@ -38,4 +38,12 @@ public class LocationReadRepository : ReadRepository<Location>, ILocationReadRep
                 x.Id == locationId &&
                 x.Cameras.Any());
     }
+    public async Task<List<Location>> GetAllWithCamerasAsync()
+{
+    return await Table
+        .Include(x => x.Cameras)
+        .AsNoTracking()
+        .OrderBy(x => x.Name)
+        .ToListAsync();
+}
 }
