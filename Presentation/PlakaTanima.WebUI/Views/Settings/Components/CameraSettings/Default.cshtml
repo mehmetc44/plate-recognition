@@ -1,9 +1,8 @@
-@using PlakaTanima.Application.Features.Locations.Queries.GetLocationList
-@model List<GetLocationListResponse>
+@using PlakaTanima.Application.Features.Locations.Queries.GetLocationTree
+@model List<LocationTreeDto>
 
 <section class="settings-panel" id="panel-camera">
     <div class="camera-settings-split">
-        <!-- Sol ağaç paneli -->
         <div class="camera-tree-panel">
             <div class="tree-header">
                 <h3><i class="fas fa-map-marker-alt"></i> Lokasyonlar</h3>
@@ -16,21 +15,32 @@
             <ul class="camera-tree" id="locationTree">
                 @foreach (var loc in Model)
                 {
-                    <li data-id="@loc.Id">
+                    <li data-id="@loc.Id" data-name="@loc.Name" data-description="@loc.Description">
                         <div class="tree-node" data-id="@loc.Id">
                             <span class="caret"></span>
                             <i class="fas fa-map-marker-alt"></i>
                             <span>@loc.Name</span>
                         </div>
                         <ul class="nested">
+                            @if (loc.Cameras != null && loc.Cameras.Any())
+                            {
+                                foreach (var cam in loc.Cameras)
+                                {
+                                    <li class="camera-leaf online" data-cam-id="@cam.Id">
+                                        <i class="fas fa-video"></i> @cam.Name
+                                    </li>
+                                }
+                            }
+                            else
+                            {
                                 <li class="camera-leaf empty">Kamera yok</li>
+                            }
                         </ul>
                     </li>
                 }
             </ul>
         </div>
 
-        <!-- Sağ detay paneli (Razor ile doldurulacak) -->
         <div class="location-detail-panel" id="locationDetailPanel">
             <div class="location-detail-card">
                 <div class="detail-header">
@@ -59,16 +69,113 @@
     </div>
 </section>
 
-<!-- Lokasyon Ekleme Modal -->
+<!-- Lokasyon Ekleme Modal (Form POST) -->
 <div id="locationModal" class="modal" style="display:none;">
-    <div class="modal-content">
-        <div class="modal-header"><span>Lokasyon Ekle</span><span class="close-modal">&times;</span></div>
-        <div class="modal-body">
-            <div class="form-group"><label>Lokasyon Adı</label><input type="text" id="locationNameInput" class="modal-input" /></div>
-            <div class="form-group"><label>Açıklama</label><textarea id="locationDescInput" class="modal-input" rows="3"></textarea></div>
+    <form method="post" action="@Url.Action("AddLocation", "Settings")">
+        @Html.AntiForgeryToken()
+        <div class="modal-content">
+            <div class="modal-header"><span>Lokasyon Ekle</span><span class="close-modal">&times;</span></div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label>Lokasyon Adı</label>
+                    <input type="text" name="Name" class="modal-input" required />
+                </div>
+                <div class="form-group">
+                    <label>Açıklama</label>
+                    <textarea name="Description" class="modal-input" rows="3"></textarea>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="submit" class="btn-save-modal">Kaydet</button>
+                <button type="button" class="btn-cancel-modal">İptal</button>
+            </div>
         </div>
-        <div class="modal-footer"><button id="saveLocationBtn" class="btn-save-modal">Kaydet</button><button class="btn-cancel-modal">İptal</button></div>
-    </div>
+    </form>
 </div>
 
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // --- Modal aç/kapa ---
+        const modal = document.getElementById('locationModal');
+        const openBtn = document.getElementById('globalAddLocationBtn');
+        const closeBtns = document.querySelectorAll('.close-modal, .btn-cancel-modal');
+        if (openBtn) openBtn.onclick = () => modal.style.display = 'flex';
+        closeBtns.forEach(btn => btn.onclick = () => modal.style.display = 'none');
+        window.onclick = (e) => { if (e.target === modal) modal.style.display = 'none'; };
 
+        // --- Ağaç aç/kapa ---
+        document.querySelectorAll('.caret').forEach(caret => {
+            caret.addEventListener('click', function(e) {
+                e.stopPropagation();
+                const li = this.closest('li');
+                const nested = li.querySelector('.nested');
+                if (nested) nested.classList.toggle('open');
+                this.classList.toggle('open');
+            });
+        });
+
+        // --- Arama ---
+        const search = document.getElementById('locationSearchTree');
+        if (search) {
+            search.addEventListener('input', function(e) {
+                const filter = e.target.value.toLowerCase();
+                document.querySelectorAll('#locationTree > li').forEach(li => {
+                    const name = li.getAttribute('data-name')?.toLowerCase() || '';
+                    li.style.display = name.includes(filter) ? '' : 'none';
+                });
+            });
+        }
+
+        // --- Lokasyon tıklama (sağ paneli doldur) ---
+        const detailName = document.getElementById('detailLocationName');
+        const detailDesc = document.getElementById('detailLocationDesc');
+        const editBtn = document.getElementById('editLocationBtn');
+        const delBtn = document.getElementById('deleteLocationBtn');
+        const addCamBtn = document.getElementById('addCameraFromDetailBtn');
+        const cameraTableBody = document.getElementById('detailCameraTableBody');
+
+        document.querySelectorAll('#locationTree .tree-node').forEach(node => {
+            node.addEventListener('click', function(e) {
+                e.stopPropagation();
+                const li = this.closest('li');
+                const locationId = li.getAttribute('data-id');
+                const locationName = li.getAttribute('data-name');
+                const locationDesc = li.getAttribute('data-description') || 'Açıklama yok';
+
+                detailName.innerText = locationName;
+                detailDesc.innerText = locationDesc;
+                editBtn.disabled = false;
+                delBtn.disabled = false;
+                addCamBtn.disabled = false;
+
+                // Şimdilik kamera tablosunu temizle (ileride doldurulacak)
+                cameraTableBody.innerHTML = '<tr><td colspan="6">Bu lokasyona ait kameralar yakında listelenecek</td></tr>';
+
+                // Sil butonuna tıklayınca ilgili lokasyonu silen formu bul ve submit et
+                delBtn.onclick = () => {
+                    if (confirm('Bu lokasyonu silmek istediğinize emin misiniz?')) {
+                        const form = document.createElement('form');
+                        form.method = 'post';
+                        form.action = '@Url.Action("DeleteLocation", "Settings")';
+                        const token = document.createElement('input');
+                        token.type = 'hidden';
+                        token.name = '__RequestVerificationToken';
+                        token.value = document.querySelector('input[name="__RequestVerificationToken"]').value;
+                        form.appendChild(token);
+                        const idField = document.createElement('input');
+                        idField.type = 'hidden';
+                        idField.name = 'Id';
+                        idField.value = locationId;
+                        form.appendChild(idField);
+                        document.body.appendChild(form);
+                        form.submit();
+                    }
+                };
+
+                // Düzenle butonu (şimdilik uyarı)
+                editBtn.onclick = () => alert('Düzenleme sayfası hazırlanıyor');
+                addCamBtn.onclick = () => alert('Kamera ekleme sayfası hazırlanıyor');
+            });
+        });
+    });
+</script>

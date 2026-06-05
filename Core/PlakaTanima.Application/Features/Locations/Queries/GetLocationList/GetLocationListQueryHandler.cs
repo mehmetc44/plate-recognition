@@ -26,6 +26,7 @@ public sealed class GetLocationListQueryHandler
         {
             Id = x.Id,
             Name = x.Name,
+            Description = x.Description,
             CameraCount = x.Cameras.Count,
             CreatedAt = x.CreatedAt
         }).ToList();

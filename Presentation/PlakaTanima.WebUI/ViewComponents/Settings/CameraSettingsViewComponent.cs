@@ -1,6 +1,8 @@
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
+using PlakaTanima.Application.Features.Cameras.Queries.GetCameraById;
 using PlakaTanima.Application.Features.Locations.Queries.GetLocationList;
+using PlakaTanima.Application.Features.Locations.Queries.GetLocationTree;
 using System.Threading.Tasks;
 
 namespace PlakaTanima.WebUI.ViewComponents.Settings
@@ -16,7 +18,7 @@ namespace PlakaTanima.WebUI.ViewComponents.Settings
 
         public async Task<IViewComponentResult> InvokeAsync()
         {
-            var locations = await _mediator.Send(new GetLocationListQuery());
+            var locations = await _mediator.Send(new GetLocationTreeQuery());
             return View(locations);
         }
     }

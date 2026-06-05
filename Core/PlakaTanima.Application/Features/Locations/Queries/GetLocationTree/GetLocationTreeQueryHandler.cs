@@ -2,6 +2,7 @@ using MediatR;
 using PlakaTanima.Application.Repositories.LocationRepositories;
 
 namespace PlakaTanima.Application.Features.Locations.Queries.GetLocationTree;
+
 public sealed class GetLocationTreeQueryHandler
     : IRequestHandler<GetLocationTreeQuery,
         List<LocationTreeDto>>
@@ -25,14 +26,12 @@ public sealed class GetLocationTreeQueryHandler
         {
             Id = x.Id,
             Name = x.Name,
-
-            Cameras = x.Cameras
-                .Select(c => new CameraTreeDto
-                {
-                    Id = c.Id,
-                    Name = c.Name
-                })
-                .ToList()
+            Description = x.Description,   // Eklendi
+            Cameras = x.Cameras.Select(c => new CameraTreeDto
+            {
+                Id = c.Id,
+                Name = c.Name
+            }).ToList()
         }).ToList();
     }
 }
