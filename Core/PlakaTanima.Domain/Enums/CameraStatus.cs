@@ -2,10 +2,7 @@ namespace PlakaTanima.Domain.Enums;
 
 public enum CameraStatus
 {
-    Unknown,
-    Active,
-    Offline,
-    AuthFailed,
-    RtspDown,
-    AlarmStreamDown
+    Online = 0,
+    Offline = 1,
+    Error = 2
 }

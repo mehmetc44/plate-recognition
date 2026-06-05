@@ -30,7 +30,13 @@ public sealed class GetLocationTreeQueryHandler
             Cameras = x.Cameras.Select(c => new CameraTreeDto
             {
                 Id = c.Id,
-                Name = c.Name
+                Name = c.Name,
+                IpAddress = c.IpAddress,
+                Port = c.Port,
+                Username = c.Username,
+                Password = c.Password,
+                StreamChannel = c.StreamChannel,
+                LocationId = c.LocationId
             }).ToList()
         }).ToList();
     }

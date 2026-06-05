@@ -12,55 +12,11 @@
     </div>
 </main>
 
-<!-- Lokasyon Ekleme Modal (Form POST) -->
-<div id="locationModal" class="modal" style="display:none;">
-    <form method="post" action="@Url.Action("AddLocation", "Settings")">
-        @Html.AntiForgeryToken()
-        <div class="modal-content">
-            <div class="modal-header"><span>Lokasyon Ekle</span><span class="close-modal">&times;</span></div>
-            <div class="modal-body">
-                <div class="form-group">
-                    <label>Lokasyon Adı</label>
-                    <input type="text" name="Name" class="modal-input" required />
-                </div>
-                <div class="form-group">
-                    <label>Açıklama</label>
-                    <textarea name="Description" class="modal-input" rows="3"></textarea>
-                </div>
-            </div>
-            <div class="modal-footer">
-                <button type="submit" class="btn-save-modal">Kaydet</button>
-                <button type="button" class="btn-cancel-modal">İptal</button>
-            </div>
-        </div>
-    </form>
-</div>
-
-<!-- Kamera Ekleme Modal (Form POST) -->
-<div id="cameraModal" class="modal" style="display:none;">
-    <form method="post" action="@Url.Action("AddCamera", "Settings")">
-        @Html.AntiForgeryToken()
-        <div class="modal-content">
-            <div class="modal-header"><span>Kamera Ekle</span><span class="close-modal-cam">&times;</span></div>
-            <div class="modal-body">
-                <input type="hidden" name="LocationId" id="cameraLocationId" />
-                <div class="form-group"><label>Kamera Adı</label><input type="text" name="Name" class="modal-input" required /></div>
-                <div class="form-group"><label>IP Adresi</label><input type="text" name="IpAddress" class="modal-input" required /></div>
-                <div class="form-group"><label>Port</label><input type="number" name="Port" class="modal-input" value="80" /></div>
-                <div class="form-group"><label>Kullanıcı Adı</label><input type="text" name="Username" class="modal-input" /></div>
-                <div class="form-group"><label>Şifre</label><input type="password" name="Password" class="modal-input" /></div>
-            </div>
-            <div class="modal-footer">
-                <button type="submit" class="btn-save-modal">Kaydet</button>
-                <button type="button" class="btn-cancel-modal-cam">İptal</button>
-            </div>
-        </div>
-    </form>
-</div>
-
 @section PageStyles {
     <link rel="stylesheet" href="~/css/Settings.css" />
 }
 @section PageScripts {
+     <script src="~/js/ApiService.js"></script>
     <script src="~/js/Settings.js"></script>
+   
 }

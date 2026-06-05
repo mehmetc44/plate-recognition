@@ -6,7 +6,8 @@
         <div class="camera-tree-panel">
             <div class="tree-header">
                 <h3><i class="fas fa-map-marker-alt"></i> Lokasyonlar</h3>
-                <button id="globalAddLocationBtn" class="btn-icon-sm" title="Yeni Lokasyon"><i class="fas fa-plus"></i></button>
+                <button id="globalAddLocationBtn" class="btn-icon-sm" title="Yeni Lokasyon"><i class="fas fa-plus"></i>
+                </button>
             </div>
             <div class="camera-list-search">
                 <i class="fas fa-search search-icon"></i>
@@ -24,9 +25,11 @@
                         <ul class="nested">
                             @if (loc.Cameras != null && loc.Cameras.Any())
                             {
-                                foreach (var cam in loc.Cameras)
+                                @foreach (var cam in loc.Cameras)
                                 {
-                                    <li class="camera-leaf online" data-cam-id="@cam.Id">
+                                    <li class="camera-leaf online">
+                                        data-cam-id="@cam.Id" data-cam-name="@cam.Name" data-ip=""
+                                        data-port="@cam.Port" data-status="">
                                         <i class="fas fa-video"></i> @cam.Name
                                     </li>
                                 }
@@ -46,136 +49,151 @@
                 <div class="detail-header">
                     <h2 id="detailLocationName">Lokasyon seçin</h2>
                     <div class="detail-actions">
-                        <button id="editLocationBtn" class="btn-outline-sm" disabled><i class="fas fa-edit"></i> Düzenle</button>
-                        <button id="deleteLocationBtn" class="btn-outline-sm danger" disabled><i class="fas fa-trash"></i> Sil</button>
+                        <button id="editLocationBtn" class="btn-outline-sm" disabled><i class="fas fa-edit"></i>
+                            Düzenle</button>
+                            <button id="deleteLocationBtn" class="btn-outline-sm danger" disabled><i
+                                class="fas fa-trash"></i> Sil</button>
+                            </div>
+                        </div>
+                        <div class="detail-field">
+                            <label>Açıklama</label>
+                            <p id="detailLocationDesc">Bir lokasyon seçin</p>
+                        </div>
+                        <div class="camera-section-header">
+                            <h3><i class="fas fa-video"></i> Kameralar</h3>
+                            <button id="addCameraFromDetailBtn" class="btn-primary-sm" disabled><i class="fas fa-plus"></i>
+                                Kamera Ekle</button>
+                            </div>
+                            <div class="camera-table-wrapper">
+                                <table class="camera-table">
+                                    <thead>
+                                        <tr>
+                                            <th>ID</th>
+                                            <th>Adı</th>
+                                            <th>IP</th>
+                                            <th>Port</th>
+                                            <th>Durum</th>
+                                            <th>İşlem</th>
+                                        </thead>
+                                        <tbody id="detailCameraTableBody">
+                                            <tr>
+                                                <td colspan="6">Lokasyon seçin</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+
+
+
+
+
+
+
+
+
+                <!-- Lokasyon Ekleme Modal (AJAX ile) -->
+                <div id="locationModal" class="modal" style="display:none;">
+                    <div class="modal-content">
+                        <div class="modal-header"><span>Lokasyon Ekle</span><span class="close-modal">&times;</span></div>
+                        <div class="modal-body">
+                            <div class="form-group">
+                                <label>Lokasyon Adı</label>
+                                <input type="text" id="locationNameInput" class="modal-input" required />
+                            </div>
+                            <div class="form-group">
+                                <label>Açıklama</label>
+                                <textarea id="locationDescInput" class="modal-input" rows="3"></textarea>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button id="saveLocationBtn" class="btn-save-modal">Kaydet</button>
+                            <button type="button" class="btn-cancel-modal">İptal</button>
+                        </div>
                     </div>
                 </div>
-                <div class="detail-field">
-                    <label>Açıklama</label>
-                    <p id="detailLocationDesc">Bir lokasyon seçin</p>
-                </div>
-                <div class="camera-section-header">
-                    <h3><i class="fas fa-video"></i> Kameralar</h3>
-                    <button id="addCameraFromDetailBtn" class="btn-primary-sm" disabled><i class="fas fa-plus"></i> Kamera Ekle</button>
-                </div>
-                <div class="camera-table-wrapper">
-                    <table class="camera-table">
-                        <thead><tr><th>ID</th><th>Adı</th><th>IP</th><th>Port</th><th>Durum</th><th>İşlem</th></thead>
-                        <tbody id="detailCameraTableBody"><tr><td colspan="6">Lokasyon seçin</td></tr></tbody>
-                    </table>
-                </div>
-            </div>
-        </div>
-    </div>
-</section>
 
-<!-- Lokasyon Ekleme Modal (Form POST) -->
-<div id="locationModal" class="modal" style="display:none;">
-    <form method="post" action="@Url.Action("AddLocation", "Settings")">
-        @Html.AntiForgeryToken()
-        <div class="modal-content">
-            <div class="modal-header"><span>Lokasyon Ekle</span><span class="close-modal">&times;</span></div>
-            <div class="modal-body">
-                <div class="form-group">
-                    <label>Lokasyon Adı</label>
-                    <input type="text" name="Name" class="modal-input" required />
-                </div>
-                <div class="form-group">
-                    <label>Açıklama</label>
-                    <textarea name="Description" class="modal-input" rows="3"></textarea>
-                </div>
-            </div>
-            <div class="modal-footer">
-                <button type="submit" class="btn-save-modal">Kaydet</button>
-                <button type="button" class="btn-cancel-modal">İptal</button>
-            </div>
-        </div>
-    </form>
-</div>
 
-<script>
-    document.addEventListener('DOMContentLoaded', function() {
-        // --- Modal aç/kapa ---
-        const modal = document.getElementById('locationModal');
-        const openBtn = document.getElementById('globalAddLocationBtn');
-        const closeBtns = document.querySelectorAll('.close-modal, .btn-cancel-modal');
-        if (openBtn) openBtn.onclick = () => modal.style.display = 'flex';
-        closeBtns.forEach(btn => btn.onclick = () => modal.style.display = 'none');
-        window.onclick = (e) => { if (e.target === modal) modal.style.display = 'none'; };
 
-        // --- Ağaç aç/kapa ---
-        document.querySelectorAll('.caret').forEach(caret => {
-            caret.addEventListener('click', function(e) {
-                e.stopPropagation();
-                const li = this.closest('li');
-                const nested = li.querySelector('.nested');
-                if (nested) nested.classList.toggle('open');
-                this.classList.toggle('open');
-            });
-        });
 
-        // --- Arama ---
-        const search = document.getElementById('locationSearchTree');
-        if (search) {
-            search.addEventListener('input', function(e) {
-                const filter = e.target.value.toLowerCase();
-                document.querySelectorAll('#locationTree > li').forEach(li => {
-                    const name = li.getAttribute('data-name')?.toLowerCase() || '';
-                    li.style.display = name.includes(filter) ? '' : 'none';
-                });
-            });
-        }
+                <!-- Modals (kamera & lokasyon ekleme/düzenleme) -->
+                <div id="cameraModal" class="modal" style="display:none;">
+                    <div class="modal-content">
+                        <div class="modal-header"><span>Kamera Ekle/Düzenle</span><span class="close-modal-cam">&times;</span></div>
+                        <div class="modal-body">
+                            <input type="hidden" id="cameraId" />
+                            <input type="hidden" id="cameraLocationId" />
+                            <div class="form-group"><label>Kamera Adı</label><input type="text" id="cameraNameInput"
+                                                                                        class="modal-input" /></div>
+                                <div class="form-group"><label>IP Adresi</label><input type="text" id="cameraIpInput" class="modal-input"
+                                                                                           placeholder="192.168.1.100" /></div>
+                                    <div class="form-group"><label>Port</label><input type="number" id="cameraPortInput" class="modal-input"
+                                                                                          value="80" /></div>
+                                        <div class="form-group"><label>Kullanıcı Adı</label><input type="text" id="cameraUsernameInput"
+                                                                                                       class="modal-input" /></div>
+                                            <div class="form-group"><label>Şifre</label><input type="password" id="cameraPasswordInput"
+                                                                                                   class="modal-input" /></div>
+                                            </div>
+                                            <div class="modal-footer"><button id="saveCameraBtn" class="btn-save-modal">Kaydet</button><button
+                                                class="btn-cancel-modal-cam">İptal</button></div>
+                                            </div>
+                                        </div>
 
-        // --- Lokasyon tıklama (sağ paneli doldur) ---
-        const detailName = document.getElementById('detailLocationName');
-        const detailDesc = document.getElementById('detailLocationDesc');
-        const editBtn = document.getElementById('editLocationBtn');
-        const delBtn = document.getElementById('deleteLocationBtn');
-        const addCamBtn = document.getElementById('addCameraFromDetailBtn');
-        const cameraTableBody = document.getElementById('detailCameraTableBody');
 
-        document.querySelectorAll('#locationTree .tree-node').forEach(node => {
-            node.addEventListener('click', function(e) {
-                e.stopPropagation();
-                const li = this.closest('li');
-                const locationId = li.getAttribute('data-id');
-                const locationName = li.getAttribute('data-name');
-                const locationDesc = li.getAttribute('data-description') || 'Açıklama yok';
 
-                detailName.innerText = locationName;
-                detailDesc.innerText = locationDesc;
-                editBtn.disabled = false;
-                delBtn.disabled = false;
-                addCamBtn.disabled = false;
 
-                // Şimdilik kamera tablosunu temizle (ileride doldurulacak)
-                cameraTableBody.innerHTML = '<tr><td colspan="6">Bu lokasyona ait kameralar yakında listelenecek</td></tr>';
 
-                // Sil butonuna tıklayınca ilgili lokasyonu silen formu bul ve submit et
-                delBtn.onclick = () => {
-                    if (confirm('Bu lokasyonu silmek istediğinize emin misiniz?')) {
-                        const form = document.createElement('form');
-                        form.method = 'post';
-                        form.action = '@Url.Action("DeleteLocation", "Settings")';
-                        const token = document.createElement('input');
-                        token.type = 'hidden';
-                        token.name = '__RequestVerificationToken';
-                        token.value = document.querySelector('input[name="__RequestVerificationToken"]').value;
-                        form.appendChild(token);
-                        const idField = document.createElement('input');
-                        idField.type = 'hidden';
-                        idField.name = 'Id';
-                        idField.value = locationId;
-                        form.appendChild(idField);
-                        document.body.appendChild(form);
-                        form.submit();
-                    }
-                };
 
-                // Düzenle butonu (şimdilik uyarı)
-                editBtn.onclick = () => alert('Düzenleme sayfası hazırlanıyor');
-                addCamBtn.onclick = () => alert('Kamera ekleme sayfası hazırlanıyor');
-            });
-        });
-    });
-</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                                        <!-- Lokasyon Ekleme Modal (AJAX ile) -->
+                                        <div id="editLocationModal" class="modal" style="display:none;">
+                                            <div class="modal-content">
+                                                <div class="modal-header"><span>Lokasyon Düzenle</span><span class="close-modal">&times;</span></div>
+                                                <div class="modal-body">
+                                                    <input type="hidden" id="editLocationId" />
+                                                    <div class="form-group">
+                                                        <label>Lokasyon Adı</label>
+                                                        <input type="text" id="editLocationName" class="modal-input" required />
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label>Açıklama</label>
+                                                        <textarea id="editLocationDesc" class="modal-input" rows="3"></textarea>
+                                                    </div>
+                                                </div>
+                                                <div class="modal-footer">
+                                                    <button id="updateLocationBtn" class="btn-save-modal">Güncelle</button>
+                                                    <button type="button" class="btn-cancel-modal">İptal</button>
+                                                </div>
+                                            </div>
+                                        </div>
+
