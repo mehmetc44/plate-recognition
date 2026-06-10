@@ -1,68 +1,864 @@
+/* =========================================
+   CANLI AKIŞ SAYFASI (Index)
+   Aynı tasarım dili: settings.html & arac_detay.html
+========================================= */
 
-/* =============================== SOL PANEL: KAMERA LİSTESİ (SADE) =============================== */
-.camera-list { width: 270px; background: var(--surface-2); border-right: 1px solid var(--border-subtle); display: flex; flex-direction: column; flex-shrink: 0; overflow-y: auto; }
-.camera-list h1 { padding: 18px 20px 14px; border-bottom: 1px solid var(--border-subtle); font-size: 1.05rem; font-weight: 600; color: var(--text-primary); display: flex; align-items: center; gap: 10px; }
-.camera-list h1 i { color: var(--accent-primary); width: 20px; text-align: center; }
-.camera-list-search { padding: 12px 16px; position: relative; border-bottom: 1px solid var(--border-subtle); }
-.camera-list-search input { width: 100%; padding: 10px 14px 10px 36px; background: var(--surface-3); border: 1px solid var(--border-subtle); border-radius: 8px; color: var(--text-primary); font-size: 0.85rem; transition: border-color 0.2s; }
-.camera-list-search input:focus { border-color: var(--accent-primary); outline: none; }
-.camera-list-search .search-icon { position: absolute; left: 28px; top: 22px; color: var(--text-secondary); font-size: 0.85rem; pointer-events: none; }
-.camera-tree { flex: 1; overflow-y: auto; padding: 8px 0; }
-.camera-tree ul { padding-left: 18px; }
-.camera-tree li { list-style: none; }
-.camera-tree-node { display: flex; align-items: center; gap: 10px; padding: 10px 18px; margin: 2px 10px; font-weight: 500; font-size: 0.9rem; color: var(--text-primary); border-radius: 8px; cursor: pointer; transition: background 0.15s; }
-.camera-tree-node:hover { background: var(--surface-3); }
-.caret { display: inline-block; width: 18px; text-align: center; font-size: 0.75rem; color: var(--text-secondary); transition: transform 0.2s; }
-.caret::before { content: "\f0da"; font-family: "Font Awesome 6 Free"; font-weight: 900; }
-.caret.open { transform: rotate(90deg); }
-.nested { display: none; }
-.nested.open { display: block; }
-.camera-item { display: flex; align-items: center; gap: 10px; padding: 10px 18px 10px 36px; margin: 2px 10px; font-size: 0.88rem; font-weight: 500; color: var(--text-secondary); border-radius: 8px; cursor: pointer; transition: all 0.15s; }
-.camera-item:hover { background: var(--surface-3); color: var(--text-primary); }
-.camera-item.selected { background: rgb(from var(--accent-primary) r g b / 0.1); color: var(--accent-primary); font-weight: 600; }
-.camera-item.online { color: var(--success); }
-.camera-item.online i { color: var(--success); }
-.camera-item.offline { color: var(--text-secondary); opacity: 0.7; }
-.camera-item.offline i { color: var(--text-secondary); }
+/* =========================================
+   SOL PANEL: KAMERA LİSTESİ
+========================================= */
+/* ===============================
+   SOL PANEL: KAMERA LİSTESİ (SADE)
+================================ */
+.camera-list {
+    width: 270px;
+    background: var(--surface-2);
+    border-right: 1px solid var(--border-subtle);
+    display: flex;
+    flex-direction: column;
+    flex-shrink: 0;
+    overflow-y: auto;
+}
 
+.camera-list h1 {
+    padding: 18px 20px 14px;
+    border-bottom: 1px solid var(--border-subtle);
+    font-size: 1.05rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
 
-/*ToolBar */
-.content-area{flex:1;background-color:var(--surface-black);display:flex;flex-direction:column;} 
-.toolbar{display:flex;justify-content:space-between;align-items:center;background-color:var(--surface-3);padding:8px 15px;border-bottom:1px solid var(--border-subtle);} 
-.toolbar button{background:none;border:none;color:var(--text-secondary);font-size:18px;cursor:pointer;transition:color .2s;margin-left:6px;} 
-.toolbar button:hover,.toolbar button.active-btn{color:var(--text-primary);} .toolbar .left-nav{display:flex;gap:18px;align-items:center;} 
-.toolbar .left-nav a{color:var(--text-secondary);text-decoration:none;cursor:pointer;font-weight:500;padding:4px 8px;border-radius:4px;transition:all .2s;} 
-.toolbar .left-nav a:hover{color:var(--text-primary);} 
-.toolbar .left-nav a.active{color:var(--text-primary);background-color:rgba(255,255,255,.08);}
-.left-nav { display: flex; align-items: center; gap: 10px; }
-.nav-item { display: flex; align-items: center; gap: 8px; text-decoration: none; color: var(--text-secondary); padding: 8px 12px; border-radius: 6px; font-weight: 500; transition: all 0.3s ease; cursor: pointer; }
-.live-indicator { color: var(--danger); font-size: 0.6rem !important; animation: blink 1.5s infinite; }
-@keyframes blink { 0% { opacity: 1; } 50% { opacity: 0.4; } 100% { opacity: 1; } }
-.nav-separator { width: 1px; height: 20px; background: var(--border-subtle); margin: 0 5px; }
-.nav-item:hover {color: var(--text-primary); }
+.camera-list h1 i {
+    color: var(--accent-primary);
+    width: 20px;
+    text-align: center;
+}
 
-/* Canlı İzleme ve Plaka Akışı Alanları */
-#liveStreamContainer, #plateStreamContainer, #liveTableStreamContainer { flex: 1; padding: 5px; display: grid; gap: 5px; height: 100%;transition: opacity 0.3s ease; background-color: var(--surface-2);}
-#liveTableStreamContainer {height: 100vh;display: flex;flex-direction: column;}
+/* Arama kutusu */
+.camera-list-search {
+    padding: 12px 16px;
+    position: relative;
+    border-bottom: 1px solid var(--border-subtle);
+}
 
+.camera-list-search input {
+    width: 100%;
+    padding: 10px 14px 10px 36px;
+    background: var(--surface-3);
+    border: 1px solid var(--border-subtle);
+    border-radius: 8px;
+    color: var(--text-primary);
+    font-size: 0.85rem;
+    transition: border-color 0.2s;
+}
 
+.camera-list-search input:focus {
+    border-color: var(--accent-primary);
+    outline: none;
+}
 
+.camera-list-search .search-icon {
+    position: absolute;
+    left: 28px;
+    top: 22px;
+    color: var(--text-secondary);
+    font-size: 0.85rem;
+    pointer-events: none;
+}
 
+/* Ağaç yapısı */
+.camera-tree {
+    flex: 1;
+    overflow-y: auto;
+    padding: 8px 0;
+}
 
+.camera-tree ul {
+    padding-left: 18px;
+}
 
+.camera-tree li {
+    list-style: none;
+}
 
-/* Sağ Panel - Araç Kartları Listesi */
-.detection-feed { width: 280px; background-color: var(--surface-2); border-left: 1px solid var(--border-subtle); padding: 15px; display: flex; flex-direction: column; gap: 15px; overflow-y: auto; transition: width 0.3s ease; }
-.detection-feed.hidden { display: none !important; }
+/* Düğüm (NVR, location gibi başlıklar) */
+.camera-tree-node {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 18px;
+    margin: 2px 10px;
+    font-weight: 500;
+    font-size: 0.9rem;
+    color: var(--text-primary);
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background 0.15s;
+}
 
-.vehicle-card { height: 250px; background-color: var(--surface-3); border: 1px solid var(--border-subtle); border-radius: 4px; overflow: hidden; display: flex; flex-direction: column; transition: background-color 0.2s ease, transform 0.2s ease; cursor: pointer; position: relative; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3); flex-shrink: 0; }
-.vehicle-card:hover { background-color: var(--surface-2); transform: translateY(-2px); }
+.camera-tree-node:hover {
+    background: var(--surface-3);
+}
 
-.card-img-wrapper { width: 100%; height: 140px; position: relative; border-bottom: 1px solid var(--border-subtle); overflow: hidden; }
-.vehicle-img { width: 100%; height: 150px; object-fit: cover; transition: transform 0.3s ease; }
-.vehicle-card:hover .vehicle-img { transform: scale(1.05); }
-.vehicle-info { padding: 12px; display: flex; flex-direction: column; gap: 12px; align-items: center; }
-.entry-details { width: 100%; display: flex; justify-content: space-between; align-items: center; font-size: 0.85rem; font-weight: 500; background-color: var(--surface-0); padding: 6px 10px; border-radius: 4px; border: 1px solid var(--border-subtle); }
-.time-badge { color: var(--text-secondary); font-family: monospace; font-size: 0.95rem; }
-.status-danger{background:rgb(from var(--danger-light) r g b / 0.2);border:1px solid var(--danger);}
-.status-warning{background:rgb(from var(--warning-light) r g b / 0.2);border:1px solid var(--warning);}
+/* Açılır ok */
+.caret {
+    display: inline-block;
+    width: 18px;
+    text-align: center;
+    font-size: 0.75rem;
+    color: var(--text-secondary);
+    transition: transform 0.2s;
+}
+
+.caret::before {
+    content: "\f0da";
+    font-family: "Font Awesome 6 Free";
+    font-weight: 900;
+}
+
+.caret.open {
+    transform: rotate(90deg);
+}
+
+/* Alt öğeler (kameralar) */
+.nested {
+    display: none;
+}
+
+.nested.open {
+    display: block;
+}
+
+.camera-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 18px 12px 36px;
+    margin: 3px 10px;
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: var(--text-secondary);
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.15s;
+    border: 1px solid transparent;
+}
+
+.camera-item i {
+    font-size: 1.1rem;
+    width: 20px;
+    text-align: center;
+}
+
+.camera-item:hover {
+    background: var(--surface-3);
+    color: var(--text-primary);
+    border-color: var(--border-subtle);
+}
+
+.camera-item.selected {
+    background: rgb(from var(--accent-primary) r g b / 0.1);
+    color: var(--accent-primary);
+    font-weight: 700;
+    border-color: rgb(from var(--accent-primary) r g b / 0.2);
+}
+/* Kamera bağlantı durumu renkleri */
+.camera-item.online {
+    color: var(--success);     /* yeşil */
+}
+
+.camera-item.online i {
+    color: var(--success);
+}
+
+.camera-item.offline {
+    color: var(--text-secondary);   /* gri */
+    opacity: 0.8;
+}
+
+.camera-item.offline i {
+    color: var(--text-secondary);
+    opacity: 0.6;
+}
+/* =========================================
+   ORTA PANEL: İÇERİK ALANI
+========================================= */
+.content-area {
+    flex: 1;
+    background-color: var(--surface-1);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+/* ---------- Toolbar ---------- */
+.toolbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: var(--surface-3);
+    padding: 8px 20px;
+    border-bottom: 1px solid var(--border-subtle);
+    flex-shrink: 0;
+    height: 52px;
+}
+
+.left-nav {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    background: var(--surface-2);
+    border-radius: 8px;
+    padding: 3px;
+    border: 1px solid var(--border-subtle);
+}
+
+.nav-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    text-decoration: none;
+    color: var(--text-secondary);
+    padding: 7px 16px;
+    border-radius: 6px;
+    font-weight: 500;
+    font-size: 0.88rem;
+    transition: all 0.2s ease;
+    cursor: pointer;
+    border: none;
+    background: transparent;
+    font-family: inherit;
+}
+
+.nav-item:hover {
+    color: var(--text-primary);
+}
+
+.nav-item.active-link {
+    background: var(--surface-1);
+    color: var(--text-primary);
+    font-weight: 600;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+}
+
+.live-indicator {
+    color: var(--danger);
+    font-size: 0.55rem !important;
+    animation: blink 1.5s infinite;
+}
+
+.nav-separator {
+    width: 1px;
+    height: 22px;
+    background: var(--border-subtle);
+    border-radius: 1px;
+}
+
+/* Görünüm butonları grubu */
+.toolbar-right {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    background: var(--surface-2);
+    border-radius: 8px;
+    padding: 3px;
+    border: 1px solid var(--border-subtle);
+}
+
+.view-button {
+    background: transparent;
+    border: none;
+    color: var(--text-secondary);
+    font-size: 0.95rem;
+    cursor: pointer;
+    padding: 7px 11px;
+    border-radius: 6px;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.view-button:hover {
+    color: var(--text-primary);
+}
+
+.view-button.active {
+    background: var(--surface-1);
+    color: var(--text-primary);
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+}
+
+/* Sağ panel toggle butonu (ayrı) */
+#btnToggleRight {
+    background: var(--surface-2);
+    border: 1px solid var(--border-subtle);
+    color: var(--text-secondary);
+    font-size: 0.95rem;
+    cursor: pointer;
+    padding: 7px 11px;
+    border-radius: 8px;
+    transition: all 0.2s ease;
+    margin-left: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+#btnToggleRight:hover {
+    color: var(--text-primary);
+    background: var(--surface-3);
+}
+
+#btnToggleRight .active {
+    color: var(--accent-primary);
+}
+
+/* Container'lar */
+#liveStreamContainer,
+#plateStreamContainer,
+#liveTableStreamContainer {
+    flex: 1;
+    overflow: auto;
+    background-color: var(--surface-1);
+    padding: 8px;
+}
+
+#liveStreamContainer {
+    display: grid;
+    gap: 8px;
+    width: 100%;
+    min-height: 0;
+}
+
+#liveStreamContainer.grid-1 {
+    grid-template-columns: 1fr;
+    grid-template-rows: 1fr;
+}
+
+#liveStreamContainer.grid-4 {
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: 1fr 1fr;
+}
+
+#liveStreamContainer.grid-12 {
+    grid-template-columns: repeat(4, 1fr);
+    grid-template-rows: repeat(3, 1fr);
+}
+
+#liveTableStreamContainer {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    padding: 16px;
+    gap: 16px;
+}
+
+/* Plate stream container - 12'li grid */
+#plateStreamContainer {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    grid-template-rows: repeat(3, 1fr);
+    gap: 8px;
+    width: 100%;
+    min-height: 0;
+}
+
+/* =========================================
+   VİDEO SLOTLARI
+========================================= */
+.video-slot {
+    background-color: var(--surface-2);
+    border: 1px solid var(--border-subtle);
+    border-radius: 10px;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    overflow: hidden;
+    width: 100%;
+    height: 100%;
+    min-height: 100px;
+}
+
+.video-slot:hover {
+    border-color: var(--text-secondary);
+}
+
+.video-slot.active-slot {
+    border: 2px solid var(--accent-primary);
+    box-shadow: 0 0 16px rgb(from var(--accent-primary) r g b / 0.2);
+}
+
+.camera-overlay-info {
+    position: absolute;
+    top: 12px;
+    left: 14px;
+    color: var(--text-primary);
+    font-family: 'Inter', sans-serif;
+    font-size: 0.78rem;
+    font-weight: 500;
+    pointer-events: none;
+    z-index: 2;
+    background: rgb(from var(--surface-2) r g b / 0.85);
+    padding: 4px 10px;
+    border-radius: 6px;
+    border: 1px solid var(--border-subtle);
+    backdrop-filter: blur(6px);
+}
+
+.no-signal {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: var(--text-secondary);
+    font-size: 0.95rem;
+    font-weight: 500;
+    pointer-events: none;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    opacity: 0.6;
+}
+
+.no-signal::before {
+    content: "\f030";
+    font-family: "Font Awesome 6 Free";
+    font-weight: 900;
+    font-size: 2rem;
+    color: var(--text-secondary);
+}
+
+.drop-zone {
+    border: 2px dashed transparent;
+    transition: all 0.2s ease;
+}
+
+.drop-zone.dragover {
+    border-color: var(--info);
+    background: rgb(from var(--info) r g b / 0.05);
+}
+
+.live-video {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+/* =========================================
+   CANLI TABLO
+========================================= */
+
+/* Tablo kartı (settings/arac_detay kartları gibi) */
+.table-card {
+    background: var(--surface-2);
+    border: 1px solid var(--border-subtle);
+    border-radius: 12px;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+}
+
+.table-card-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 14px 20px;
+    background: var(--surface-3);
+    border-bottom: 1px solid var(--border-subtle);
+    flex-wrap: wrap;
+    gap: 12px;
+}
+
+.table-card-header .header-title {
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.table-card-header .header-title i {
+    color: var(--accent-primary);
+    font-size: 0.9rem;
+}
+
+.table-card-controls {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex-wrap: wrap;
+}
+
+/* Arama kutusu kart içinde */
+.table-card-controls .search-box {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 14px;
+    background: var(--surface-2);
+    border: 1px solid var(--border-subtle);
+    border-radius: 8px;
+    transition: border-color 0.2s ease;
+}
+
+.table-card-controls .search-box:focus-within {
+    border-color: var(--accent-primary);
+}
+
+.table-card-controls .search-box i {
+    color: var(--text-secondary);
+    font-size: 0.85rem;
+}
+
+.table-card-controls .search-box input {
+    background: transparent;
+    border: none;
+    outline: none;
+    color: var(--text-primary);
+    font-size: 0.85rem;
+    font-family: inherit;
+    width: 160px;
+}
+
+.table-card-controls .search-box input::placeholder {
+    color: var(--text-secondary);
+}
+
+/* Filtre grubu kart içinde */
+.filter-group {
+    display: flex;
+    gap: 4px;
+    flex-wrap: wrap;
+    background: var(--surface-2);
+    border-radius: 8px;
+    padding: 3px;
+    border: 1px solid var(--border-subtle);
+}
+
+.filter-btn {
+    padding: 6px 14px;
+    font-size: 0.8rem;
+    font-weight: 500;
+    font-family: inherit;
+    border-radius: 6px;
+    border: none;
+    background: transparent;
+    color: var(--text-secondary);
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.filter-btn:hover {
+    color: var(--text-primary);
+}
+
+.filter-btn.active {
+    background: var(--surface-1);
+    color: var(--text-primary);
+    font-weight: 600;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+}
+
+/* Tablo body */
+.table-card-body {
+    flex: 1;
+    overflow: auto;
+}
+
+.live-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.live-table thead th {
+    position: sticky;
+    top: 0;
+    z-index: 5;
+    background: var(--surface-3);
+    padding: 12px 16px;
+    text-align: left;
+    color: var(--text-secondary);
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    border-bottom: 1px solid var(--border-subtle);
+    white-space: nowrap;
+}
+
+.live-table tbody td {
+    padding: 12px 16px;
+    border-bottom: 1px solid rgb(from var(--border-subtle) r g b / 0.5);
+    color: var(--text-primary);
+    font-size: 0.88rem;
+    white-space: nowrap;
+}
+
+.live-table tbody tr {
+    transition: background 0.15s ease;
+}
+
+.live-table tbody tr:hover {
+    background: rgb(from var(--accent-primary) r g b / 0.04);
+}
+
+.live-table tbody tr:last-child td {
+    border-bottom: none;
+}
+
+.live-table .monospace {
+    font-family: 'SF Mono', 'Cascadia Code', 'Consolas', monospace;
+    font-size: 0.82rem;
+}
+
+/* Tablo işlem butonu - tek tip */
+.btn-table-action {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 14px;
+    font-size: 0.82rem;
+    font-weight: 600;
+    font-family: inherit;
+    border-radius: 6px;
+    border: 1px solid var(--border-subtle);
+    background: var(--surface-3);
+    color: var(--accent-primary);
+    cursor: pointer;
+    transition: all 0.2s ease;
+    white-space: nowrap;
+}
+
+.btn-table-action:hover {
+    background: var(--accent-primary);
+    color: var(--text-inverse);
+    border-color: var(--accent-primary);
+    transform: translateY(-1px);
+    box-shadow: 0 2px 8px rgb(from var(--accent-primary) r g b / 0.3);
+}
+
+.btn-table-action i {
+    font-size: 0.85rem;
+}
+
+/* Auto scroll toggle */
+.toggle-label {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.82rem;
+    color: var(--text-secondary);
+    cursor: pointer;
+    white-space: nowrap;
+}
+
+.toggle-label input[type="checkbox"] {
+    accent-color: var(--accent-primary);
+}
+
+/* =========================================
+   SAĞ PANEL: TESPİT AKIŞI
+========================================= */
+.detection-feed {
+    width: 310px;
+    background-color: var(--surface-2);
+    border-left: 1px solid var(--border-subtle);
+    padding: 20px 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    overflow-y: auto;
+    flex-shrink: 0;
+    transition: width 0.3s ease;
+}
+
+.detection-feed.hidden {
+    display: none !important;
+}
+
+.feed-title {
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    padding-bottom: 12px;
+    border-bottom: 1px solid var(--border-subtle);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-shrink: 0;
+}
+
+.feed-title i {
+    color: var(--accent-primary);
+    font-size: 0.9rem;
+    width: 20px;
+    text-align: center;
+}
+
+/* Araç Kartı */
+.vehicle-card {
+    background-color: var(--surface-3);
+    border: 1px solid var(--border-subtle);
+    border-radius: 10px;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    transition: all 0.2s ease;
+    cursor: pointer;
+    position: relative;
+    flex-shrink: 0;
+}
+
+.vehicle-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.12);
+    border-color: var(--text-secondary);
+}
+
+.vehicle-img {
+    width: 100%;
+    height: 150px;
+    object-fit: cover;
+    border-bottom: 1px solid var(--border-subtle);
+    transition: transform 0.3s ease;
+}
+
+.vehicle-card:hover .vehicle-img {
+    transform: scale(1.03);
+}
+
+.vehicle-info {
+    padding: 14px 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    align-items: center;
+}
+
+.vehicle-info .plate-label {
+    font-size: 0.95rem;
+    font-weight: 700;
+}
+
+.vehicle-info > div:last-child {
+    font-size: 0.82rem;
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+/* Kart kenar vurguları */
+.vehicle-card.status-danger {
+    border-left: 3px solid var(--danger);
+}
+
+.vehicle-card.status-warning {
+    border-left: 3px solid var(--warning);
+}
+
+/* Rozet pozisyonu */
+.badge-absolute {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    z-index: 2;
+}
+
+/* =========================================
+   RESPONSIVE
+========================================= */
+@media (max-width: 1200px) {
+    .detection-feed {
+        width: 270px;
+    }
+
+    .camera-list {
+        width: 240px;
+    }
+}
+
+@media (max-width: 1000px) {
+    .detection-feed {
+        width: 250px;
+        padding: 14px 10px;
+    }
+
+    .camera-list {
+        width: 220px;
+    }
+
+    .table-card-header {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+}
+
+@media (max-width: 768px) {
+    main {
+        flex-direction: column;
+    }
+
+    .camera-list {
+        width: 100%;
+        height: auto;
+        max-height: 220px;
+        border-right: none;
+        border-bottom: 1px solid var(--border-subtle);
+    }
+
+    .detection-feed {
+        width: 100%;
+        max-height: 320px;
+        border-left: none;
+        border-top: 1px solid var(--border-subtle);
+        flex-direction: row;
+        flex-wrap: wrap;
+        gap: 10px;
+        padding: 12px;
+    }
+
+    .feed-title {
+        width: 100%;
+        border-bottom: 1px solid var(--border-subtle);
+        padding-bottom: 8px;
+    }
+
+    .vehicle-card {
+        flex: 1 1 160px;
+        min-width: 150px;
+    }
+
+    .vehicle-img {
+        height: 100px;
+    }
+
+    .toolbar {
+        padding: 8px 10px;
+        height: auto;
+        gap: 8px;
+    }
+
+    .table-card-controls {
+        flex-direction: column;
+        align-items: stretch;
+        width: 100%;
+    }
+
+    .table-card-controls .search-box {
+        width: 100%;
+    }
+
+    .table-card-controls .search-box input {
+        width: 100%;
+    }
+}

@@ -12,17 +12,12 @@ using PlakaTanima.Application.Features.Locations.Queries.GetLocationTree;
 
 namespace PlakaTanima.WebUI.Controllers
 {
-    public class SettingsController : Controller
+    public class CameraController : Controller
     {
         private readonly IMediator _mediator;
-        public SettingsController(IMediator mediator)
+        public CameraController (IMediator mediator)
         {
             _mediator = mediator;
-        }
-
-        public async Task<IActionResult> Index()
-        {
-            return View();
         }
 
         // ========== JSON API: Tree verisi ==========
@@ -60,53 +55,7 @@ namespace PlakaTanima.WebUI.Controllers
             return Json(detail);
         }
 
-        // ========== LOCATION CRUD (JSON) ==========
-        [HttpPost]
-        public async Task<IActionResult> AddLocationApi([FromBody] CreateLocationCommand command)
-        {
-            if (!ModelState.IsValid)
-                return Json(new { success = false, message = "Geçersiz veri." });
-            try
-            {
-                var id = await _mediator.Send(command);
-                return Json(new { success = true, id, name = command.Name, description = command.Description });
-            }
-            catch (Exception ex)
-            {
-                return Json(new { success = false, message = ex.Message });
-            }
-        }
-
-        [HttpPost]
-        public async Task<IActionResult> UpdateLocationApi([FromBody] UpdateLocationCommand command)
-        {
-            if (!ModelState.IsValid)
-                return Json(new { success = false, message = "Geçersiz veri." });
-            try
-            {
-                await _mediator.Send(command);
-                return Json(new { success = true });
-            }
-            catch (Exception ex)
-            {
-                return Json(new { success = false, message = ex.Message });
-            }
-        }
-
-        [HttpPost]
-        public async Task<IActionResult> DeleteLocationApi([FromBody] DeleteLocationCommand command)
-        {
-            try
-            {
-                await _mediator.Send(command);
-                return Json(new { success = true });
-            }
-            catch (Exception ex)
-            {
-                return Json(new { success = false, message = ex.Message });
-            }
-        }
-
+        
         // ========== CAMERA CRUD (JSON) ==========
         [HttpPost]
         public async Task<IActionResult> AddCameraApi([FromBody] CreateCameraCommand command)

@@ -1,0 +1,178 @@
+@{
+    ViewData["Title"] = "Plaka Yönetimi";
+}
+
+<main class="py-main">
+    <!-- ========== SOL SIDEBAR ========== -->
+    <aside class="py-sidebar">
+        <div class="sidebar-header"><i class="fas fa-database"></i> <span>PLAKA YÖNETİMİ</span></div>
+        <ul class="py-menu">
+            <li class="py-menu-item active" data-tab="all"><i class="fas fa-list"></i> <span>Tüm Plakalar</span></li>
+            <li class="py-menu-item" data-tab="vip"><i class="fas fa-star"></i> <span>VIP Araçlar</span></li>
+            <li class="py-menu-item" data-tab="blacklist"><i class="fas fa-ban"></i> <span>Kara Liste</span></li>
+            <li class="py-menu-item" data-tab="staff"><i class="fas fa-id-badge"></i> <span>Personel</span></li>
+        </ul>
+        <div class="sidebar-footer"><i class="fas fa-shield-alt"></i> <span>v2.0.1</span></div>
+    </aside>
+
+    <!-- ========== SAĞ İÇERİK ========== -->
+    <div class="py-content">
+        <!-- ÜST AKSİYON BAR -->
+        <div class="py-toolbar">
+            <div class="py-toolbar-left">
+                <div class="py-search-box">
+                    <i class="fas fa-search"></i>
+                    <input type="text" id="pySearchInput" placeholder="Plaka, marka, sahip ara...">
+                </div>
+                <div class="py-filter-group" id="pyFilterGroup">
+                    <button class="py-filter-btn active" data-filter="all">Hepsi</button>
+                    <button class="py-filter-btn" data-filter="vip">VIP</button>
+                    <button class="py-filter-btn" data-filter="blacklist">Kara Liste</button>
+                    <button class="py-filter-btn" data-filter="staff">Personel</button>
+                </div>
+            </div>
+            <div class="py-toolbar-right">
+                <button class="py-btn-primary" id="pyAddBtn"><i class="fas fa-plus"></i> Yeni Araç</button>
+            </div>
+        </div>
+
+        <!-- İSTATİSTİK KARTLARI -->
+        <div class="py-stats">
+            <div class="py-stat-card">
+                <div class="py-stat-icon" style="background: rgb(from var(--accent-primary) r g b / 0.12); color: var(--accent-primary);">
+                    <i class="fas fa-car"></i>
+                </div>
+                <div class="py-stat-info">
+                    <span class="py-stat-value" id="statTotal">0</span>
+                    <span class="py-stat-label">Toplam Araç</span>
+                </div>
+            </div>
+            <div class="py-stat-card">
+                <div class="py-stat-icon" style="background: rgb(from var(--warning) r g b / 0.12); color: var(--warning);">
+                    <i class="fas fa-star"></i>
+                </div>
+                <div class="py-stat-info">
+                    <span class="py-stat-value" id="statVip">0</span>
+                    <span class="py-stat-label">VIP</span>
+                </div>
+            </div>
+            <div class="py-stat-card">
+                <div class="py-stat-icon" style="background: rgb(from var(--danger) r g b / 0.12); color: var(--danger);">
+                    <i class="fas fa-ban"></i>
+                </div>
+                <div class="py-stat-info">
+                    <span class="py-stat-value" id="statBlacklist">0</span>
+                    <span class="py-stat-label">Kara Liste</span>
+                </div>
+            </div>
+            <div class="py-stat-card">
+                <div class="py-stat-icon" style="background: rgb(from var(--success) r g b / 0.12); color: var(--success);">
+                    <i class="fas fa-id-badge"></i>
+                </div>
+                <div class="py-stat-info">
+                    <span class="py-stat-value" id="statStaff">0</span>
+                    <span class="py-stat-label">Personel</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- TABLO -->
+        <div class="py-table-card">
+            <div class="py-table-wrapper">
+                <table class="py-table">
+                    <thead>
+                        <tr>
+                            <th>Plaka</th>
+                            <th>Marka / Model</th>
+                            <th>Sahip / Sürücü</th>
+                            <th>Kategori</th>
+                            <th>Eklenme Tarihi</th>
+                            <th>İşlem</th>
+                        </tr>
+                    </thead>
+                    <tbody id="pyTableBody">
+                        <!-- Dinamik doldurulacak -->
+                    </tbody>
+                </table>
+            </div>
+            <div class="py-table-empty" id="pyTableEmpty">
+                <i class="fas fa-inbox"></i>
+                <p>Henüz araç bulunamadı. Yeni araç eklemek için "Yeni Araç" butonunu kullanın.</p>
+            </div>
+        </div>
+    </div>
+</main>
+
+<!-- ========== ARAÇ EKLE/DÜZENLE MODAL ========== -->
+<div class="py-modal-overlay hidden" id="pyModalOverlay">
+    <div class="py-modal">
+        <div class="py-modal-header">
+            <span id="pyModalTitle">Yeni Araç Ekle</span>
+            <button class="py-modal-close" id="pyModalClose"><i class="fas fa-times"></i></button>
+        </div>
+        <div class="py-modal-body">
+            <input type="hidden" id="pyEditId">
+            <div class="py-form-row">
+                <div class="py-form-group">
+                    <label>Plaka</label>
+                    <input type="text" id="pyFormPlate" class="py-form-input" placeholder="Örn: 34 ABC 123" maxlength="12">
+                </div>
+                <div class="py-form-group">
+                    <label>Marka / Model</label>
+                    <input type="text" id="pyFormModel" class="py-form-input" placeholder="Örn: Mercedes E200">
+                </div>
+            </div>
+            <div class="py-form-row">
+                <div class="py-form-group">
+                    <label>Sahip / Sürücü</label>
+                    <input type="text" id="pyFormOwner" class="py-form-input" placeholder="Örn: Ahmet Yılmaz">
+                </div>
+                <div class="py-form-group">
+                    <label>Kategori</label>
+                    <select id="pyFormCategory" class="py-form-select">
+                        <option value="normal">Normal</option>
+                        <option value="vip">VIP</option>
+                        <option value="blacklist">Kara Liste</option>
+                        <option value="staff">Personel</option>
+                    </select>
+                </div>
+            </div>
+            <div class="py-form-group">
+                <label>Açıklama / Not</label>
+                <textarea id="pyFormNote" class="py-form-input py-form-textarea" rows="3" placeholder="İsteğe bağlı not..."></textarea>
+            </div>
+        </div>
+        <div class="py-modal-footer">
+            <button class="py-btn-cancel" id="pyModalCancel">İptal</button>
+            <button class="py-btn-save" id="pyModalSave"><i class="fas fa-save"></i> Kaydet</button>
+        </div>
+    </div>
+</div>
+
+<!-- ========== SİL ONAY MODAL ========== -->
+<div class="py-modal-overlay hidden" id="pyDeleteOverlay">
+    <div class="py-modal py-modal-sm">
+        <div class="py-modal-header" style="border-color: var(--danger);">
+            <span><i class="fas fa-exclamation-triangle" style="color: var(--danger);"></i> Aracı Sil</span>
+            <button class="py-modal-close" id="pyDeleteClose"><i class="fas fa-times"></i></button>
+        </div>
+        <div class="py-modal-body" style="text-align: center;">
+            <p style="color: var(--text-primary); font-size: 1.05rem; margin: 12px 0;">
+                <strong id="pyDeletePlate">34 ABC 123</strong> plakalı aracı silmek istediğinize emin misiniz?
+            </p>
+            <p style="color: var(--text-secondary); font-size: 0.9rem;">Bu işlem geri alınamaz.</p>
+        </div>
+        <div class="py-modal-footer">
+            <button class="py-btn-cancel" id="pyDeleteCancel">İptal</button>
+            <button class="py-btn-danger" id="pyDeleteConfirm"><i class="fas fa-trash"></i> Sil</button>
+        </div>
+    </div>
+</div>
+
+@section PageStyles {
+    <link rel="stylesheet" href="~/css/PlateManagement.css" />
+}
+
+@section PageScripts {
+    <script src="~/js/PlateManagement.js"></script>
+}

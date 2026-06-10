@@ -1,6 +1,7 @@
 const liveTableStreamContainer = document.getElementById("liveTableStreamContainer");
 const navLive = document.getElementById("navLiveStream");
 const navPlate = document.getElementById("navPlateStream");
+const navTable = document.getElementById("navTableStream");
 
 const liveContainer = document.getElementById("liveStreamContainer");
 const plateContainer = document.getElementById("plateStreamContainer");
@@ -34,11 +35,20 @@ function showViewButtons() {
 }
 navLive.addEventListener("click", function () {
     liveContainer.classList.remove("hidden");
+    liveContainer.style.display = "";
     plateContainer.classList.add("hidden");
+    liveTableStreamContainer.classList.add("hidden");
 
     navLive.classList.add("active-link");
     navPlate.classList.remove("active-link");
+    navTable.classList.remove("active-link");
     showViewButtons();
+
+    // Eğer hiç grid render edilmemişse varsayılan 1'li gridi göster
+    if (liveContainer.children.length === 0) {
+        renderGrid(1);
+        setActiveButton("btn1View");
+    }
 });
 function closeTableIfOpen() {
     liveTableStreamContainer.classList.add("hidden");
@@ -53,6 +63,21 @@ navPlate.addEventListener("click", function () {
 
     navPlate.classList.add("active-link");
     navLive.classList.remove("active-link");
+    navTable.classList.remove("active-link");
+
+    hideViewButtons();
+});
+
+// Liste Akışı tıklandığında
+navTable.addEventListener("click", function () {
+    liveContainer.classList.add("hidden");
+    plateContainer.classList.add("hidden");
+
+    liveTableStreamContainer.classList.remove("hidden");
+
+    navTable.classList.add("active-link");
+    navLive.classList.remove("active-link");
+    navPlate.classList.remove("active-link");
 
     hideViewButtons();
 });
@@ -83,7 +108,9 @@ setRightPanel(true);
 /* İzleme ekranını 1, 4, 12'li grid çevirme */
 let currentView = 1;
 function showGrid() {
+    liveContainer.style.display = "";
     liveTableStreamContainer.classList.add("hidden");
+    plateContainer.classList.add("hidden");
     liveContainer.classList.remove("hidden");
 }
 
@@ -95,14 +122,11 @@ function showTable() {
 function renderGrid(count) {
     showGrid();
 
-    let className = "";
-
-    if (count === 1) className = "grid-1";
-    if (count === 4) className = "grid-4";
-    if (count === 12) className = "grid-12";
+    // Container class'larını temizle ve yeni grid class'ını ekle
+    liveContainer.classList.remove("grid-1", "grid-4", "grid-12");
+    liveContainer.classList.add(`grid-${count}`);
 
     liveContainer.innerHTML = "";
-    liveContainer.className = `live-stream-container ${className}`;
 
     for (let i = 1; i <= count; i++) {
 
@@ -136,7 +160,15 @@ function renderGrid(count) {
 
 /*LiveTableStream'i açıp kapatma*/
 function setTableView() {
-    showTable();
+    liveContainer.classList.add("hidden");
+    plateContainer.classList.add("hidden");
+    liveTableStreamContainer.classList.remove("hidden");
+
+    navTable.classList.add("active-link");
+    navLive.classList.remove("active-link");
+    navPlate.classList.remove("active-link");
+
+    hideViewButtons();
 }
 /*Butonları aktif pasif yapma*/
 
@@ -158,11 +190,6 @@ document.getElementById("btn4View").addEventListener("click", () => {
 document.getElementById("btn12View").addEventListener("click", () => {
     renderGrid(12);
     setActiveButton("btn12View");
-});
-
-document.getElementById("btnTableView").addEventListener("click", () => {
-    setTableView();
-    setActiveButton("btnTableView");
 });
 
 /*==============================================================================================*/
@@ -235,3 +262,35 @@ function attachCameraToSlot(slot, cameraId) {
     // 🔥 STREAM BAĞLAMA (ENGINE)
     connectHlsStream(video, cameraId);
 }
+
+/*==============================================================================================*/
+/* TESPİT KARTLARINA TIKLAYINCA arac_detay.html'A YÖNLENDİR */
+document.querySelectorAll(".vehicle-card").forEach(card => {
+    card.addEventListener("click", function () {
+        // Karttaki plakayı bul
+        const plateEl = this.querySelector(".plate-label");
+        if (plateEl) {
+            const plate = plateEl.textContent.trim();
+            window.open(`arac_detay.html?plate=${encodeURIComponent(plate)}`, "_blank");
+        }
+    });
+});
+
+/*==============================================================================================*/
+/* LİSTE AKIŞI TABLOSUNDAKİ İNCELE BUTONLARI */
+document.querySelectorAll(".btn-table-action").forEach(btn => {
+    btn.addEventListener("click", function (e) {
+        e.stopPropagation();
+        const plate = this.dataset.plate;
+        if (plate) {
+            window.open(`arac_detay.html?plate=${encodeURIComponent(plate)}`, "_blank");
+        }
+    });
+});
+
+/*==============================================================================================*/
+/* BAŞLANGIÇ: Sayfa yüklendiğinde 1'li grid'i göster */
+document.addEventListener("DOMContentLoaded", function () {
+    renderGrid(1);
+    setActiveButton("btn1View");
+});

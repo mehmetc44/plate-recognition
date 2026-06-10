@@ -18,8 +18,7 @@ namespace PlakaTanima.WebUI.ViewComponents.Settings
 
         public async Task<IViewComponentResult> InvokeAsync()
         {
-            var locations = await _mediator.Send(new GetLocationTreeQuery());
-            return View(locations);
+            return View();
         }
     }
 }

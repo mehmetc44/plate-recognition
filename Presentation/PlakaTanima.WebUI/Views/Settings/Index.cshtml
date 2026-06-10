@@ -1,22 +1,156 @@
+@{
+    ViewData["Title"] = "Ayarlar";
+}
+
 <main class="settings-main">
-    @await Html.PartialAsync("_SideBarPartial")
+    <!-- Sidebar -->
+    <aside class="settings-sidebar">
+        <div class="sidebar-header"><i class="fas fa-cogs"></i> <span>YÖNETİM PANELİ</span></div>
+        <ul class="settings-menu">
+            <li class="menu-item active" data-tab="general"><i class="fas fa-globe"></i> <span>Sistem Ayarları</span></li>
+            <li class="menu-item" data-tab="appearance"><i class="fas fa-palette"></i> <span>Görünüm</span></li>
+            <li class="menu-item" data-tab="profile"><i class="fas fa-user-cog"></i> <span>Kişisel Ayarlar</span></li>
+            <li class="menu-item" data-tab="camera"><i class="fas fa-camera-retro"></i> <span>Kamera Ayarları</span></li>
+            <li class="menu-item" data-tab="recording"><i class="fas fa-hdd"></i> <span>Kayıt</span></li>
+        </ul>
+        <div class="sidebar-footer"><i class="fas fa-shield-alt"></i> <span>v2.0.1</span></div>
+    </aside>
+
+    <!-- Sağ içerik alanı -->
     <div class="settings-content-area">
-        <partial name="_SystemSettingsPartial" />
-        <partial name="_ViewSettingsPartial" />
-        @await Component.InvokeAsync("CameraSettings")
-        <partial name="_RecordSettingsPartial" />
+        <!-- SİSTEM AYARLARI -->
+        <section class="settings-panel active" id="panel-general">
+            <div class="settings-group">
+                <h3 class="settings-group-title"><i class="fas fa-globe"></i> Sistem Ayarları</h3>
+                <div class="settings-row"><div class="settings-label"><span>Dil</span><small>Sistem arayüz dili</small></div><select id="sysLang" class="settings-select"><option value="tr" selected>Türkçe</option><option value="en">English</option><option value="de">Deutsch</option></select></div>
+                <div class="settings-row"><div class="settings-label"><span>Zaman Dilimi</span><small>Tarih ve saat gösterimi</small></div><select id="sysTimezone" class="settings-select"><option value="Europe/Istanbul" selected>Europe/Istanbul (GMT+3)</option><option value="Europe/London">Europe/London (GMT+0)</option><option value="America/New_York">America/New_York (GMT-5)</option></select></div>
+                <div class="settings-row"><div class="settings-label"><span>Veri Saklama Süresi</span><small>Plaka kayıtları</small></div><select id="sysRetention" class="settings-select"><option value="30">30 Gün</option><option value="90" selected>90 Gün</option><option value="180">180 Gün</option><option value="365">1 Yıl</option></select></div>
+            </div>
+            <div class="settings-group">
+                <h3 class="settings-group-title"><i class="fas fa-bell"></i> Bildirimler</h3>
+                <div class="settings-row"><div class="settings-label"><span>Kara Liste Uyarıları</span><small>Kara listedeki araç tespit edildiğinde bildirim gönder</small></div><label class="toggle-switch"><input id="notifyBlacklist" type="checkbox" checked><span class="toggle-slider"></span></label></div>
+                <div class="settings-row"><div class="settings-label"><span>VIP Araç Bildirimi</span><small>Özel araçlar geçiş yaptığında bildir</small></div><label class="toggle-switch"><input id="notifyVip" type="checkbox"><span class="toggle-slider"></span></label></div>
+                <div class="settings-row"><div class="settings-label"><span>Sesli Uyarı</span><small>Kritik durumlarda sesli uyarı çal</small></div><label class="toggle-switch"><input id="notifySound" type="checkbox" checked><span class="toggle-slider"></span></label></div>
+            </div>
+        </section>
+
+        <!-- GÖRÜNÜM AYARLARI -->
+        <section class="settings-panel" id="panel-appearance">
+            <div class="settings-group">
+                <h3 class="settings-group-title"><i class="fas fa-palette"></i> Tema Seçimi</h3>
+                <div class="theme-grid" id="themeGrid">
+                    <button class="theme-card active" data-theme="light"><div class="theme-preview" data-preview="light"><span class="prev-surface"></span><span class="prev-text"></span><span class="prev-accent"></span><span class="prev-border"></span></div><span class="theme-name">Açık</span></button>
+                    <button class="theme-card" data-theme="ocean"><div class="theme-preview" data-preview="ocean"><span class="prev-surface"></span><span class="prev-text"></span><span class="prev-accent"></span><span class="prev-border"></span></div><span class="theme-name">Okyanus</span></button>
+                    <button class="theme-card" data-theme="forest"><div class="theme-preview" data-preview="forest"><span class="prev-surface"></span><span class="prev-text"></span><span class="prev-accent"></span><span class="prev-border"></span></div><span class="theme-name">Orman</span></button>
+                    <button class="theme-card" data-theme="royal"><div class="theme-preview" data-preview="royal"><span class="prev-surface"></span><span class="prev-text"></span><span class="prev-accent"></span><span class="prev-border"></span></div><span class="theme-name">Kraliyet</span></button>
+                    <button class="theme-card" data-theme="sunset"><div class="theme-preview" data-preview="sunset"><span class="prev-surface"></span><span class="prev-text"></span><span class="prev-accent"></span><span class="prev-border"></span></div><span class="theme-name">Gün Batımı</span></button>
+                    <button class="theme-card" data-theme="slate"><div class="theme-preview" data-preview="slate"><span class="prev-surface"></span><span class="prev-text"></span><span class="prev-accent"></span><span class="prev-border"></span></div><span class="theme-name">Kurumsal</span></button>
+                </div>
+                <div class="settings-row" style="margin-top:16px"><div class="settings-label"><span>Koyu Varyant</span><small>Seçili temanın koyu sürümünü kullan</small></div><label class="toggle-switch"><input id="darkModeToggle" type="checkbox"><span class="toggle-slider"></span></label></div>
+            </div>
+            <div class="settings-group">
+                <h3 class="settings-group-title"><i class="fas fa-tint"></i> Vurgu Rengi</h3>
+                <div class="settings-row"><div class="settings-label"><span>Renk Seçimi</span><small>Arayüz vurgu rengini seçin</small></div>
+                <div class="color-picker-group" id="colorPickerGroup">
+                    <button class="color-dot active" data-accent="blue" style="background:#2196F3"></button>
+                    <button class="color-dot" data-accent="red" style="background:#E53935"></button>
+                    <button class="color-dot" data-accent="green" style="background:#43A047"></button>
+                    <button class="color-dot" data-accent="orange" style="background:#FB8C00"></button>
+                    <button class="color-dot" data-accent="purple" style="background:#8E24AA"></button>
+                    <button class="color-dot" data-accent="cyan" style="background:#00ACC1"></button>
+                    <button class="color-dot" data-accent="pink" style="background:#D81B60"></button>
+                </div></div>
+            </div>
+            <div class="settings-group">
+                <h3 class="settings-group-title"><i class="fas fa-text-height"></i> Görüntüleme</h3>
+                <div class="settings-row"><div class="settings-label"><span>Tablo Yoğunluğu</span><small>Veri tablolarının satır yüksekliği</small></div>
+                <div class="density-group" id="densityGroup"><button class="density-btn" data-density="compact">Sıkışık</button><button class="density-btn active" data-density="normal">Normal</button><button class="density-btn" data-density="comfortable">Rahat</button></div></div>
+                <div class="settings-row"><div class="settings-label"><span>Sidebar Konumu</span><small>Kamera listesinin konumu</small></div><select id="sidebarPosition" class="settings-select"><option value="left" selected>Sol</option><option value="right">Sağ</option></select></div>
+                <div class="settings-row"><div class="settings-label"><span>Animasyonlar</span><small>Arayüz geçiş animasyonlarını etkinleştir</small></div><label class="toggle-switch"><input id="animationsEnabled" type="checkbox" checked><span class="toggle-slider"></span></label></div>
+            </div>
+        </section>
+
+        <!-- KİŞİSEL AYARLAR -->
+        <section class="settings-panel" id="panel-profile">
+            <div class="settings-group">
+                <h3 class="settings-group-title"><i class="fas fa-user-circle"></i> Profil Bilgileri</h3>
+                <div class="settings-row"><div class="settings-label"><span>Kullanıcı Adı</span><small>Görünen adınız</small></div><input type="text" id="profileName" class="settings-text-input" value="Admin" placeholder="Kullanıcı adınız"></div>
+                <div class="settings-row"><div class="settings-label"><span>E-posta Adresi</span><small>Giriş için kullanılır</small></div><input type="email" id="profileEmail" class="settings-text-input" value="admin@platar.com" placeholder="E-posta adresiniz"></div>
+                <div class="settings-row"><div class="settings-label"><span>Rol / Yetki</span><small>Sistemdeki yetki seviyeniz</small></div><input type="text" class="settings-text-input" value="Yönetici" disabled style="opacity:0.6; cursor:not-allowed;"></div>
+            </div>
+            <div class="settings-group">
+                <h3 class="settings-group-title"><i class="fas fa-lock"></i> Şifre Değiştir</h3>
+                <div class="settings-row"><div class="settings-label"><span>Mevcut Şifre</span><small>Eski şifrenizi girin</small></div><input type="password" id="profileCurrentPw" class="settings-text-input" placeholder="••••••••"></div>
+                <div class="settings-row"><div class="settings-label"><span>Yeni Şifre</span><small>En az 6 karakter</small></div><input type="password" id="profileNewPw" class="settings-text-input" placeholder="••••••••"></div>
+                <div class="settings-row"><div class="settings-label"><span>Yeni Şifre (Tekrar)</span><small>Yeni şifrenizi doğrulayın</small></div><input type="password" id="profileConfirmPw" class="settings-text-input" placeholder="••••••••"></div>
+            </div>
+            <div class="settings-group">
+                <h3 class="settings-group-title"><i class="fas fa-bell"></i> Bildirim Tercihleri</h3>
+                <div class="settings-row"><div class="settings-label"><span>E-posta Bildirimleri</span><small>Önemli olaylar için e-posta al</small></div><label class="toggle-switch"><input id="profileEmailNotify" type="checkbox" checked><span class="toggle-slider"></span></label></div>
+                <div class="settings-row"><div class="settings-label"><span>Tarayıcı Bildirimleri</span><small>Masaüstü bildirimlerini aç</small></div><label class="toggle-switch"><input id="profileBrowserNotify" type="checkbox" checked><span class="toggle-slider"></span></label></div>
+            </div>
+        </section>
+
+        <!-- KAMERA AYARLARI -->
+        <section class="settings-panel" id="panel-camera">
+            
+        </section>
+
+        <!-- KAYIT AYARLARI -->
+        <section class="settings-panel" id="panel-recording">
+            <div class="settings-group">
+                <h3 class="settings-group-title"><i class="fas fa-hdd"></i> Kayıt Yönetimi</h3>
+                <div class="settings-row"><div class="settings-label"><span>Sürekli Kayıt</span><small>7/24 video kaydı yap</small></div><label class="toggle-switch"><input id="recContinuous" type="checkbox"><span class="toggle-slider"></span></label></div>
+                <div class="settings-row"><div class="settings-label"><span>Olay Bazlı Kayıt</span><small>Sadece plaka tespit edildiğinde kaydet</small></div><label class="toggle-switch"><input id="recEvent" type="checkbox" checked><span class="toggle-slider"></span></label></div>
+                <div class="settings-row"><div class="settings-label"><span>Kayıt Saklama Süresi</span><small>Kaç gün boyunca kayıt tutulsun</small></div><select id="recRetention" class="settings-select"><option>7 Gün</option><option selected>30 Gün</option><option>90 Gün</option></select></div>
+            </div>
+            <div class="settings-group">
+                <h3 class="settings-group-title"><i class="fas fa-chart-line"></i> Kayıt Kalitesi</h3>
+                <div class="settings-row"><div class="settings-label"><span>Video Kalitesi</span><small>Kayıt edilen videoların kalitesi</small></div><select id="recQuality" class="settings-select"><option>Düşük (720p)</option><option selected>Orta (1080p)</option><option>Yüksek (4K)</option></select></div>
+            </div>
+        </section>
+
+        <!-- Alt aksiyon butonları -->
         <div class="settings-actions">
-            <button class="btn-reset"><i class="fas fa-undo"></i> Varsayılana Dön</button>
-            <button class="btn-save"><i class="fas fa-save"></i> Değişiklikleri Kaydet</button>
+            <button class="btn-reset" id="resetSettingsBtn"><i class="fas fa-undo"></i> Varsayılana Dön</button>
+            <button class="btn-save" id="saveSettingsBtn"><i class="fas fa-save"></i> Değişiklikleri Kaydet</button>
         </div>
     </div>
 </main>
+
+<!-- Modals (kamera & lokasyon ekleme/düzenleme) -->
+<div id="locationModal" class="modal" style="display:none;">
+    <div class="modal-content">
+        <div class="modal-header"><span>Lokasyon Ekle/Düzenle</span><span class="close-modal">&times;</span></div>
+        <div class="modal-body">
+            <input type="hidden" id="locationId" />
+            <div class="form-group"><label>Lokasyon Adı</label><input type="text" id="locationNameInput" class="modal-input" placeholder="Örn: Ana Giriş" /></div>
+            <div class="form-group"><label>Açıklama</label><textarea id="locationDescInput" class="modal-input" rows="3" placeholder="Lokasyon açıklaması"></textarea></div>
+        </div>
+        <div class="modal-footer"><button id="saveLocationBtn" class="btn-save-modal">Kaydet</button><button class="btn-cancel-modal">İptal</button></div>
+    </div>
+</div>
+
+<div id="cameraModal" class="modal" style="display:none;">
+    <div class="modal-content">
+        <div class="modal-header"><span>Kamera Ekle/Düzenle</span><span class="close-modal-cam">&times;</span></div>
+        <div class="modal-body">
+            <input type="hidden" id="cameraId" />
+            <input type="hidden" id="cameraLocationId" />
+            <div class="form-group"><label>Kamera Adı</label><input type="text" id="cameraNameInput" class="modal-input" /></div>
+            <div class="form-group"><label>IP Adresi</label><input type="text" id="cameraIpInput" class="modal-input" placeholder="192.168.1.100" /></div>
+            <div class="form-group"><label>Port</label><input type="number" id="cameraPortInput" class="modal-input" value="80" /></div>
+            <div class="form-group"><label>Kullanıcı Adı</label><input type="text" id="cameraUsernameInput" class="modal-input" /></div>
+            <div class="form-group"><label>Şifre</label><input type="password" id="cameraPasswordInput" class="modal-input" /></div>
+        </div>
+        <div class="modal-footer"><button id="saveCameraBtn" class="btn-save-modal">Kaydet</button><button class="btn-cancel-modal-cam">İptal</button></div>
+    </div>
+</div>
 
 @section PageStyles {
     <link rel="stylesheet" href="~/css/Settings.css" />
 }
 @section PageScripts {
-     <script src="~/js/ApiService.js"></script>
+    <script src="~/js/ApiService.js"></script>
     <script src="~/js/Settings.js"></script>
-   
 }

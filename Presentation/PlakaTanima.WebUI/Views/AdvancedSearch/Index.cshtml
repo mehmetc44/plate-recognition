@@ -1,0 +1,274 @@
+@{
+    ViewData["Title"] = "Gelişmiş Sorgu";
+}
+<!-- ========== ÜST BAR: Arama + Butonlar ========== -->
+<div class="query-topbar">
+    <div class="search-box">
+        <i class="fas fa-search"></i>
+        <input type="text" placeholder="Plaka, kamera, not ara...">
+    </div>
+    <div class="topbar-actions">
+        <button class="btn-filter"><i class="fas fa-filter"></i> Filtrele</button>
+        <button class="btn-clear"><i class="fas fa-eraser"></i> Temizle</button>
+    </div>
+</div>
+
+<!-- ========== İÇERİK: Filtre + Tablo + Detay ========== -->
+<div class="query-content">
+
+    <!-- ========== SOL: FİLTRE PANELİ ========== -->
+    <aside class="filter-panel">
+        <div class="filter-panel-header">
+            <h4><i class="fas fa-filter"></i> Filtre</h4>
+            <span class="result-count" id="resultCount">1.284 sonuç</span>
+        </div>
+
+        <div id="activeFilters" class="filter-chips"></div>
+
+        <details open class="filter-group">
+            <summary>Araç Türü</summary>
+            <div class="filter-content">
+                <label><input type="checkbox" onchange="toggleFilter('type','vip')"> VIP</label>
+                <label><input type="checkbox" onchange="toggleFilter('type','normal')"> Normal</label>
+                <label><input type="checkbox" onchange="toggleFilter('type','blacklist')"> Kara Liste</label>
+            </div>
+        </details>
+
+        <details class="filter-group">
+            <summary>Zaman</summary>
+            <div class="filter-content">
+                <label><input type="radio" name="time" onchange="setQuickTime('today')"> Bugün</label>
+                <label><input type="radio" name="time" onchange="setQuickTime('7d')"> Son 7 Gün</label>
+                <label><input type="radio" name="time" onchange="setQuickTime('30d')"> Son 30 Gün</label>
+
+                <div class="date-range">
+                    <input type="date" id="startDate" placeholder="Başlangıç">
+                    <input type="date" id="endDate" placeholder="Bitiş">
+                    <button class="btn-date-apply" onclick="applyDateRange()">Uygula</button>
+                </div>
+            </div>
+        </details>
+
+        <details class="filter-group">
+            <summary>Yön</summary>
+            <div class="filter-content">
+                <label><input type="checkbox" onchange="toggleFilter('direction','entry')"> Giriş</label>
+                <label><input type="checkbox" onchange="toggleFilter('direction','exit')"> Çıkış</label>
+            </div>
+        </details>
+
+        <button class="btn-reset-filters" onclick="resetFilters()">
+            <i class="fas fa-undo"></i> Filtreleri Sıfırla
+        </button>
+    </aside>
+
+    <!-- ========== ORTA: TABLO ========== -->
+    <div class="table-section">
+        <div class="table-card">
+            <div class="table-card-body">
+                <table class="query-table">
+                    <thead>
+                        <tr>
+                            <th>Plaka</th>
+                            <th>Geçiş Noktası</th>
+                            <th>Yön</th>
+                            <th>Tarih & Saat</th>
+                            <th>Durum</th>
+                            <th>İşlem</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr onclick="openDetail('34 ABC 123', 'Kamera 1', 'Giriş', '27.04.2026 14:10', 'Normal')">
+                            <td><span class="plate-label">34 ABC 123</span></td>
+                            <td>Kamera 1</td>
+                            <td class="text-success"><i class="fas fa-arrow-right"></i> Giriş</td>
+                            <td class="monospace">27.04.2026 14:10</td>
+                            <td><span class="badge normal">Normal</span></td>
+                            <td>
+                                <button class="btn-icon text-info" title="İncele" onclick="event.stopPropagation(); openDetail('34 ABC 123', 'Kamera 1', 'Giriş', '27.04.2026 14:10', 'Normal')">
+                                    <i class="fas fa-eye"></i>
+                                </button>
+                            </td>
+                        </tr>
+                        <tr onclick="openDetail('06 XYZ 987', 'Kamera 2', 'Çıkış', '27.04.2026 14:05', 'Kara Liste')">
+                            <td><span class="plate-label">06 XYZ 987</span></td>
+                            <td>Kamera 2</td>
+                            <td class="text-danger"><i class="fas fa-arrow-left"></i> Çıkış</td>
+                            <td class="monospace">27.04.2026 14:05</td>
+                            <td><span class="badge blacklist">Kara Liste</span></td>
+                            <td>
+                                <button class="btn-icon text-danger" title="İncele" onclick="event.stopPropagation(); openDetail('06 XYZ 987', 'Kamera 2', 'Çıkış', '27.04.2026 14:05', 'Kara Liste')">
+                                    <i class="fas fa-exclamation-circle"></i>
+                                </button>
+                            </td>
+                        </tr>
+                        <tr onclick="openDetail('21 AAA 001', 'Ana Giriş', 'Giriş', '27.04.2026 13:58', 'VIP')">
+                            <td><span class="plate-label">21 AAA 001</span></td>
+                            <td>Ana Giriş</td>
+                            <td class="text-success"><i class="fas fa-arrow-right"></i> Giriş</td>
+                            <td class="monospace">27.04.2026 13:58</td>
+                            <td><span class="badge vip">VIP</span></td>
+                            <td>
+                                <button class="btn-icon text-info" title="İncele" onclick="event.stopPropagation(); openDetail('21 AAA 001', 'Ana Giriş', 'Giriş', '27.04.2026 13:58', 'VIP')">
+                                    <i class="fas fa-eye"></i>
+                                </button>
+                            </td>
+                        </tr>
+                        <tr onclick="openDetail('53 KRM 112', 'Otopark Çıkış', 'Giriş', '27.04.2026 13:42', 'Kara Liste')">
+                            <td><span class="plate-label">53 KRM 112</span></td>
+                            <td>Otopark Çıkış</td>
+                            <td class="text-success"><i class="fas fa-arrow-right"></i> Giriş</td>
+                            <td class="monospace">27.04.2026 13:42</td>
+                            <td><span class="badge blacklist">Kara Liste</span></td>
+                            <td>
+                                <button class="btn-icon text-danger" title="İncele" onclick="event.stopPropagation(); openDetail('53 KRM 112', 'Otopark Çıkış', 'Giriş', '27.04.2026 13:42', 'Kara Liste')">
+                                    <i class="fas fa-exclamation-circle"></i>
+                                </button>
+                            </td>
+                        </tr>
+                        <tr onclick="openDetail('16 NMG 772', 'Arka Kapı', 'Çıkış', '27.04.2026 13:15', 'Normal')">
+                            <td><span class="plate-label">16 NMG 772</span></td>
+                            <td>Arka Kapı</td>
+                            <td class="text-danger"><i class="fas fa-arrow-left"></i> Çıkış</td>
+                            <td class="monospace">27.04.2026 13:15</td>
+                            <td><span class="badge normal">Normal</span></td>
+                            <td>
+                                <button class="btn-icon" title="İncele" onclick="event.stopPropagation(); openDetail('16 NMG 772', 'Arka Kapı', 'Çıkış', '27.04.2026 13:15', 'Normal')">
+                                    <i class="fas fa-eye"></i>
+                                </button>
+                            </td>
+                        </tr>
+                        <tr onclick="openDetail('35 VMS 404', 'Ana Giriş', 'Giriş', '27.04.2026 12:50', 'VIP')">
+                            <td><span class="plate-label">35 VMS 404</span></td>
+                            <td>Ana Giriş</td>
+                            <td class="text-success"><i class="fas fa-arrow-right"></i> Giriş</td>
+                            <td class="monospace">27.04.2026 12:50</td>
+                            <td><span class="badge vip">VIP</span></td>
+                            <td>
+                                <button class="btn-icon text-info" title="İncele" onclick="event.stopPropagation(); openDetail('35 VMS 404', 'Ana Giriş', 'Giriş', '27.04.2026 12:50', 'VIP')">
+                                    <i class="fas fa-eye"></i>
+                                </button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- ========== SAĞ: DETAY PANELİ ========== -->
+    <aside class="detail-panel hidden" id="detailPanel">
+        <div class="detail-panel-header">
+            <h3><i class="fas fa-id-card"></i> Plaka Detayı</h3>
+            <button class="detail-close-btn" onclick="closeDetail()" title="Kapat">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+
+        <div class="detail-info-grid">
+            <div class="detail-info-item">
+                <span class="detail-info-label">Plaka</span>
+                <span class="detail-info-value" id="detailPlate">34 ABC 123</span>
+            </div>
+            <div class="detail-info-item">
+                <span class="detail-info-label">Kamera</span>
+                <span class="detail-info-value" id="detailCamera">Kamera 1</span>
+            </div>
+            <div class="detail-info-item">
+                <span class="detail-info-label">Yön</span>
+                <span class="detail-info-value" id="detailDirection">Giriş</span>
+            </div>
+            <div class="detail-info-item">
+                <span class="detail-info-label">Tarih</span>
+                <span class="detail-info-value monospace" id="detailDate">27.04.2026 14:10</span>
+            </div>
+            <div class="detail-info-item full-width">
+                <span class="detail-info-label">Durum</span>
+                <span class="detail-info-value" id="detailStatus">Normal</span>
+            </div>
+        </div>
+
+        <div class="detail-divider"></div>
+
+        <div class="detail-history-title">
+            <i class="fas fa-history"></i> Geçiş Geçmişi
+        </div>
+
+        <div class="detail-history-list">
+            <div class="detail-history-item">
+                <span><i class="fas fa-circle" style="font-size: 0.45rem; color: var(--success); margin-right: 8px;"></i> Kamera 1</span>
+                <span class="time">12:01</span>
+            </div>
+            <div class="detail-history-item">
+                <span><i class="fas fa-circle" style="font-size: 0.45rem; color: var(--success); margin-right: 8px;"></i> Kamera 2</span>
+                <span class="time">12:05</span>
+            </div>
+            <div class="detail-history-item">
+                <span><i class="fas fa-circle" style="font-size: 0.45rem; color: var(--text-secondary); margin-right: 8px;"></i> Kamera 3</span>
+                <span class="time">12:09</span>
+            </div>
+        </div>
+    </aside>
+</div>
+
+@section PageStyles {
+    <link rel="stylesheet" href="~/css/gelismisSorgu.css" />
+}
+
+@section PageScripts {
+    <script>
+        function openDetail(plate, camera, direction, date, status) {
+            const panel = document.getElementById("detailPanel");
+            panel.classList.remove("hidden");
+            document.getElementById("detailPlate").textContent = plate;
+            document.getElementById("detailCamera").textContent = camera;
+            document.getElementById("detailDirection").textContent = direction;
+            document.getElementById("detailDate").textContent = date;
+            document.getElementById("detailStatus").textContent = status;
+        }
+        function closeDetail() {
+            document.getElementById("detailPanel").classList.add("hidden");
+        }
+        let filters = { type: [], direction: null, time: null, range: { start: null, end: null } };
+        function toggleFilter(category, value) {
+            if (category === "type") {
+                if (filters.type.includes(value)) filters.type = filters.type.filter(x => x !== value);
+                else filters.type.push(value);
+            }
+            if (category === "direction") filters.direction = filters.direction === value ? null : value;
+            renderChips(); updateResults();
+        }
+        function setQuickTime(type) { filters.time = type; renderChips(); updateResults(); }
+        function applyDateRange() {
+            filters.range.start = document.getElementById("startDate").value;
+            filters.range.end = document.getElementById("endDate").value;
+            renderChips(); updateResults();
+        }
+        function renderChips() {
+            const box = document.getElementById("activeFilters");
+            box.innerHTML = "";
+            filters.type.forEach(t => addChip(box, "Tür: " + t, () => toggleFilter("type", t)));
+            if (filters.direction) addChip(box, "Yön: " + filters.direction, () => toggleFilter("direction", filters.direction));
+            if (filters.time) addChip(box, "Zaman: " + filters.time, () => { filters.time = null; renderChips(); updateResults(); });
+            if (filters.range.start) addChip(box, "Tarih Aralığı", () => { filters.range = { start: null, end: null }; renderChips(); updateResults(); });
+        }
+        function addChip(parent, text, removeFn) {
+            const chip = document.createElement("div");
+            chip.className = "filter-chip";
+            chip.innerHTML = text + ' <i class="fas fa-times" style="margin-left:4px;cursor:pointer;"></i>';
+            chip.querySelector("i").onclick = (e) => { e.stopPropagation(); removeFn(); };
+            parent.appendChild(chip);
+        }
+        function resetFilters() {
+            filters = { type: [], direction: null, time: null, range: { start: null, end: null } };
+            document.querySelectorAll(".filter-content input[type=checkbox]").forEach(cb => cb.checked = false);
+            document.querySelectorAll(".filter-content input[type=radio]").forEach(rb => rb.checked = false);
+            document.getElementById("startDate").value = "";
+            document.getElementById("endDate").value = "";
+            renderChips(); updateResults();
+        }
+        function updateResults() {
+            document.getElementById("resultCount").textContent = "Filtre uygulandı";
+        }
+    </script>
+}
