@@ -1,0 +1,13 @@
+{
+    "ANPR": {
+        "licensePlate": "34ABC123",
+        "confidenceLevel": "98",
+        "movingDirection": "forward",
+        "country": "Turkey",
+        "VehicleInfo": {
+            "vehicleType": "Sedan",
+            "color": "White",
+            "brand": "Toyota"
+        }
+    }
+}

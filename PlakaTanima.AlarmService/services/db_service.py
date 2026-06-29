@@ -15,30 +15,73 @@ def get_connection():
 def save_event_to_db(event, saved_image_paths):
     """
     Inserts a new ANPR Event record directly into PostgreSQL.
+    Supports robust parsing for different XML tag formats (case sensitivity, casing variation).
     """
     anpr = event.xml_data.get("ANPR", {})
-    vehicle_info = anpr.get("VehicleInfo", {})
+    vehicle_info = anpr.get("vehicleInfo") or anpr.get("VehicleInfo") or {}
 
-    # Extract details
-    confidence = float(anpr.get("confidenceLevel", 95)) / 100
-    vehicle_type = vehicle_info.get("vehicleType", "Unknown")
-    vehicle_color = vehicle_info.get("color", "Unknown")
-    vehicle_brand = vehicle_info.get("brand", "Unknown")
-    direction = anpr.get("movingDirection", "Unknown")
-    country = anpr.get("country", "Turkey")
+    # Extract details safely
+    confidence_str = anpr.get("confidenceLevel") or anpr.get("ConfidenceLevel", "95")
+    confidence_str = str(confidence_str).replace(",", ".")
+    try:
+        confidence = float(confidence_str) / 100
+    except ValueError:
+        confidence = 0.95
+
+    vehicle_type = (
+        anpr.get("vehicleType") or
+        anpr.get("VehicleType") or
+        vehicle_info.get("vehicleType") or
+        vehicle_info.get("VehicleType") or
+        "Unknown"
+    )
+
+    vehicle_color = (
+        vehicle_info.get("color") or
+        vehicle_info.get("Color") or
+        "Unknown"
+    )
+
+    vehicle_brand = (
+        vehicle_info.get("brand") or
+        vehicle_info.get("Brand") or
+        vehicle_info.get("vehicleLogoRecog") or
+        "Unknown"
+    )
+
+    direction = (
+        anpr.get("direction") or
+        anpr.get("Direction") or
+        anpr.get("movingDirection") or
+        "Unknown"
+    )
+
+    country = (
+        anpr.get("country") or
+        anpr.get("Country") or
+        "Turkey"
+    )
 
     # Image paths
     plate_path = saved_image_paths.get("plate")
     vehicle_path = saved_image_paths.get("vehicle")
     full_path = saved_image_paths.get("full")
 
-    # Parse timestamps
-    try:
-        dt = datetime.strptime(event.timestamp, "%Y%m%d_%H%M%S_%f")
-        # Ensure UTC timezone is associated
-        dt = dt.replace(tzinfo=timezone.utc)
-    except Exception:
-        dt = datetime.now(timezone.utc)
+    # Try parsing XML dateTime
+    dt = None
+    xml_dt_str = event.xml_data.get("dateTime")
+    if xml_dt_str:
+        try:
+            dt = datetime.fromisoformat(xml_dt_str)
+        except Exception:
+            pass
+
+    if not dt:
+        try:
+            dt = datetime.strptime(event.timestamp, "%Y%m%d_%H%M%S_%f")
+            dt = dt.replace(tzinfo=timezone.utc)
+        except Exception:
+            dt = datetime.now(timezone.utc)
 
     now = datetime.now(timezone.utc)
 

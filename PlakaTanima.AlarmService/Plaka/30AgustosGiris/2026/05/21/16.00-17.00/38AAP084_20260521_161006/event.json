@@ -1,0 +1,101 @@
+{
+    "ipAddress": "10.179.0.81",
+    "ipv6Address": "::ffff:10.179.0.81",
+    "portNo": "80",
+    "protocol": "HTTP",
+    "macAddress": "08:cc:81:77:93:8a",
+    "channelID": "1",
+    "dateTime": "2026-05-21T16:10:06+08:00",
+    "activePostCount": "1",
+    "eventType": "ANPR",
+    "eventState": "active",
+    "eventDescription": "ANPR",
+    "channelName": "30 AGUSTOS GIRIS PLATAR",
+    "ANPR": {
+        "country": "46",
+        "licensePlate": "38AAP084",
+        "line": "1",
+        "direction": "forward",
+        "confidenceLevel": "98",
+        "plateType": "unknown",
+        "plateColor": "unknown",
+        "licenseBright": "128",
+        "dangmark": "no",
+        "twoWheelVehicle": "no",
+        "threeWheelVehicle": "no",
+        "plateCharBelieve": "99,99,99,99,99,99,99,99",
+        "vehicleType": "bus",
+        "detectDir": "8",
+        "detectType": "0",
+        "alarmDataType": "0",
+        "vehicleInfo": {
+            "index": "7395",
+            "colorDepth": "2",
+            "color": "green",
+            "length": "0",
+            "vehicleLogoRecog": "1707",
+            "vehileSubLogoRecog": "0",
+            "vehileModel": "0"
+        },
+        "pictureInfoList": {
+            "pictureInfo": [
+                {
+                    "fileName": "licensePlatePicture.jpg",
+                    "type": "licensePlatePicture",
+                    "dataType": "0",
+                    "picRecogMode": "0",
+                    "absTime": "20260521161006471",
+                    "pId": "2026052116100697700VdqwBMgtNT4wY"
+                },
+                {
+                    "fileName": "vehiclePicture.jpg",
+                    "type": "vehiclePicture",
+                    "dataType": "0",
+                    "picRecogMode": "0",
+                    "absTime": "20260521161006471",
+                    "pId": "2026052116100697700RszGATIng1Npg"
+                },
+                {
+                    "fileName": "detectionPicture.jpg",
+                    "type": "detectionPicture",
+                    "dataType": "0",
+                    "picRecogMode": "0",
+                    "absTime": "20260521161006471",
+                    "plateRect": {
+                        "X": "413",
+                        "Y": "241",
+                        "width": "26",
+                        "height": "10"
+                    },
+                    "pId": "2026052116100697800O730NEzqs9rvs"
+                }
+            ]
+        },
+        "originalLicensePlate": "38AAP084",
+        "CRIndex": "46",
+        "vehicleListName": "otherList",
+        "plateSize": "0"
+    },
+    "UUID": "2026052116100697300edbIawTkCdRKyBzG1WsY1fXRgsEIWclUtyTfpx1Weqn1",
+    "picNum": "3",
+    "monitoringSiteID": null,
+    "isDataRetransmission": "false",
+    "DeviceGPSInfo": {
+        "longitudeType": "E",
+        "latitudeType": "N",
+        "Longitude": {
+            "degree": "0",
+            "minute": "0",
+            "sec": "0.000000"
+        },
+        "Latitude": {
+            "degree": "0",
+            "minute": "0",
+            "sec": "0.000000"
+        }
+    },
+    "detectionBackgroundImageResolution": {
+        "height": "1568",
+        "width": "2560"
+    }
+}
