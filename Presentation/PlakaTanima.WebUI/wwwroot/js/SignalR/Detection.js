@@ -4,32 +4,66 @@ var connection = new signalR.HubConnectionBuilder()
     .withUrl("/plateHub")
     .withAutomaticReconnect()
     .build();
+
 connection.on("NewPlateDetected", function (data) {
     const feed = document.getElementById("detectionFeed");
+    if (!feed) return;
 
-    const vehicleImgSrc = data.imgVehicle 
-        ? `data:image/jpeg;base64,${data.imgVehicle}` 
-        : "/img/no-car.png";
+    // 1. Resolve image source (supports base64, MinIO URLs, and fallback)
+    let vehicleImgSrc = "/img/no-car.png";
+    if (data.imgVehicle) {
+        if (data.imgVehicle.startsWith("http") || data.imgVehicle.startsWith("/")) {
+            vehicleImgSrc = data.imgVehicle;
+        } else {
+            vehicleImgSrc = `data:image/jpeg;base64,${data.imgVehicle}`;
+        }
+    }
 
-    // Senin tasarımın - Tam isabet verilerle
+    // 2. Resolve category specific badge classes, icons, labels and card accent borders
+    let badgeClass = "badge-normal";
+    let badgeIcon = "fa-check-circle";
+    let badgeText = "Normal";
+    let cardAccentClass = "";
+
+    const categoryLower = (data.category || "normal").toLowerCase();
+
+    if (categoryLower === "vip") {
+        badgeClass = "badge-vip";
+        badgeIcon = "fa-star";
+        badgeText = "VIP";
+        cardAccentClass = "status-warning";
+    } else if (categoryLower === "blacklist" || categoryLower === "kara liste") {
+        badgeClass = "badge-alert";
+        badgeIcon = "fa-ban";
+        badgeText = "KARA LİSTE";
+        cardAccentClass = "status-danger";
+    } else if (categoryLower === "staff" || categoryLower === "personel") {
+        badgeClass = "badge-staff";
+        badgeIcon = "fa-id-badge";
+        badgeText = "PERSONEL";
+    }
+
+    // 3. Generate and slide in the vehicle card HTML
     const cardHtml = `
-        <div class="vehicle-card animate__animated animate__fadeInDown">
-            <!-- Statü: Şimdilik hepsi Normal -->
-            <span class="badge badge-normal badge-absolute">
-                <i class="fas fa-check-circle"></i> Normal
+        <div class="vehicle-card ${cardAccentClass} animate__animated animate__fadeInDown">
+            <!-- Dynamic Status Badge -->
+            <span class="badge ${badgeClass} badge-absolute">
+                <i class="fas ${badgeIcon}"></i> ${badgeText}
             </span>
 
-            <!-- Araç Görseli -->
+            <!-- Vehicle Snapshot Image -->
             <img src="${vehicleImgSrc}" alt="Araç" class="vehicle-img">
 
             <div class="vehicle-info">
-                <!-- Plaka (38UC997 gibi) -->
-                <div class="plate-label plate-success">${data.plate}</div>
+                <!-- Plate Monospace Label -->
+                <div class="plate-label ${categoryLower === 'blacklist' ? 'plate-danger' : (categoryLower === 'vip' ? 'plate-warning' : 'plate-success')}">${data.plate}</div>
                 
-                <!-- Alt Bilgi: Kamera İsmi ve Tam Tarih/Saat -->
+                <!-- Camera Location -->
                 <div class="text-success small mt-1">
                     <i class="fas fa-arrow-right"></i> ${data.camera}
                 </div>
+                
+                <!-- Detection DateTime -->
                 <div class="text-muted small">
                     <i class="far fa-clock"></i> ${data.fullTime}
                 </div>
@@ -38,11 +72,12 @@ connection.on("NewPlateDetected", function (data) {
 
     feed.insertAdjacentHTML('afterbegin', cardHtml);
 
+    // Limit active live feed cards to 20 to prevent DOM overflow
     if (feed.children.length > 20) {
         feed.lastElementChild.remove();
     }
 });
 
 connection.start().then(function () {
-    console.log("Bağlantı başarılı. Akış dinleniyor...");
-}).catch(err => console.error(err.toString()));
+    console.log("Bağlantı başarılı. Canlı plaka akışı dinleniyor...");
+}).catch(err => console.error("SignalR başlatılamadı: " + err.toString()));

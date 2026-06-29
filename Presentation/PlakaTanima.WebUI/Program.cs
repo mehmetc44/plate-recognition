@@ -3,6 +3,7 @@ using PlakaTanima.Infrastructure;
 using PlakaTanima.SignalR.Hubs;
 using PlakaTanima.SignalR;
 using PlakaTanima.WebUI;
+using Hangfire;
 
 // --- LOAD ROOT .ENV FILE ---
 var rootDir = Directory.GetCurrentDirectory();
@@ -46,6 +47,8 @@ app.UseHttpsRedirection();
 app.UseStaticFiles();
 
 app.UseRouting();
+
+app.UseHangfireDashboard();
 
 app.UseAuthorization();
 

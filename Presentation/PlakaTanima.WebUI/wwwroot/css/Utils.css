@@ -204,10 +204,12 @@ tbody tr:hover { background: rgb(from var(--text-secondary) r g b / 0.06); }
 .badge-vip { background: var(--warning); color: var(--text-inverse); display: inline-flex; align-items: center; gap: 4px; padding: 5px 12px; border-radius: 20px; font-size: 0.75rem; font-weight: 600; }
 .badge-normal { background: var(--success); color: var(--text-inverse); display: inline-flex; align-items: center; gap: 4px; padding: 5px 12px; border-radius: 20px; font-size: 0.75rem; font-weight: 600; }
 .badge-alert { background: var(--danger); color: var(--text-inverse); display: inline-flex; align-items: center; gap: 4px; padding: 5px 12px; border-radius: 20px; font-size: 0.75rem; font-weight: 600; }
+.badge-staff { background: var(--info); color: var(--text-inverse); display: inline-flex; align-items: center; gap: 4px; padding: 5px 12px; border-radius: 20px; font-size: 0.75rem; font-weight: 600; }
 
 .badge-alert,
 .badge-vip,
 .badge-normal,
+.badge-staff,
 .badge-absolute { position: absolute; top: 10px; left: 10px; z-index: 2; }
 
 /* =========================================

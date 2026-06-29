@@ -17,6 +17,7 @@ public static class DependencyInjection
     cfg.RegisterServicesFromAssembly(
         typeof(ApplicationAssemblyReference).Assembly);
 });
+        services.AddScoped<PlakaTanima.Application.Services.ILprProcessingJob, PlakaTanima.WebUI.Services.LprProcessingJob>();
         return services;
     }
 }
