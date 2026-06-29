@@ -18,11 +18,19 @@ class CameraProcess:
         self.correlator = EventCorrelator()
 
         self.url = f"http://{self.cfg['ip']}/ISAPI/Event/notification/alertStream"
+        self.running = True
+
+    def stop(self):
+        """
+        Gracefully signals the worker loop to terminate.
+        """
+        self.running = False
+        logger.info(f"[{self.cfg['ad']}] Stop signal received. Exiting thread...")
 
     def start(self):
         auth = HTTPDigestAuth(self.cfg['user'], self.cfg['pass'])
 
-        while True:
+        while self.running:
             try:
                 logger.info(f"[{self.cfg['ad']}] Connecting to {self.url} ...")
 
@@ -37,12 +45,16 @@ class CameraProcess:
                 logger.info(f"[{self.cfg['ad']}] Connected")
 
                 for chunk in response.iter_content(chunk_size=8192):
+                    if not self.running:
+                        break
                     if not chunk:
                         continue
 
                     packets = self.parser.feed(chunk)
 
                     for packet in packets:
+                        if not self.running:
+                            break
                         if packet["type"] == "xml":
                             self.correlator.handle_xml(
                                 self.cfg['ad'],
@@ -60,5 +72,12 @@ class CameraProcess:
                                 logger.info(f"[{self.cfg['ad']}] Plate parsed and queued: {event.plate}")
 
             except Exception as e:
+                if not self.running:
+                    break
                 logger.error(f"[{self.cfg['ad']}] Connection lost: {e}")
-                time.sleep(config.RECONNECT_DELAY)
+                
+                # Check running flag inside reconnect delay
+                for _ in range(config.RECONNECT_DELAY):
+                    if not self.running:
+                        break
+                    time.sleep(1)
