@@ -1,5 +1,10 @@
 import os
 from pathlib import Path
+from dotenv import load_dotenv
+
+# Load environment variables from the root .env file
+dotenv_path = Path(__file__).resolve().parents[2] / ".env"
+load_dotenv(dotenv_path=dotenv_path)
 
 # Base folder where images are saved locally
 BASE_FOLDER = Path(os.getenv("BASE_FOLDER", "Plaka"))
@@ -42,3 +47,10 @@ KAMERALAR = [
         "pass": "kutup12."
     }
 ]
+
+# MinIO configuration
+MINIO_ENDPOINT = os.getenv("MINIO_ENDPOINT", "localhost:9000")
+MINIO_ACCESS_KEY = os.getenv("MINIO_ACCESS_KEY", "minioadmin")
+MINIO_SECRET_KEY = os.getenv("MINIO_SECRET_KEY", "minioadmin")
+MINIO_BUCKET = os.getenv("MINIO_BUCKET", "platar-bucket")
+MINIO_SECURE = os.getenv("MINIO_SECURE", "False").lower() in ("true", "1", "yes")

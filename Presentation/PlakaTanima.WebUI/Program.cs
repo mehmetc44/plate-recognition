@@ -4,6 +4,27 @@ using PlakaTanima.SignalR.Hubs;
 using PlakaTanima.SignalR;
 using PlakaTanima.WebUI;
 
+// --- LOAD ROOT .ENV FILE ---
+var rootDir = Directory.GetCurrentDirectory();
+while (rootDir != null)
+{
+    var envPath = Path.Combine(rootDir, ".env");
+    if (File.Exists(envPath))
+    {
+        foreach (var line in File.ReadAllLines(envPath))
+        {
+            if (string.IsNullOrWhiteSpace(line) || line.StartsWith("#")) continue;
+            var parts = line.Split('=', 2);
+            if (parts.Length == 2)
+            {
+                Environment.SetEnvironmentVariable(parts[0].Trim(), parts[1].Trim());
+            }
+        }
+        break;
+    }
+    rootDir = Directory.GetParent(rootDir)?.FullName;
+}
+
 var builder = WebApplication.CreateBuilder(args);
 
 
@@ -34,5 +55,12 @@ app.MapHub<PlateHub>("/plateHub");
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");
+
+// --- DATABASE MIGRATION & SEEDING ---
+using (var scope = app.Services.CreateScope())
+{
+    var context = scope.ServiceProvider.GetRequiredService<PlakaTanima.Persistence.Contexts.AppDbContext>();
+    await PlakaTanima.Persistence.Contexts.DbSeeder.SeedAsync(context);
+}
 
 app.Run();
