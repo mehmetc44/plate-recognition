@@ -123,3 +123,33 @@ def save_event_to_db(event, saved_image_paths):
     finally:
         if conn:
             conn.close()
+
+def get_all_cameras():
+    """
+    Fetches all cameras from the PostgreSQL database.
+    """
+    query = """
+        SELECT "Id", "Name", "IpAddress", "Port", "Username", "Password"
+        FROM "Cameras"
+    """
+    conn = None
+    cameras = []
+    try:
+        conn = get_connection()
+        with conn.cursor() as cur:
+            cur.execute(query)
+            rows = cur.fetchall()
+            for row in rows:
+                cameras.append({
+                    "id": str(row[0]),
+                    "ad": row[1],
+                    "ip": row[2] if row[3] == 80 or not row[3] else f"{row[2]}:{row[3]}",
+                    "user": row[4],
+                    "pass": row[5]
+                })
+    except Exception as e:
+        logger.error(f"[DB] Error fetching cameras: {e}")
+    finally:
+        if conn:
+            conn.close()
+    return cameras

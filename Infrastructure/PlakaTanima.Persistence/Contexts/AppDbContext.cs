@@ -13,6 +13,7 @@ public class AppDbContext : DbContext
 
     public DbSet<Camera> Cameras { get; set; }
     public DbSet<AnprEvent> AnprEvents { get; set; }
+    public DbSet<Vehicle> Vehicles { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

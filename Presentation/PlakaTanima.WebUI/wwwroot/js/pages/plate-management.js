@@ -1,41 +1,15 @@
 // ==========================================
-// PLAKA YÖNETİMİ - Full JS (Tema uyumlu)
+// PLAKA YÖNETİMİ - Full JS (Dinamik Entegrasyon)
 // ==========================================
 (function () {
     if (!document.getElementById('pyTableBody')) return;
 
-    // ==========================================================
-    // 1. ÖRNEK VERİ (localStorage ile kalıcı)
-    // ==========================================================
-    function getVehicles() {
-        try {
-            const data = localStorage.getItem('py_vehicles');
-            if (data) return JSON.parse(data);
-        } catch (e) { /* ignore */ }
-        return [
-            { id: 'v1', plate: '34 ABC 123', model: 'Mercedes E200 Siyah', owner: 'Ahmet Yılmaz', category: 'vip', note: 'Yönetim kurulu üyesi', date: '12.01.2025' },
-            { id: 'v2', plate: '06 XYZ 987', model: 'BMW X5 Beyaz', owner: 'Mehmet Kara', category: 'blacklist', note: 'Güvenlik riski', date: '05.03.2025' },
-            { id: 'v3', plate: '35 VMS 404', model: 'Audi A6 Gri', owner: 'Ayşe Demir', category: 'vip', note: 'Özel misafir', date: '18.02.2025' },
-            { id: 'v4', plate: '16 NMG 772', model: 'Toyota Corolla Mavi', owner: 'Ali Yıldız', category: 'normal', note: '', date: '22.04.2025' },
-            { id: 'v5', plate: '53 KRM 112', model: 'Ford Transit Beyaz', owner: 'Veli Can', category: 'blacklist', note: 'Hırsızlık şüphesi', date: '10.01.2025' },
-            { id: 'v6', plate: '21 AAA 001', model: 'Volkswagen Passat Siyah', owner: 'Zeynep Koç', category: 'staff', note: 'Personel aracı', date: '01.06.2025' },
-            { id: 'v7', plate: '38 AAA 543', model: 'Mercedes S400 Siyah', owner: 'Mustafa Öztürk', category: 'vip', note: 'CEO aracı', date: '15.03.2025' },
-            { id: 'v8', plate: '07 BLL 234', model: 'Fiat Egea Kırmızı', owner: 'Hakan Usta', category: 'normal', note: '', date: '20.05.2025' },
-        ];
-    }
-
-    function saveVehicles(vehicles) {
-        try {
-            localStorage.setItem('py_vehicles', JSON.stringify(vehicles));
-        } catch (e) { /* ignore */ }
-    }
-
-    let vehicles = getVehicles();
+    let vehicles = [];
     let currentFilter = 'all';
     let currentSearch = '';
 
     // ==========================================================
-    // 2. DOM REFERANSLARI
+    // 1. DOM REFERANSLARI
     // ==========================================================
     const menuItems = document.querySelectorAll('.py-menu-item');
     const filterBtns = document.querySelectorAll('.py-filter-btn');
@@ -66,7 +40,7 @@
     let deleteTargetId = null;
 
     // ==========================================================
-    // 3. YARDIMCI FONKSİYONLAR
+    // 2. YARDIMCI FONKSİYONLAR
     // ==========================================================
     function getCategoryBadge(category) {
         const labels = {
@@ -90,16 +64,23 @@
         return `<span class="py-badge ${cls[category] || 'py-badge-normal'}"><i class="fas ${icons[category] || 'fa-check-circle'}"></i> ${labels[category] || category}</span>`;
     }
 
-    function generateId() {
-        return 'v' + Date.now() + Math.random().toString(36).substr(2, 4);
-    }
-
-    function formatDate() {
-        const d = new Date();
-        const day = String(d.getDate()).padStart(2, '0');
-        const month = String(d.getMonth() + 1).padStart(2, '0');
-        const year = d.getFullYear();
-        return `${day}.${month}.${year}`;
+    // ==========================================================
+    // 3. API SERVIS ÇAĞRILARI
+    // ==========================================================
+    async function loadVehicles() {
+        try {
+            const res = await fetch('/Vehicle/GetVehiclesApi');
+            const data = await res.json();
+            if (Array.isArray(data)) {
+                vehicles = data;
+            } else if (data.success === false) {
+                showToast(data.message || 'Veriler yüklenemedi.', 'error');
+            }
+        } catch (err) {
+            console.error('Veri çekme hatası:', err);
+            showToast('Sunucu bağlantı hatası.', 'error');
+        }
+        renderTable();
     }
 
     // ==========================================================
@@ -238,7 +219,7 @@
         modalOverlay.classList.add('hidden');
     }
 
-    function saveVehicle() {
+    async function saveVehicle() {
         const plate = formPlate.value.trim();
         const model = formModel.value.trim();
         const owner = formOwner.value.trim();
@@ -248,34 +229,45 @@
         // Validasyon
         if (!plate) { showToast('Plaka zorunludur!', 'error'); formPlate.focus(); return; }
         if (!model) { showToast('Marka/Model zorunludur!', 'error'); formModel.focus(); return; }
+        if (!owner) { showToast('Sahip/Sürücü zorunludur!', 'error'); formOwner.focus(); return; }
 
         const editIdVal = editId.value;
+        const payload = {
+            plate,
+            model,
+            owner,
+            category,
+            note
+        };
 
-        if (editIdVal) {
-            // Düzenleme
-            const idx = vehicles.findIndex(v => v.id === editIdVal);
-            if (idx !== -1) {
-                vehicles[idx] = { ...vehicles[idx], plate, model, owner, category, note };
+        try {
+            modalSave.disabled = true;
+            let url = '/Vehicle/AddVehicleApi';
+            if (editIdVal) {
+                url = '/Vehicle/UpdateVehicleApi';
+                payload.id = editIdVal;
             }
-            showToast('Araç başarıyla güncellendi!', 'success');
-        } else {
-            // Yeni ekle
-            const newVehicle = {
-                id: generateId(),
-                plate,
-                model,
-                owner,
-                category,
-                note,
-                date: formatDate()
-            };
-            vehicles.push(newVehicle);
-            showToast('Araç başarıyla eklendi!', 'success');
-        }
 
-        saveVehicles(vehicles);
-        closeModal();
-        renderTable();
+            const res = await fetch(url, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(payload)
+            });
+            const result = await res.json();
+
+            if (result.success) {
+                showToast(result.message || 'Araç başarıyla kaydedildi!', 'success');
+                closeModal();
+                await loadVehicles();
+            } else {
+                showToast(result.message || 'Kayıt başarısız oldu.', 'error');
+            }
+        } catch (err) {
+            console.error('Kayıt hatası:', err);
+            showToast('Sunucuyla iletişim kurulurken hata oluştu.', 'error');
+        } finally {
+            modalSave.disabled = false;
+        }
     }
 
     addBtn.addEventListener('click', () => openModal('Yeni Araç Ekle'));
@@ -301,7 +293,7 @@
     function viewVehicle(id) {
         const v = vehicles.find(v => v.id === id);
         if (!v) return;
-        window.open(`arac_detay.html?plate=${encodeURIComponent(v.plate)}`, '_blank');
+        window.open(`/VehicleDetails?plate=${encodeURIComponent(v.plate)}`, '_blank');
     }
 
     // ==========================================================
@@ -329,13 +321,27 @@
         deleteTargetId = null;
     }
 
-    function executeDelete() {
+    async function executeDelete() {
         if (!deleteTargetId) return;
-        vehicles = vehicles.filter(v => v.id !== deleteTargetId);
-        saveVehicles(vehicles);
-        closeDeleteModal();
-        renderTable();
-        showToast('Araç başarıyla silindi!', 'success');
+        try {
+            deleteConfirm.disabled = true;
+            const res = await fetch(`/Vehicle/DeleteVehicleApi?id=${deleteTargetId}`, {
+                method: 'POST'
+            });
+            const result = await res.json();
+            if (result.success) {
+                showToast(result.message || 'Araç başarıyla silindi!', 'success');
+                closeDeleteModal();
+                await loadVehicles();
+            } else {
+                showToast(result.message || 'Silme işlemi başarısız oldu.', 'error');
+            }
+        } catch (err) {
+            console.error('Silme hatası:', err);
+            showToast('Sunucuyla iletişim kurulurken hata oluştu.', 'error');
+        } finally {
+            deleteConfirm.disabled = false;
+        }
     }
 
     deleteClose.addEventListener('click', closeDeleteModal);
@@ -390,5 +396,5 @@
     // ==========================================================
     // 13. BAŞLANGIÇ
     // ==========================================================
-    renderTable();
+    loadVehicles();
 })();
