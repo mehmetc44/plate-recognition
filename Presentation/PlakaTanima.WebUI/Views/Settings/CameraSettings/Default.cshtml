@@ -1,98 +1,90 @@
 @using PlakaTanima.Application.Features.Locations.Queries.GetLocationTree
 @model List<LocationTreeDto>
 
-<section class="settings-panel" id="panel-camera">
-    <div class="camera-settings-split">
-        <div class="camera-tree-panel">
-            <div class="tree-header">
-                <h3><i class="fas fa-map-marker-alt"></i> Lokasyonlar</h3>
-                <button id="globalAddLocationBtn" class="btn-icon-sm" title="Yeni Lokasyon"><i class="fas fa-plus"></i>
-                </button>
-            </div>
-            <div class="camera-list-search">
-                <i class="fas fa-search search-icon"></i>
-                <input type="text" id="locationSearchTree" placeholder="Lokasyon ara...">
-            </div>
-            <ul class="camera-tree" id="locationTree">
-                @foreach (var loc in Model)
-                {
-                    <li data-id="@loc.Id" data-name="@loc.Name" data-description="@loc.Description">
-                        <div class="tree-node" data-id="@loc.Id">
-                            <span class="caret"></span>
-                            <i class="fas fa-map-marker-alt"></i>
-                            <span>@loc.Name</span>
-                        </div>
-                        <ul class="nested">
-                            @if (loc.Cameras != null && loc.Cameras.Any())
-                            {
-                                @foreach (var cam in loc.Cameras)
-                                {
-                                    <li class="camera-leaf @(string.IsNullOrEmpty(cam.IpAddress) ? "offline" : "online")"
-                                        data-cam-id="@cam.Id" data-cam-name="@cam.Name"
-                                        data-ip="@cam.IpAddress" data-port="@cam.Port"
-                                        data-username="@cam.Username" data-password="@cam.Password"
-                                        data-status="@(string.IsNullOrEmpty(cam.IpAddress) ? "offline" : "online")">
-                                        <i class="fas fa-video"></i> @cam.Name
-                                    </li>
-                                }
-                            }
-                            else
-                            {
-                                <li class="camera-leaf empty">Kamera yok</li>
-                            }
-                        </ul>
-                    </li>
-                }
-            </ul>
+<div class="camera-settings-split">
+    <div class="camera-tree-panel">
+        <div class="tree-header">
+            <h3><i class="fas fa-map-marker-alt"></i> Lokasyonlar</h3>
+            <button id="globalAddLocationBtn" class="btn-icon-sm" title="Yeni Lokasyon"><i class="fas fa-plus"></i></button>
         </div>
-
-        <div class="location-detail-panel" id="locationDetailPanel">
-            <div class="location-detail-card">
-                <div class="detail-header">
-                    <h2 id="detailLocationName">Lokasyon seçin</h2>
-                    <div class="detail-actions">
-                        <button id="editLocationBtn" class="btn-outline-sm" disabled><i class="fas fa-edit"></i>
-                            Düzenle</button>
-                            <button id="deleteLocationBtn" class="btn-outline-sm danger" disabled><i
-                                class="fas fa-trash"></i> Sil</button>
-                            </div>
-                        </div>
-                        <div class="detail-field">
-                            <label>Açıklama</label>
-                            <p id="detailLocationDesc">Bir lokasyon seçin</p>
-                        </div>
-                        <div class="camera-section-header">
-                            <h3><i class="fas fa-video"></i> Kameralar</h3>
-                            <button id="addCameraFromDetailBtn" class="btn-primary-sm" disabled><i class="fas fa-plus"></i>
-                                Kamera Ekle</button>
-                            </div>
-                            <div class="camera-table-wrapper">
-                                <table class="camera-table">
-                                    <thead>
-                                        <tr>
-                                            <th>ID</th>
-                                            <th>Adı</th>
-                                            <th>IP</th>
-                                            <th>Port</th>
-                                            <th>Durum</th>
-                                            <th>İşlem</th>
-                                        </thead>
-                                        <tbody id="detailCameraTableBody">
-                                            <tr>
-                                                <td colspan="6">Lokasyon seçin</td>
-                                            </tr>
-                                        </tbody>
-                                    </table>
-                                </div>
-                            </div>
-                        </div>
+        <div class="camera-list-search">
+            <i class="fas fa-search search-icon"></i>
+            <input type="text" id="locationSearchTree" placeholder="Lokasyon ara...">
+        </div>
+        <ul class="camera-tree" id="locationTree">
+            @foreach (var loc in Model)
+            {
+                <li data-id="@loc.Id" data-name="@loc.Name" data-description="@loc.Description">
+                    <div class="tree-node" data-id="@loc.Id">
+                        <span class="caret"></span>
+                        <i class="fas fa-map-marker-alt"></i>
+                        <span>@loc.Name</span>
                     </div>
-                </section>
+                    <ul class="nested">
+                        @if (loc.Cameras != null && loc.Cameras.Any())
+                        {
+                            @foreach (var cam in loc.Cameras)
+                            {
+                                <li class="camera-leaf @cam.Status.ToString().ToLower()"
+                                    data-cam-id="@cam.Id" data-cam-name="@cam.Name"
+                                    data-ip="@cam.IpAddress" data-port="@cam.Port"
+                                    data-username="@cam.Username" data-password="@cam.Password"
+                                    data-status="@cam.Status.ToString().ToLower()">
+                                    <i class="fas fa-video"></i> @cam.Name
+                                </li>
+                            }
+                        }
+                        else
+                        {
+                            <li class="camera-leaf empty">Kamera yok</li>
+                        }
+                    </ul>
+                </li>
+            }
+        </ul>
+    </div>
 
+    <div class="location-detail-panel" id="locationDetailPanel">
+        <div class="location-detail-card">
+            <div class="detail-header">
+                <h2 id="detailLocationName">Lokasyon seçin</h2>
+                <div class="detail-actions">
+                    <button id="editLocationBtn" class="btn-outline-sm" disabled><i class="fas fa-edit"></i> Düzenle</button>
+                    <button id="deleteLocationBtn" class="btn-outline-sm danger" disabled><i class="fas fa-trash"></i> Sil</button>
+                </div>
+            </div>
+            <div class="detail-field">
+                <label>Açıklama</label>
+                <p id="detailLocationDesc">Bir lokasyon seçin</p>
+            </div>
+            <div class="camera-section-header">
+                <h3><i class="fas fa-video"></i> Kameralar</h3>
+                <button id="addCameraFromDetailBtn" class="btn-primary-sm" disabled><i class="fas fa-plus"></i> Kamera Ekle</button>
+            </div>
+            <div class="camera-table-wrapper">
+                <table class="camera-table">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Adı</th>
+                            <th>IP</th>
+                            <th>Port</th>
+                            <th>Durum</th>
+                            <th>İşlem</th>
+                        </tr>
+                    </thead>
+                    <tbody id="detailCameraTableBody">
+                        <tr>
+                            <td colspan="6">Lokasyon seçin</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
 
-
-
-
+<!-- Lokasyon Düzenleme Modal -->
 <div id="editLocationModal" class="modal" style="display:none;">
     <div class="modal-content">
         <div class="modal-header"><span>Lokasyon Düzenle</span><span class="close-modal">&times;</span></div>
@@ -113,7 +105,8 @@
         </div>
     </div>
 </div>
-<!-- Lokasyon Ekleme Modal (AJAX ile) -->
+
+<!-- Lokasyon Ekleme Modal -->
 <div id="locationModal" class="modal" style="display:none;">
     <div class="modal-content">
         <div class="modal-header"><span>Lokasyon Ekle</span><span class="close-modal">&times;</span></div>
@@ -134,69 +127,37 @@
     </div>
 </div>
 
-<div id="editLocationModal" class="modal" style="display:none;">
+<!-- Kamera Ekleme/Düzenleme Modal -->
+<div id="cameraModal" class="modal" style="display:none;">
     <div class="modal-content">
-        <div class="modal-header"><span>Lokasyon Düzenle</span><span class="close-modal">&times;</span></div>
+        <div class="modal-header"><span>Kamera Ekle/Düzenle</span><span class="close-modal-cam">&times;</span></div>
         <div class="modal-body">
-            <input type="hidden" id="editLocationId" />
+            <input type="hidden" id="cameraId" />
+            <input type="hidden" id="cameraLocationId" />
             <div class="form-group">
-                <label>Lokasyon Adı</label>
-                <input type="text" id="editLocationName" class="modal-input" required />
+                <label>Kamera Adı</label>
+                <input type="text" id="cameraNameInput" class="modal-input" required />
             </div>
             <div class="form-group">
-                <label>Açıklama</label>
-                <textarea id="editLocationDesc" class="modal-input" rows="3"></textarea>
+                <label>IP Adresi</label>
+                <input type="text" id="cameraIpInput" class="modal-input" required />
+            </div>
+            <div class="form-group">
+                <label>Port</label>
+                <input type="number" id="cameraPortInput" class="modal-input" value="80" />
+            </div>
+            <div class="form-group">
+                <label>Kullanıcı Adı</label>
+                <input type="text" id="cameraUsernameInput" class="modal-input" />
+            </div>
+            <div class="form-group">
+                <label>Şifre</label>
+                <input type="password" id="cameraPasswordInput" class="modal-input" />
             </div>
         </div>
         <div class="modal-footer">
-            <button id="updateLocationBtn" class="btn-save-modal">Güncelle</button>
-            <button type="button" class="btn-cancel-modal">İptal</button>
+            <button id="saveCameraBtn" class="btn-save-modal">Kaydet</button>
+            <button type="button" class="btn-cancel-modal-cam">İptal</button>
         </div>
     </div>
 </div>
-
-
-
-
-
-
-
-
-
-                
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-                
-

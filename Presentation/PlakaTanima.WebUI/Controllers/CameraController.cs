@@ -25,26 +25,22 @@ namespace PlakaTanima.WebUI.Controllers
         public async Task<IActionResult> GetTree()
         {
             var tree = await _mediator.Send(new GetLocationTreeQuery());
-            var cameras = await _mediator.Send(new GetCameraListQuery());
 
             var result = tree.Select(loc => new
             {
                 loc.Id,
                 loc.Name,
                 loc.Description,
-                Cameras = cameras
-                    .Where(c => loc.Cameras.Any(lc => lc.Id == c.Id))
-                    .Select(c => new
-                    {
-                        c.Id,
-                        c.Name,
-                        c.IpAddress,
-                        c.Port,
-                        c.Username,
-                        c.Password,
-                        c.LocationName,
-                        Status = c.Status.ToString().ToLower()
-                    })
+                Cameras = loc.Cameras.Select(c => new
+                {
+                    c.Id,
+                    c.Name,
+                    c.IpAddress,
+                    c.Port,
+                    c.Username,
+                    c.Password,
+                    Status = c.Status.ToString().ToLower()
+                })
             });
 
             return Json(result);

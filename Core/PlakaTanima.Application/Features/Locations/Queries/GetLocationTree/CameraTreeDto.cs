@@ -19,4 +19,6 @@ public sealed class CameraTreeDto
     public string Password { get; set; } = string.Empty;
 
     public int StreamChannel { get; set; }
+
+    public PlakaTanima.Domain.Enums.CameraStatus Status { get; set; }
 }

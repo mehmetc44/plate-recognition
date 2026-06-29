@@ -36,7 +36,8 @@ public sealed class GetLocationTreeQueryHandler
                 Username = c.Username,
                 Password = c.Password,
                 StreamChannel = c.StreamChannel,
-                LocationId = c.LocationId
+                LocationId = c.LocationId,
+                Status = c.Status
             }).ToList()
         }).ToList();
     }
