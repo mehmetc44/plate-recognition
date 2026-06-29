@@ -1,10 +1,11 @@
-using PlakaTanima.Application.Features.Cameras.Queries.GetCameraList;
-using PlakaTanima.Application.Features.Locations.Queries.GetLocationTree;
+using System.Collections.Generic;
+using PlakaTanima.Application.DTOs.Cameras;
+using PlakaTanima.Application.DTOs.Locations;
 
 namespace PlakaTanima.WebUI.Models;
 
 public class SettingsPageViewModel
 {
-    public List<LocationTreeDto> LocationTree { get; set; } = new();
-    public List<CameraListDto> AllCameras { get; set; } = new();
+    public List<LocationDto> LocationTree { get; set; } = new();
+    public List<CameraDto> AllCameras { get; set; } = new();
 }

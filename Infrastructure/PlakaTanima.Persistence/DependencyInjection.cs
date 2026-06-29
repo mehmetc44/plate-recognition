@@ -19,11 +19,8 @@ public static class DependencyInjection
             options.UseNpgsql(
                 configuration.GetConnectionString("DefaultConnection")));
 
-        services.AddScoped<ILocationReadRepository, LocationReadRepository>();
-        services.AddScoped<ILocationWriteRepository, LocationWriteRepository>();
-
-        services.AddScoped<ICameraReadRepository, CameraReadRepository>();
-        services.AddScoped<ICameraWriteRepository, CameraWriteRepository>();
+        services.AddScoped<ILocationRepository, LocationRepository>();
+        services.AddScoped<ICameraRepository, CameraRepository>();
         return services;
     }
 }

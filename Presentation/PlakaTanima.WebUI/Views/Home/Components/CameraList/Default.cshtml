@@ -1,20 +1,47 @@
+@model IEnumerable<PlakaTanima.Domain.Entities.Location>
+
 <aside class="camera-list">
-    <h1><i class="fas fa-sitemap"></i> Resource</h1>
+    <h1><i class="fas fa-sitemap"></i> KAYNAKLAR</h1>
     <div class="camera-list-search">
         <i class="fas fa-search search-icon"></i>
-        <input type="text" id="cameraSearch" placeholder="Kamera ara...">
+        <input type="text" id="cameraSearch" placeholder="Kamera veya IP ara...">
     </div>
-    <ul class="camera-tree">
-        <li>
-            <div class="camera-tree-node nvr-toggle">
-                <span class="caret"></span>
-                <i class="fas fa-server"></i> NVR
-            </div>
-            <ul class="nested">
-                <li class="camera-item online" data-camera-id="1"><i class="fas fa-video"></i> Camera 1</li>
-                <li class="camera-item offline" data-camera-id="1"><i class="fas fa-video"></i> Camera 2</li>
-                <li class="camera-item offline" data-camera-id="1"><i class="fas fa-video"></i> Camera 3</li>
-            </ul>
-        </li>
+    <ul class="camera-tree" id="homeCameraTree">
+        @foreach (var location in Model)
+        {
+            <li>
+                <div class="camera-tree-node nvr-toggle">
+                    <span class="caret"></span>
+                    <i class="fas fa-map-marker-alt"></i> @location.Name
+                </div>
+                <ul class="nested">
+                    @if (!location.Cameras.Any())
+                    {
+                        <li class="camera-item offline" style="opacity: 0.5; pointer-events: none; display: flex; align-items: center; gap: 6px;">
+                            <i class="fas fa-video-slash"></i>
+                            <span>Kamera Yok</span>
+                        </li>
+                    }
+                    else
+                    {
+                        @foreach (var camera in location.Cameras)
+                        {
+                            <li class="camera-item @camera.Status.ToString().ToLower()" 
+                                data-camera-id="@camera.Id" 
+                                data-ip="@camera.IpAddress" 
+                                data-port="@camera.Port" 
+                                data-channel="@camera.StreamChannel"
+                                style="display: flex; justify-content: space-between; align-items: center;">
+                                <span style="display: flex; align-items: center; gap: 6px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
+                                    <i class="fas fa-video"></i>
+                                    <span>@camera.Name</span>
+                                </span>
+                                <small style="font-family: monospace; font-size: 0.72rem; opacity: 0.6; margin-left: auto; padding-left: 6px;">@camera.IpAddress</small>
+                            </li>
+                        }
+                    }
+                </ul>
+            </li>
+        }
     </ul>
 </aside>

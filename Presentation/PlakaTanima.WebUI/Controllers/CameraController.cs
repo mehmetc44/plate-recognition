@@ -1,70 +1,119 @@
-using MediatR;
+using System;
+using System.Linq;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using PlakaTanima.Application.Features.Cameras.Commands.CreateCamera;
-using PlakaTanima.Application.Features.Cameras.Commands.DeleteCamera;
-using PlakaTanima.Application.Features.Cameras.Commands.UpdateCamera;
-using PlakaTanima.Application.Features.Cameras.Queries.GetCameraById;
-using PlakaTanima.Application.Features.Cameras.Queries.GetCameraList;
-using PlakaTanima.Application.Features.Locations.Commands;
-using PlakaTanima.Application.Features.Locations.Commands.DeleteLocation;
-using PlakaTanima.Application.Features.Locations.Commands.UpdateLocation;
-using PlakaTanima.Application.Features.Locations.Queries.GetLocationTree;
+using PlakaTanima.Application.DTOs.Cameras;
+using PlakaTanima.Application.DTOs.Locations;
+using PlakaTanima.Application.Repositories.CameraRepositories;
+using PlakaTanima.Application.Repositories.LocationRepositories;
+using PlakaTanima.Domain.Entities;
+using PlakaTanima.Domain.Enums;
 
 namespace PlakaTanima.WebUI.Controllers
 {
     public class CameraController : Controller
     {
-        private readonly IMediator _mediator;
-        public CameraController (IMediator mediator)
+        private readonly ICameraRepository _cameraRepository;
+        private readonly ILocationRepository _locationRepository;
+
+        public CameraController(
+            ICameraRepository cameraRepository,
+            ILocationRepository locationRepository)
         {
-            _mediator = mediator;
+            _cameraRepository = cameraRepository;
+            _locationRepository = locationRepository;
         }
 
         // ========== JSON API: Tree verisi ==========
         [HttpGet]
         public async Task<IActionResult> GetTree()
         {
-            var tree = await _mediator.Send(new GetLocationTreeQuery());
-
-            var result = tree.Select(loc => new
+            try
             {
-                loc.Id,
-                loc.Name,
-                loc.Description,
-                Cameras = loc.Cameras.Select(c => new
+                var locations = await _locationRepository.GetAllWithCamerasAsync();
+                var result = locations.Select(loc => new LocationDto
                 {
-                    c.Id,
-                    c.Name,
-                    c.IpAddress,
-                    c.Port,
-                    c.Username,
-                    c.Password,
-                    Status = c.Status.ToString().ToLower()
-                })
-            });
+                    Id = loc.Id,
+                    Name = loc.Name,
+                    Description = loc.Description,
+                    Cameras = loc.Cameras.Select(c => new CameraDto
+                    {
+                        Id = c.Id,
+                        Name = c.Name,
+                        LocationId = c.LocationId,
+                        IpAddress = c.IpAddress,
+                        Port = c.Port,
+                        Username = c.Username,
+                        Password = c.Password,
+                        StreamChannel = c.StreamChannel,
+                        Status = c.Status.ToString().ToLower()
+                    }).ToList()
+                }).ToList();
 
-            return Json(result);
+                return Json(result);
+            }
+            catch (Exception ex)
+            {
+                return Json(new { success = false, message = ex.Message });
+            }
         }
 
         // ========== JSON API: Kamera detay ==========
         [HttpGet]
         public async Task<IActionResult> GetCameraDetail(Guid id)
         {
-            var detail = await _mediator.Send(new GetCameraByIdQuery(id));
-            return Json(detail);
+            var camera = await _cameraRepository.GetByIdAsync(id);
+            if (camera == null)
+                return NotFound();
+
+            var dto = new CameraDto
+            {
+                Id = camera.Id,
+                Name = camera.Name,
+                LocationId = camera.LocationId,
+                IpAddress = camera.IpAddress,
+                Port = camera.Port,
+                Username = camera.Username,
+                Password = camera.Password,
+                StreamChannel = camera.StreamChannel,
+                Status = camera.Status.ToString().ToLower()
+            };
+
+            return Json(dto);
         }
 
-        
         // ========== CAMERA CRUD (JSON) ==========
         [HttpPost]
-        public async Task<IActionResult> AddCameraApi([FromBody] CreateCameraCommand command)
+        public async Task<IActionResult> AddCameraApi([FromBody] CreateCameraDto command)
         {
             if (!ModelState.IsValid)
                 return Json(new { success = false, message = "Geçersiz veri." });
             try
             {
-                var id = await _mediator.Send(command);
-                return Json(new { success = true, id, name = command.Name });
+                var location = await _locationRepository.GetByIdAsync(command.LocationId);
+                if (location == null)
+                    return Json(new { success = false, message = "Lokasyon bulunamadı." });
+
+                var ipExists = await _cameraRepository.ExistsByIpAddressAsync(command.IpAddress);
+                if (ipExists)
+                    return Json(new { success = false, message = "Bu IP adresi ile kayıtlı kamera mevcut." });
+
+                var camera = new Camera
+                {
+                    Name = command.Name,
+                    LocationId = command.LocationId,
+                    IpAddress = command.IpAddress,
+                    Port = command.Port,
+                    Username = command.Username,
+                    Password = command.Password,
+                    StreamChannel = command.StreamChannel,
+                    Status = CameraStatus.Offline
+                };
+
+                await _cameraRepository.AddAsync(camera);
+                await _cameraRepository.SaveAsync();
+
+                return Json(new { success = true, id = camera.Id, name = camera.Name });
             }
             catch (Exception ex)
             {
@@ -73,13 +122,36 @@ namespace PlakaTanima.WebUI.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> UpdateCameraApi([FromBody] UpdateCameraCommand command)
+        public async Task<IActionResult> UpdateCameraApi([FromBody] UpdateCameraDto command)
         {
             if (!ModelState.IsValid)
                 return Json(new { success = false, message = "Geçersiz veri." });
             try
             {
-                await _mediator.Send(command);
+                var camera = await _cameraRepository.GetByIdAsync(command.Id, true);
+                if (camera == null)
+                    return Json(new { success = false, message = "Kamera bulunamadı." });
+
+                var location = await _locationRepository.GetByIdAsync(command.LocationId);
+                if (location == null)
+                    return Json(new { success = false, message = "Lokasyon bulunamadı." });
+
+                var ipExists = await _cameraRepository.ExistsByIpAddressAsync(command.IpAddress, command.Id);
+                if (ipExists)
+                    return Json(new { success = false, message = "Bu IP adresi başka bir kamerada kullanılıyor." });
+
+                camera.Name = command.Name;
+                camera.LocationId = command.LocationId;
+                camera.IpAddress = command.IpAddress;
+                camera.Port = command.Port;
+                camera.Username = command.Username;
+                camera.Password = command.Password;
+                camera.StreamChannel = command.StreamChannel;
+                camera.UpdatedAt = DateTime.UtcNow;
+
+                _cameraRepository.Update(camera);
+                await _cameraRepository.SaveAsync();
+
                 return Json(new { success = true });
             }
             catch (Exception ex)
@@ -89,11 +161,16 @@ namespace PlakaTanima.WebUI.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> DeleteCameraApi([FromBody] DeleteCameraCommand command)
+        public async Task<IActionResult> DeleteCameraApi([FromBody] DeleteRequest request)
         {
             try
             {
-                await _mediator.Send(command);
+                var camera = await _cameraRepository.GetByIdAsync(request.Id);
+                if (camera != null)
+                {
+                    _cameraRepository.Remove(camera);
+                    await _cameraRepository.SaveAsync();
+                }
                 return Json(new { success = true });
             }
             catch (Exception ex)
@@ -104,14 +181,22 @@ namespace PlakaTanima.WebUI.Controllers
 
         // ========== LOCATION CRUD (JSON API) ==========
         [HttpPost]
-        public async Task<IActionResult> AddLocationApi([FromBody] CreateLocationCommand command)
+        public async Task<IActionResult> AddLocationApi([FromBody] CreateLocationDto command)
         {
             if (!ModelState.IsValid)
                 return Json(new { success = false, message = "Geçersiz veri." });
             try
             {
-                var id = await _mediator.Send(command);
-                return Json(new { success = true, id, name = command.Name });
+                var location = new Location
+                {
+                    Name = command.Name,
+                    Description = command.Description
+                };
+
+                await _locationRepository.AddAsync(location);
+                await _locationRepository.SaveAsync();
+
+                return Json(new { success = true, id = location.Id, name = location.Name });
             }
             catch (Exception ex)
             {
@@ -120,13 +205,23 @@ namespace PlakaTanima.WebUI.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> UpdateLocationApi([FromBody] UpdateLocationCommand command)
+        public async Task<IActionResult> UpdateLocationApi([FromBody] UpdateLocationDto command)
         {
             if (!ModelState.IsValid)
                 return Json(new { success = false, message = "Geçersiz veri." });
             try
             {
-                await _mediator.Send(command);
+                var location = await _locationRepository.GetByIdAsync(command.Id, true);
+                if (location == null)
+                    return Json(new { success = false, message = "Lokasyon bulunamadı." });
+
+                location.Name = command.Name;
+                location.Description = command.Description;
+                location.UpdatedAt = DateTime.UtcNow;
+
+                _locationRepository.Update(location);
+                await _locationRepository.SaveAsync();
+
                 return Json(new { success = true });
             }
             catch (Exception ex)
@@ -136,11 +231,21 @@ namespace PlakaTanima.WebUI.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> DeleteLocationApi([FromBody] DeleteLocationCommand command)
+        public async Task<IActionResult> DeleteLocationApi([FromBody] DeleteRequest request)
         {
             try
             {
-                await _mediator.Send(command);
+                var location = await _locationRepository.GetByIdAsync(request.Id);
+                if (location != null)
+                {
+                    // Check if has cameras
+                    var hasCameras = await _locationRepository.HasCameraAsync(request.Id);
+                    if (hasCameras)
+                        return Json(new { success = false, message = "Kamerası bulunan bir lokasyon silinemez." });
+
+                    _locationRepository.Remove(location);
+                    await _locationRepository.SaveAsync();
+                }
                 return Json(new { success = true });
             }
             catch (Exception ex)
@@ -152,57 +257,113 @@ namespace PlakaTanima.WebUI.Controllers
         // ========== TRADITIONAL POST ACTIONS (for form fallback) ==========
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> AddLocation(CreateLocationCommand command)
+        public async Task<IActionResult> AddLocation(CreateLocationDto command)
         {
             if (!ModelState.IsValid)
-                return RedirectToAction(nameof(Index));
-            await _mediator.Send(command);
-            return RedirectToAction(nameof(Index));
+                return RedirectToAction("Index", "Settings");
+
+            var location = new Location { Name = command.Name, Description = command.Description };
+            await _locationRepository.AddAsync(location);
+            await _locationRepository.SaveAsync();
+
+            return RedirectToAction("Index", "Settings");
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> UpdateLocation(UpdateLocationCommand command)
+        public async Task<IActionResult> UpdateLocation(UpdateLocationDto command)
         {
             if (!ModelState.IsValid)
-                return RedirectToAction(nameof(Index));
-            await _mediator.Send(command);
-            return RedirectToAction(nameof(Index));
+                return RedirectToAction("Index", "Settings");
+
+            var location = await _locationRepository.GetByIdAsync(command.Id, true);
+            if (location != null)
+            {
+                location.Name = command.Name;
+                location.Description = command.Description;
+                _locationRepository.Update(location);
+                await _locationRepository.SaveAsync();
+            }
+
+            return RedirectToAction("Index", "Settings");
         }
 
         [HttpPost]
-        public async Task<IActionResult> DeleteLocation(DeleteLocationCommand command)
+        public async Task<IActionResult> DeleteLocation(DeleteRequest command)
         {
-            await _mediator.Send(command);
+            var location = await _locationRepository.GetByIdAsync(command.Id);
+            if (location != null)
+            {
+                _locationRepository.Remove(location);
+                await _locationRepository.SaveAsync();
+            }
             return Ok();
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> AddCamera(CreateCameraCommand command)
+        public async Task<IActionResult> AddCamera(CreateCameraDto command)
         {
             if (!ModelState.IsValid)
-                return RedirectToAction(nameof(Index));
-            await _mediator.Send(command);
-            return RedirectToAction(nameof(Index));
+                return RedirectToAction("Index", "Settings");
+
+            var camera = new Camera
+            {
+                Name = command.Name,
+                LocationId = command.LocationId,
+                IpAddress = command.IpAddress,
+                Port = command.Port,
+                Username = command.Username,
+                Password = command.Password,
+                StreamChannel = command.StreamChannel,
+                Status = CameraStatus.Offline
+            };
+            await _cameraRepository.AddAsync(camera);
+            await _cameraRepository.SaveAsync();
+
+            return RedirectToAction("Index", "Settings");
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> UpdateCamera(UpdateCameraCommand command)
+        public async Task<IActionResult> UpdateCamera(UpdateCameraDto command)
         {
             if (!ModelState.IsValid)
-                return RedirectToAction(nameof(Index));
-            await _mediator.Send(command);
-            return RedirectToAction(nameof(Index));
+                return RedirectToAction("Index", "Settings");
+
+            var camera = await _cameraRepository.GetByIdAsync(command.Id, true);
+            if (camera != null)
+            {
+                camera.Name = command.Name;
+                camera.LocationId = command.LocationId;
+                camera.IpAddress = command.IpAddress;
+                camera.Port = command.Port;
+                camera.Username = command.Username;
+                camera.Password = command.Password;
+                camera.StreamChannel = command.StreamChannel;
+                _cameraRepository.Update(camera);
+                await _cameraRepository.SaveAsync();
+            }
+
+            return RedirectToAction("Index", "Settings");
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteCamera(DeleteCameraCommand command)
+        public async Task<IActionResult> DeleteCamera(DeleteRequest command)
         {
-            await _mediator.Send(command);
-            return RedirectToAction(nameof(Index));
+            var camera = await _cameraRepository.GetByIdAsync(command.Id);
+            if (camera != null)
+            {
+                _cameraRepository.Remove(camera);
+                await _cameraRepository.SaveAsync();
+            }
+            return RedirectToAction("Index", "Settings");
         }
+    }
+
+    public class DeleteRequest
+    {
+        public Guid Id { get; set; }
     }
 }

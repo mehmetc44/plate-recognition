@@ -7,144 +7,157 @@
 .py-main { display: flex; flex: 1; overflow: hidden; background-color: var(--surface-1); }
 
 /* =========================================
-   SIDEBAR
-========================================= */
-.py-sidebar { width: 280px; background: var(--surface-2); color: var(--text-secondary); display: flex; flex-direction: column; justify-content: space-between; box-shadow: var(--shadow-md); flex-shrink: 0; border-right: 1px solid var(--border-subtle); }
+   SIDEBAR (Sol Menü)
+   ========================================= */
+.py-sidebar { width: 240px; background: var(--surface-2); color: var(--text-secondary); display: flex; flex-direction: column; justify-content: space-between; box-shadow: none; flex-shrink: 0; border-right: 1px solid var(--border-subtle); }
 
-.py-sidebar .sidebar-header { padding: 1.8rem 1.5rem 1rem; font-weight: 700; font-size: 1.1rem; letter-spacing: 0.5px; border-bottom: 1px solid var(--border-subtle); display: flex; align-items: center; gap: 0.8rem; color: var(--text-primary); }
-.py-sidebar .sidebar-header i { font-size: 1.4rem; color: var(--accent-primary); }
+.py-sidebar .sidebar-header { padding: 1.2rem 1.2rem 0.8rem; font-weight: 700; font-size: 0.95rem; letter-spacing: 0.5px; border-bottom: 1px solid var(--border-subtle); display: flex; align-items: center; gap: 0.6rem; color: var(--text-primary); }
+.py-sidebar .sidebar-header i { font-size: 1.1rem; color: var(--accent-primary); }
 
-.py-menu { list-style: none; padding: 1.5rem 0; flex: 1; }
+.py-menu { list-style: none; padding: 0.8rem 0; flex: 1; }
 
-.py-menu-item { display: flex; align-items: center; gap: 0.9rem; padding: 0.85rem 1.5rem; margin: 0.3rem 0; cursor: pointer; transition: all var(--transition-fast); font-weight: 500; font-size: 0.95rem; color: var(--text-secondary); border-left: 3px solid transparent; }
-.py-menu-item i { width: 1.6rem; font-size: 1.2rem; color: var(--text-secondary); transition: color var(--transition-fast); }
+.py-menu-item { display: flex; align-items: center; gap: 0.8rem; padding: 0.65rem 1.2rem; margin: 1px 0; cursor: pointer; transition: all var(--transition-fast); font-weight: 500; font-size: 0.88rem; color: var(--text-secondary); border-left: 3px solid transparent; }
+.py-menu-item i { width: 1.4rem; font-size: 1rem; color: var(--text-secondary); transition: color var(--transition-fast); }
 .py-menu-item:hover { background: var(--surface-3); color: var(--text-primary); }
 .py-menu-item:hover i { color: var(--text-primary); }
-.py-menu-item.active { background: var(--surface-3); color: var(--text-primary); border-left-color: var(--danger-dark); font-weight: 600; }
-.py-menu-item.active i { color: var(--danger-dark); }
+.py-menu-item.active { background: var(--surface-4); color: var(--text-primary); border-left-color: var(--accent-primary); font-weight: 600; }
+.py-menu-item.active i { color: var(--accent-primary); }
 
-.py-sidebar .sidebar-footer { padding: 1rem 1.5rem; font-size: 0.75rem; border-top: 1px solid var(--border-subtle); display: flex; align-items: center; gap: 0.6rem; color: var(--text-secondary); }
+.py-sidebar .sidebar-footer { padding: 0.8rem 1.2rem; font-size: 0.72rem; border-top: 1px solid var(--border-subtle); display: flex; align-items: center; gap: 0.5rem; color: var(--text-secondary); }
 
 /* =========================================
    SAĞ İÇERİK
-========================================= */
-.py-content { flex: 1; overflow-y: auto; padding: 20px 28px; display: flex; flex-direction: column; gap: 20px; }
+   ========================================= */
+.py-content { flex: 1; overflow-y: auto; padding: 16px 20px; display: flex; flex-direction: column; gap: 16px; }
 
 /* =========================================
    ÜST AKSİYON BAR
-========================================= */
-.py-toolbar { display: flex; align-items: center; justify-content: space-between; gap: 16px; flex-wrap: wrap; }
+   ========================================= */
+.py-toolbar { display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
 
-.py-toolbar-left { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; flex: 1; }
+.py-toolbar-left { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; flex: 1; }
 
-.py-search-box { display: flex; align-items: center; gap: 8px; padding: 10px 16px; background: var(--surface-2); border: 1px solid var(--border-subtle); border-radius: 10px; transition: border-color 0.2s ease; min-width: 260px; flex: 1; max-width: 400px; }
+.py-search-box { display: flex; align-items: center; gap: 8px; padding: 8px 12px; background: var(--surface-2); border: 1px solid var(--border-subtle); border-radius: var(--radius-sm); transition: border-color var(--transition-fast) ease; min-width: 240px; flex: 1; max-width: 360px; }
 .py-search-box:focus-within { border-color: var(--accent-primary); }
-.py-search-box i { color: var(--text-secondary); font-size: 0.9rem; }
-.py-search-box input { background: transparent; border: none; outline: none; color: var(--text-primary); font-size: 0.88rem; font-family: inherit; width: 100%; }
+.py-search-box i { color: var(--text-secondary); font-size: 0.85rem; }
+.py-search-box input { background: transparent; border: none; outline: none; color: var(--text-primary); font-size: 0.85rem; font-family: inherit; width: 100%; }
 .py-search-box input::placeholder { color: var(--text-secondary); }
 
-.py-filter-group { display: flex; gap: 4px; background: var(--surface-2); border-radius: 8px; padding: 3px; border: 1px solid var(--border-subtle); }
-.py-filter-btn { padding: 7px 14px; border: none; background: transparent; color: var(--text-secondary); font-size: 0.82rem; font-weight: 500; font-family: inherit; border-radius: 6px; cursor: pointer; transition: all 0.2s ease; }
+.py-filter-group { display: flex; gap: 2px; background: var(--surface-2); border-radius: var(--radius-sm); padding: 2px; border: 1px solid var(--border-subtle); }
+.py-filter-btn { padding: 6px 12px; border: none; background: transparent; color: var(--text-secondary); font-size: 0.8rem; font-weight: 500; font-family: inherit; border-radius: var(--radius-sm); cursor: pointer; transition: all var(--transition-fast) ease; }
 .py-filter-btn:hover { color: var(--text-primary); }
-.py-filter-btn.active { background: var(--surface-1); color: var(--text-primary); font-weight: 600; box-shadow: 0 1px 3px rgba(0,0,0,0.08); }
+.py-filter-btn.active { background: var(--surface-1); color: var(--text-primary); font-weight: 600; border: 1px solid var(--border-subtle); }
 
-.py-btn-primary { display: inline-flex; align-items: center; gap: 8px; padding: 10px 20px; background: var(--accent-primary); color: white; border: none; border-radius: 8px; font-size: 0.88rem; font-weight: 600; font-family: inherit; cursor: pointer; transition: all 0.2s ease; white-space: nowrap; }
-.py-btn-primary:hover { background: var(--accent-primary-dark); transform: translateY(-1px); box-shadow: 0 4px 12px rgb(from var(--accent-primary) r g b / 0.3); }
-
-/* =========================================
-   İSTATİSTİK KARTLARI
-========================================= */
-.py-stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 16px; }
-
-.py-stat-card { background: var(--surface-2); border: 1px solid var(--border-subtle); border-radius: 12px; padding: 18px 20px; display: flex; align-items: center; gap: 16px; transition: all 0.2s ease; }
-.py-stat-card:hover { border-color: var(--text-secondary); transform: translateY(-2px); box-shadow: var(--shadow-md); }
-
-.py-stat-icon { width: 44px; height: 44px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 1.2rem; flex-shrink: 0; }
-
-.py-stat-info { display: flex; flex-direction: column; gap: 2px; }
-.py-stat-value { font-size: 1.5rem; font-weight: 700; color: var(--text-primary); line-height: 1.2; }
-.py-stat-label { font-size: 0.8rem; color: var(--text-secondary); font-weight: 500; }
+.py-btn-primary { display: inline-flex; align-items: center; gap: 6px; padding: 8px 16px; background: var(--accent-primary); color: var(--text-inverse); border: 1px solid var(--accent-primary-dark); border-radius: var(--radius-sm); font-size: 0.85rem; font-weight: 600; font-family: inherit; cursor: pointer; transition: all var(--transition-fast) ease; white-space: nowrap; }
+.py-btn-primary:hover { background: var(--accent-primary-light); border-color: var(--accent-primary); transform: translateY(-1px); box-shadow: 0 2px 6px rgb(from var(--accent-primary) r g b / 0.3); }
 
 /* =========================================
-   TABLO
-========================================= */
-.py-table-card { background: var(--surface-2); border: 1px solid var(--border-subtle); border-radius: 12px; overflow: hidden; display: flex; flex-direction: column; flex: 1; }
+   İSTATİSTİK KARTLARI (Surveillance Modülleri)
+   ========================================= */
+.py-stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 12px; }
+
+.py-stat-card { background: var(--surface-2); border: 1px solid var(--border-subtle); border-radius: var(--radius-sm); padding: 12px 16px; display: flex; align-items: center; gap: 14px; transition: all var(--transition-fast) ease; position: relative; }
+.py-stat-card:hover { border-color: var(--border-strong); }
+
+/* Sol Kenar Vurgu Barları */
+.py-stats > div:nth-child(1) { border-left: 3px solid var(--accent-primary); }
+.py-stats > div:nth-child(2) { border-left: 3px solid var(--warning); }
+.py-stats > div:nth-child(3) { border-left: 3px solid var(--danger); }
+.py-stats > div:nth-child(4) { border-left: 3px solid var(--success); }
+
+.py-stat-icon { width: 36px; height: 36px; border-radius: var(--radius-sm); display: flex; align-items: center; justify-content: center; font-size: 1rem; flex-shrink: 0; background: var(--surface-1) !important; color: inherit !important; border: 1px solid var(--border-subtle); }
+
+.py-stat-info { display: flex; flex-direction: column; gap: 1px; }
+.py-stat-value { font-size: 1.35rem; font-weight: 700; color: var(--text-primary); line-height: 1.2; font-family: 'SF Mono', 'Consolas', monospace; }
+.py-stat-label { font-size: 0.75rem; color: var(--text-secondary); font-weight: 600; text-transform: uppercase; letter-spacing: 0.3px; }
+
+/* =========================================
+   TABLO (Yüksek Yoğunluk)
+   ========================================= */
+.py-table-card { background: var(--surface-2); border: 1px solid var(--border-subtle); border-radius: var(--radius-sm); overflow: hidden; display: flex; flex-direction: column; flex: 1; }
 
 .py-table-wrapper { overflow-x: auto; flex: 1; }
 
 .py-table { width: 100%; border-collapse: collapse; }
-.py-table thead th { position: sticky; top: 0; z-index: 5; background: var(--surface-3); padding: 14px 18px; text-align: left; color: var(--text-secondary); font-size: 0.75rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; border-bottom: 1px solid var(--border-subtle); white-space: nowrap; }
-.py-table tbody td { padding: 14px 18px; border-bottom: 1px solid rgb(from var(--border-subtle) r g b / 0.5); color: var(--text-primary); font-size: 0.88rem; white-space: nowrap; vertical-align: middle; }
-.py-table tbody tr { transition: background 0.15s ease; }
-.py-table tbody tr:hover { background: rgb(from var(--accent-primary) r g b / 0.04); }
+.py-table thead th { position: sticky; top: 0; z-index: 5; background: var(--surface-3); padding: 10px 14px; text-align: left; color: var(--text-secondary); font-size: 0.72rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; border-bottom: 1px solid var(--border-subtle); white-space: nowrap; }
+.py-table tbody td { padding: 9px 14px; border-bottom: 1px solid rgb(from var(--border-subtle) r g b / 0.4); color: var(--text-primary); font-size: 0.85rem; white-space: nowrap; vertical-align: middle; }
+.py-table tbody tr { transition: background var(--transition-fast) ease; }
+.py-table tbody tr:hover { background: rgb(from var(--accent-primary) r g b / 0.03); }
 .py-table tbody tr:last-child td { border-bottom: none; }
 
+/* Plaka sütunu stilizasyonu */
+.py-table tbody td:first-child {
+    font-family: 'SF Mono', 'Cascadia Code', 'Consolas', monospace;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+}
+
 /* Kategori badge'leri */
-.py-badge { display: inline-flex; align-items: center; gap: 5px; padding: 4px 12px; border-radius: 30px; font-size: 0.75rem; font-weight: 600; white-space: nowrap; }
-.py-badge-normal { background: rgb(from var(--neutral) r g b / 0.12); color: var(--neutral); }
-.py-badge-vip { background: rgb(from var(--warning) r g b / 0.12); color: var(--warning); }
-.py-badge-blacklist { background: rgb(from var(--danger) r g b / 0.12); color: var(--danger); }
-.py-badge-staff { background: rgb(from var(--success) r g b / 0.12); color: var(--success); }
+.py-badge { display: inline-flex; align-items: center; gap: 4px; padding: 2px 8px; border-radius: var(--radius-sm); font-size: 0.72rem; font-weight: 600; white-space: nowrap; border: 1px solid transparent; }
+.py-badge-normal { background: rgb(from var(--neutral) r g b / 0.08); color: var(--neutral); border-color: rgb(from var(--neutral) r g b / 0.15); }
+.py-badge-vip { background: rgb(from var(--warning) r g b / 0.08); color: var(--warning); border-color: rgb(from var(--warning) r g b / 0.15); }
+.py-badge-blacklist { background: rgb(from var(--danger) r g b / 0.08); color: var(--danger); border-color: rgb(from var(--danger) r g b / 0.15); }
+.py-badge-staff { background: rgb(from var(--success) r g b / 0.08); color: var(--success); border-color: rgb(from var(--success) r g b / 0.15); }
 
 /* Tablo işlem butonları */
-.py-action-btn { display: inline-flex; align-items: center; justify-content: center; width: 34px; height: 34px; border-radius: 8px; border: 1px solid var(--border-subtle); background: var(--surface-3); color: var(--text-secondary); cursor: pointer; transition: all 0.2s ease; font-size: 0.9rem; }
-.py-action-btn:hover { border-color: var(--accent-primary); color: var(--accent-primary); background: rgb(from var(--accent-primary) r g b / 0.08); }
-.py-action-btn.danger:hover { border-color: var(--danger); color: var(--danger); background: rgb(from var(--danger) r g b / 0.08); }
+.py-action-btn { display: inline-flex; align-items: center; justify-content: center; width: 28px; height: 28px; border-radius: var(--radius-sm); border: 1px solid var(--border-subtle); background: var(--surface-3); color: var(--text-secondary); cursor: pointer; transition: all var(--transition-fast) ease; font-size: 0.8rem; }
+.py-action-btn:hover { border-color: var(--accent-primary); color: var(--accent-primary); background: rgb(from var(--accent-primary) r g b / 0.05); }
+.py-action-btn.danger:hover { border-color: var(--danger); color: var(--danger); background: rgb(from var(--danger) r g b / 0.05); }
 
-.py-action-group { display: flex; gap: 6px; }
+.py-action-group { display: flex; gap: 4px; }
 
 /* Boş tablo mesajı */
-.py-table-empty { display: none; flex-direction: column; align-items: center; justify-content: center; padding: 60px 20px; text-align: center; gap: 12px; }
-.py-table-empty i { font-size: 3rem; color: var(--text-secondary); opacity: 0.3; }
-.py-table-empty p { color: var(--text-secondary); font-size: 0.95rem; margin: 0; }
+.py-table-empty { display: none; flex-direction: column; align-items: center; justify-content: center; padding: 48px 16px; text-align: center; gap: 8px; }
+.py-table-empty i { font-size: 2.2rem; color: var(--text-secondary); opacity: 0.25; }
+.py-table-empty p { color: var(--text-secondary); font-size: 0.88rem; margin: 0; }
 
 /* =========================================
-   MODAL
-========================================= */
-.py-modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.5); backdrop-filter: blur(4px); display: flex; align-items: center; justify-content: center; z-index: 1000; animation: fadeIn 0.2s ease; }
+   MODAL (Aygıt Ayarları Tarzı)
+   ========================================= */
+.py-modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.6); backdrop-filter: blur(2px); display: flex; align-items: center; justify-content: center; z-index: 1000; animation: fadeIn var(--transition-fast) ease; }
 @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
 
-.py-modal { background: var(--surface-2); border: 1px solid var(--border-subtle); border-radius: 16px; width: 520px; max-width: 90vw; max-height: 90vh; overflow-y: auto; box-shadow: var(--shadow-lg); animation: slideUp 0.25s ease; }
-.py-modal-sm { width: 420px; }
-@keyframes slideUp { from { opacity: 0; transform: translateY(20px) scale(0.97); } to { opacity: 1; transform: translateY(0) scale(1); } }
+.py-modal { background: var(--surface-2); border: 1px solid var(--border-strong); border-radius: var(--radius-lg); width: 480px; max-width: 90vw; max-height: 90vh; overflow-y: auto; box-shadow: var(--shadow-lg); animation: slideUp var(--transition-normal) ease-out; }
+.py-modal-sm { width: 380px; }
+@keyframes slideUp { from { opacity: 0; transform: scale(0.98); } to { opacity: 1; transform: scale(1); } }
 
-.py-modal-header { display: flex; justify-content: space-between; align-items: center; padding: 18px 24px; border-bottom: 1px solid var(--border-subtle); font-size: 1.05rem; font-weight: 600; color: var(--text-primary); }
+.py-modal-header { display: flex; justify-content: space-between; align-items: center; padding: 14px 20px; border-bottom: 1px solid var(--border-subtle); font-size: 0.95rem; font-weight: 600; color: var(--text-primary); text-transform: uppercase; letter-spacing: 0.5px; }
 
-.py-modal-close { background: none; border: none; color: var(--text-secondary); font-size: 1.2rem; cursor: pointer; width: 32px; height: 32px; border-radius: 8px; display: flex; align-items: center; justify-content: center; transition: all 0.2s ease; }
+.py-modal-close { background: none; border: none; color: var(--text-secondary); font-size: 1rem; cursor: pointer; width: 28px; height: 28px; border-radius: var(--radius-sm); display: flex; align-items: center; justify-content: center; transition: all var(--transition-fast) ease; }
 .py-modal-close:hover { background: var(--surface-3); color: var(--text-primary); }
 
-.py-modal-body { padding: 20px 24px; display: flex; flex-direction: column; gap: 16px; }
+.py-modal-body { padding: 16px 20px; display: flex; flex-direction: column; gap: 12px; }
 
-.py-form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+.py-form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
 
-.py-form-group { display: flex; flex-direction: column; gap: 6px; }
-.py-form-group label { font-size: 0.82rem; font-weight: 600; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 0.3px; }
+.py-form-group { display: flex; flex-direction: column; gap: 4px; }
+.py-form-group label { font-size: 0.75rem; font-weight: 600; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 0.3px; }
 
-.py-form-input { padding: 10px 14px; background: var(--surface-3); border: 1px solid var(--border-subtle); border-radius: 8px; color: var(--text-primary); font-size: 0.9rem; font-family: inherit; transition: border-color 0.2s ease; }
-.py-form-input:focus { border-color: var(--accent-primary); outline: none; }
+.py-form-input { padding: 8px 12px; background: var(--surface-3); border: 1px solid var(--border-subtle); border-radius: var(--radius-sm); color: var(--text-primary); font-size: 0.85rem; font-family: inherit; transition: border-color var(--transition-fast) ease; outline: none; }
+.py-form-input:focus { border-color: var(--accent-primary); }
 .py-form-input::placeholder { color: var(--text-secondary); opacity: 0.6; }
 
-.py-form-textarea { resize: vertical; min-height: 80px; }
+.py-form-textarea { resize: vertical; min-height: 60px; }
 
-.py-form-select { padding: 10px 14px; background: var(--surface-3); border: 1px solid var(--border-subtle); border-radius: 8px; color: var(--text-primary); font-size: 0.9rem; font-family: inherit; cursor: pointer; outline: none; appearance: none; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23888' d='M6 8L1 3h10z'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 12px center; }
+.py-form-select { padding: 8px 12px; background: var(--surface-3); border: 1px solid var(--border-subtle); border-radius: var(--radius-sm); color: var(--text-primary); font-size: 0.85rem; font-family: inherit; cursor: pointer; outline: none; appearance: none; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='10' viewBox='0 0 10 10'%3E%3Cpath fill='%23666' d='M5 7L1 2h8z'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 10px center; }
 
-.py-modal-footer { display: flex; justify-content: flex-end; gap: 10px; padding: 16px 24px; border-top: 1px solid var(--border-subtle); }
+.py-modal-footer { display: flex; justify-content: flex-end; gap: 8px; padding: 12px 20px; border-top: 1px solid var(--border-subtle); }
 
-.py-btn-cancel { padding: 10px 20px; background: var(--surface-3); border: 1px solid var(--border-subtle); border-radius: 8px; color: var(--text-secondary); font-size: 0.88rem; font-weight: 500; font-family: inherit; cursor: pointer; transition: all 0.2s ease; }
+.py-btn-cancel { padding: 8px 16px; background: var(--surface-3); border: 1px solid var(--border-subtle); border-radius: var(--radius-sm); color: var(--text-secondary); font-size: 0.82rem; font-weight: 500; font-family: inherit; cursor: pointer; transition: all var(--transition-fast) ease; }
 .py-btn-cancel:hover { background: var(--surface-4); color: var(--text-primary); }
 
-.py-btn-save { padding: 10px 24px; background: var(--accent-primary); border: none; border-radius: 8px; color: white; font-size: 0.88rem; font-weight: 600; font-family: inherit; cursor: pointer; transition: all 0.2s ease; display: inline-flex; align-items: center; gap: 8px; }
-.py-btn-save:hover { background: var(--accent-primary-dark); transform: translateY(-1px); box-shadow: 0 4px 12px rgb(from var(--accent-primary) r g b / 0.3); }
+.py-btn-save { padding: 8px 20px; background: var(--accent-primary); border: 1px solid var(--accent-primary-dark); border-radius: var(--radius-sm); color: var(--text-inverse); font-size: 0.82rem; font-weight: 600; font-family: inherit; cursor: pointer; transition: all var(--transition-fast) ease; display: inline-flex; align-items: center; gap: 6px; }
+.py-btn-save:hover { background: var(--accent-primary-light); border-color: var(--accent-primary); transform: translateY(-1px); }
 
-.py-btn-danger { padding: 10px 24px; background: var(--danger); border: none; border-radius: 8px; color: white; font-size: 0.88rem; font-weight: 600; font-family: inherit; cursor: pointer; transition: all 0.2s ease; display: inline-flex; align-items: center; gap: 8px; }
-.py-btn-danger:hover { background: var(--danger-dark); transform: translateY(-1px); box-shadow: 0 4px 12px rgb(from var(--danger) r g b / 0.3); }
+.py-btn-danger { padding: 8px 20px; background: var(--danger); border: 1px solid var(--danger-dark); border-radius: var(--radius-sm); color: var(--text-inverse); font-size: 0.82rem; font-weight: 600; font-family: inherit; cursor: pointer; transition: all var(--transition-fast) ease; display: inline-flex; align-items: center; gap: 6px; }
+.py-btn-danger:hover { background: var(--danger-light); border-color: var(--danger); transform: translateY(-1px); }
 
 /* =========================================
    RESPONSIVE
 ========================================= */
 @media (max-width: 1000px) {
-    .py-sidebar { width: 220px; }
-    .py-content { padding: 16px; }
+    .py-sidebar { width: 200px; }
+    .py-content { padding: 12px; }
     .py-stats { grid-template-columns: repeat(2, 1fr); }
 }
 
@@ -153,9 +166,9 @@
     .py-sidebar { width: 100%; flex-direction: row; flex-wrap: wrap; border-right: none; border-bottom: 1px solid var(--border-subtle); }
     .py-sidebar .sidebar-header { display: none; }
     .py-sidebar .sidebar-footer { display: none; }
-    .py-menu { display: flex; padding: 8px; gap: 4px; overflow-x: auto; }
-    .py-menu-item { padding: 8px 14px; white-space: nowrap; border-left: none; border-bottom: 2px solid transparent; font-size: 0.85rem; }
-    .py-menu-item.active { border-left-color: transparent; border-bottom-color: var(--danger-dark); }
+    .py-menu { display: flex; padding: 4px; gap: 2px; overflow-x: auto; }
+    .py-menu-item { padding: 6px 12px; white-space: nowrap; border-left: none; border-bottom: 2px solid transparent; font-size: 0.8rem; }
+    .py-menu-item.active { border-left-color: transparent; border-bottom-color: var(--accent-primary); }
     .py-toolbar { flex-direction: column; align-items: stretch; }
     .py-toolbar-left { flex-direction: column; }
     .py-search-box { max-width: 100%; }

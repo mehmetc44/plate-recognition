@@ -22,637 +22,636 @@
    1. LIGHT MODE (Varsayılan)
    =================================== */
 :root {
-  /* ── Surface (Arka Plan Katmanları) ── */
-  --surface-0: #ffffff;
-  --surface-1: #f7f8fa;
+  /* ── Surface (Arka Plan Katmanları - Gümüş/Gri Profesyonel) ── */
+  --surface-0: #fbfbfb;
+  --surface-1: #f0f2f5;
   --surface-2: #ffffff;
-  --surface-3: #f0f1f4;
-  --surface-4: #e4e6eb;
+  --surface-3: #e8eaf0;
+  --surface-4: #dadce0;
   --surface-black: #000000;
 
   /* ── Text ── */
-  --text-primary: #1a1d23;
-  --text-secondary: #6b7280;
+  --text-primary: #1c1d21;
+  --text-secondary: #5f6672;
   --text-inverse: #ffffff;
 
   /* ── Interaction (Link / UI) ── */
-  --link: #4b5563;
-  --link-hover: #1a1d23;
+  --link: #5f6672;
+  --link-hover: #1c1d21;
 
-  /* ── Brand / Accent (varsayılan: mavi) ── */
-  --accent-primary: #2196F3;
-  --accent-primary-light: #64B5F6;
-  --accent-primary-dark: #1565C0;
-  --accent-active: #E53935;
-  --accent-active-light: #EF5350;
-  --accent-active-dark: #B71C1C;
+  /* ── Brand / Accent (Hikvision Kırmızısı) ── */
+  --accent-primary: #e31e24;
+  --accent-primary-light: #ff4d52;
+  --accent-primary-dark: #b31015;
+  --accent-active: #e31e24;
+  --accent-active-light: #ff4d52;
+  --accent-active-dark: #b31015;
 
   /* ── Status Colors ── */
-  --success: #2E7D32;
-  --success-light: #4CAF50;
-  --success-dark: #1B5E20;
-  --danger: #C62828;
-  --danger-light: #EF5350;
-  --danger-dark: #8B0000;
-  --warning: #E65100;
-  --warning-light: #FF9800;
-  --warning-dark: #BF360C;
-  --info: #1565C0;
-  --info-light: #42A5F5;
-  --info-dark: #0D47A1;
-  --neutral: #757575;
-  --neutral-light: #BDBDBD;
-  --neutral-dark: #424242;
+  --success: #008f39;
+  --success-light: #2ecc71;
+  --success-dark: #006622;
+  --danger: #d92b2b;
+  --danger-light: #ff5c5c;
+  --danger-dark: #a61c1c;
+  --warning: #d97706;
+  --warning-light: #fbbf24;
+  --warning-dark: #b45309;
+  --info: #0066cc;
+  --info-light: #3399ff;
+  --info-dark: #004499;
+  --neutral: #64748b;
+  --neutral-light: #cbd5e1;
+  --neutral-dark: #475569;
 
   /* ── Border / Divider ── */
-  --border-subtle: #e0e2e7;
-  --border-strong: #c4c8d0;
+  --border-subtle: #d2d6dc;
+  --border-strong: #9aa2af;
 
-  /* ── Shadow ── */
-  --shadow-sm: 0 1px 2px rgba(0,0,0,0.05);
-  --shadow-md: 0 4px 12px rgba(0,0,0,0.08);
-  --shadow-lg: 0 8px 24px rgba(0,0,0,0.12);
+  /* ── Shadow (Keskin, düz çizgiler) ── */
+  --shadow-sm: 0 1px 2px rgba(0,0,0,0.06);
+  --shadow-md: 0 2px 4px rgba(0,0,0,0.08);
+  --shadow-lg: 0 4px 8px rgba(0,0,0,0.10);
 
-  /* ── Radius ── */
-  --radius-sm: 6px;
-  --radius-md: 8px;
-  --radius-lg: 12px;
-  --radius-xl: 16px;
+  /* ── Radius (Cihaz Arayüzü İçin Keskin Köşeler) ── */
+  --radius-sm: 2px;
+  --radius-md: 3px;
+  --radius-lg: 4px;
+  --radius-xl: 4px;
 
   /* ── Transition ── */
-  --transition-fast: 0.15s ease;
-  --transition-normal: 0.25s ease;
-  --transition-slow: 0.4s ease;
+  --transition-fast: 0.1s ease;
+  --transition-normal: 0.18s ease;
+  --transition-slow: 0.3s ease;
 }
 
 /* ===================================
-   2. DARK MODE
+   2. DARK MODE (Varsayılan Koyu Arayüz - HikCentral Tarzı)
    =================================== */
 [data-theme="dark"] {
-  --surface-0: #0d0d0d;
-  --surface-1: #141517;
-  --surface-2: #1a1b1f;
-  --surface-3: #212328;
-  --surface-4: #2a2c33;
+  --surface-0: #0c0d10;
+  --surface-1: #111216;
+  --surface-2: #16181f;
+  --surface-3: #1f222b;
+  --surface-4: #2b2f3a;
   --surface-black: #000000;
 
-  --text-primary: #f0f0f2;
-  --text-secondary: #9ca3af;
-  --text-inverse: #141517;
+  --text-primary: #e6eaf2;
+  --text-secondary: #8792a6;
+  --text-inverse: #111216;
 
-  --link: #9ca3af;
-  --link-hover: #f0f0f2;
+  --link: #8792a6;
+  --link-hover: #e6eaf2;
 
-  --accent-primary: #42A5F5;
-  --accent-primary-light: #90CAF9;
-  --accent-primary-dark: #1E88E5;
-  --accent-active: #EF5350;
-  --accent-active-light: #EF9A9A;
-  --accent-active-dark: #D32F2F;
+  --accent-primary: #e31e24;
+  --accent-primary-light: #ff4d52;
+  --accent-primary-dark: #b31015;
+  --accent-active: #e31e24;
+  --accent-active-light: #ff4d52;
+  --accent-active-dark: #b31015;
 
-  --success: #4CAF50;
-  --success-light: #81C784;
-  --success-dark: #2E7D32;
-  --danger: #EF5350;
-  --danger-light: #EF9A9A;
-  --danger-dark: #C62828;
-  --warning: #FF9800;
-  --warning-light: #FFB74D;
-  --warning-dark: #E65100;
-  --info: #42A5F5;
-  --info-light: #90CAF9;
-  --info-dark: #1565C0;
-  --neutral: #9E9E9E;
-  --neutral-light: #E0E0E0;
-  --neutral-dark: #616161;
+  --success: #00b050;
+  --success-light: #2ecc71;
+  --success-dark: #008030;
+  --danger: #e31e24;
+  --danger-light: #ff4d52;
+  --danger-dark: #b31015;
+  --warning: #ff8000;
+  --warning-light: #ffad55;
+  --warning-dark: #c86000;
+  --info: #0088ff;
+  --info-light: #55aaff;
+  --info-dark: #0055bb;
+  --neutral: #6c7a89;
+  --neutral-light: #abb7b7;
+  --neutral-dark: #4f5b66;
 
-  --border-subtle: #2d3038;
-  --border-strong: #404450;
+  --border-subtle: #242833;
+  --border-strong: #3b4254;
 
-  --shadow-sm: 0 1px 2px rgba(0,0,0,0.25);
-  --shadow-md: 0 4px 12px rgba(0,0,0,0.35);
-  --shadow-lg: 0 8px 24px rgba(0,0,0,0.45);
+  --shadow-sm: 0 1px 2px rgba(0,0,0,0.3);
+  --shadow-md: 0 2px 5px rgba(0,0,0,0.4);
+  --shadow-lg: 0 4px 10px rgba(0,0,0,0.5);
 }
 
 /* ===================================
-   3. OCEAN TEMA (Mavi Profesyonel)
+   3. OCEAN TEMA (Savunma & Kontrol Odası Mavi)
    =================================== */
 [data-theme="ocean"] {
-  --surface-0: #ffffff;
-  --surface-1: #f0f5fa;
+  --surface-0: #f4f7fa;
+  --surface-1: #e9eff5;
   --surface-2: #ffffff;
-  --surface-3: #e3edf6;
-  --surface-4: #d0dff0;
-  --surface-black: #0a1929;
+  --surface-3: #d5e1ee;
+  --surface-4: #c2d3e4;
+  --surface-black: #08111e;
 
-  --text-primary: #0d2137;
-  --text-secondary: #4a6d8c;
+  --text-primary: #0a1b2e;
+  --text-secondary: #4a637d;
   --text-inverse: #ffffff;
 
-  --link: #3b6d9e;
-  --link-hover: #0d2137;
+  --link: #3b5a7a;
+  --link-hover: #0a1b2e;
 
-  --accent-primary: #1565C0;
-  --accent-primary-light: #42A5F5;
-  --accent-primary-dark: #0D47A1;
-  --accent-active: #C62828;
-  --accent-active-light: #EF5350;
-  --accent-active-dark: #8B0000;
+  --accent-primary: #0066cc;
+  --accent-primary-light: #3399ff;
+  --accent-primary-dark: #004499;
+  --accent-active: #e31e24;
+  --accent-active-light: #ff4d52;
+  --accent-active-dark: #b31015;
 
-  --success: #2E7D32;
-  --success-light: #4CAF50;
-  --success-dark: #1B5E20;
-  --danger: #C62828;
-  --danger-light: #EF5350;
-  --danger-dark: #8B0000;
-  --warning: #E65100;
-  --warning-light: #FF9800;
-  --warning-dark: #BF360C;
-  --info: #0D47A1;
+  --success: #008040;
+  --success-light: #2ecc71;
+  --success-dark: #005522;
+  --danger: #d92b2b;
+  --danger-light: #ff5c5c;
+  --danger-dark: #a61c1c;
+  --warning: #ff8000;
+  --warning-light: #ffad55;
+  --warning-dark: #c86000;
+  --info: #0055bb;
   --info-light: #42A5F5;
   --info-dark: #072a5e;
-  --neutral: #607D8B;
-  --neutral-light: #B0BEC5;
-  --neutral-dark: #37474F;
+  --neutral: #5c6c7d;
+  --neutral-light: #9ab2cc;
+  --neutral-dark: #334455;
 
-  --border-subtle: #d4e0ed;
-  --border-strong: #b0c5db;
+  --border-subtle: #cbd6e2;
+  --border-strong: #9ab0c7;
 
-  --shadow-sm: 0 1px 2px rgba(21,101,192,0.06);
-  --shadow-md: 0 4px 14px rgba(21,101,192,0.10);
-  --shadow-lg: 0 8px 28px rgba(21,101,192,0.14);
+  --shadow-sm: 0 1px 2px rgba(10,27,46,0.06);
+  --shadow-md: 0 2px 4px rgba(10,27,46,0.08);
+  --shadow-lg: 0 4px 8px rgba(10,27,46,0.1);
 }
 
-/* Ocean Dark variasyonu */
 [data-theme="ocean-dark"] {
-  --surface-0: #0a1929;
-  --surface-1: #0f2137;
-  --surface-2: #152a42;
-  --surface-3: #1c3450;
-  --surface-4: #253f5e;
-  --surface-black: #050d17;
+  --surface-0: #06090e;
+  --surface-1: #0a0f18;
+  --surface-2: #101622;
+  --surface-3: #182132;
+  --surface-4: #222d42;
+  --surface-black: #020406;
 
-  --text-primary: #e8f0f8;
-  --text-secondary: #8aa8cc;
-  --text-inverse: #0a1929;
+  --text-primary: #dae5f2;
+  --text-secondary: #7b90a6;
+  --text-inverse: #0a0f18;
 
-  --link: #8aa8cc;
-  --link-hover: #e8f0f8;
+  --link: #7b90a6;
+  --link-hover: #dae5f2;
 
-  --accent-primary: #42A5F5;
-  --accent-primary-light: #90CAF9;
-  --accent-primary-dark: #1E88E5;
-  --accent-active: #EF5350;
-  --accent-active-light: #EF9A9A;
-  --accent-active-dark: #D32F2F;
+  --accent-primary: #0088ff;
+  --accent-primary-light: #55aaff;
+  --accent-primary-dark: #0055bb;
+  --accent-active: #e31e24;
+  --accent-active-light: #ff4d52;
+  --accent-active-dark: #b31015;
 
-  --success: #4CAF50;
-  --success-light: #81C784;
-  --success-dark: #2E7D32;
-  --danger: #EF5350;
-  --danger-light: #EF9A9A;
-  --danger-dark: #C62828;
-  --warning: #FF9800;
-  --warning-light: #FFB74D;
-  --warning-dark: #E65100;
-  --info: #42A5F5;
-  --info-light: #90CAF9;
-  --info-dark: #1565C0;
-  --neutral: #78909C;
-  --neutral-light: #CFD8DC;
-  --neutral-dark: #455A64;
+  --success: #00b050;
+  --success-light: #2ecc71;
+  --success-dark: #008030;
+  --danger: #e31e24;
+  --danger-light: #ff4d52;
+  --danger-dark: #b31015;
+  --warning: #ff8000;
+  --warning-light: #ffad55;
+  --warning-dark: #c86000;
+  --info: #0088ff;
+  --info-light: #55aaff;
+  --info-dark: #0055bb;
+  --neutral: #5c6c7d;
+  --neutral-light: #abbbc9;
+  --neutral-dark: #3a4957;
 
-  --border-subtle: #1e3a58;
-  --border-strong: #2c5078;
+  --border-subtle: #192233;
+  --border-strong: #273650;
 
-  --shadow-sm: 0 1px 2px rgba(0,0,0,0.30);
-  --shadow-md: 0 4px 14px rgba(0,0,0,0.40);
-  --shadow-lg: 0 8px 28px rgba(0,0,0,0.50);
+  --shadow-sm: 0 1px 2px rgba(0,0,0,0.3);
+  --shadow-md: 0 2px 5px rgba(0,0,0,0.4);
+  --shadow-lg: 0 4px 10px rgba(0,0,0,0.5);
 }
 
 /* ===================================
-   4. FOREST TEMA (Yeşil Doğa)
+   4. FOREST TEMA (Yeşil Doğa) -> Endüstriyel Yeşil/Siyah
    =================================== */
 [data-theme="forest"] {
-  --surface-0: #ffffff;
-  --surface-1: #f2f7f4;
+  --surface-0: #f4f6f4;
+  --surface-1: #e9ede9;
   --surface-2: #ffffff;
-  --surface-3: #e5efe7;
-  --surface-4: #d2e3d7;
-  --surface-black: #0a1f0f;
+  --surface-3: #d5ded5;
+  --surface-4: #c2cdc2;
+  --surface-black: #081109;
 
-  --text-primary: #0f2415;
-  --text-secondary: #4a6d54;
+  --text-primary: #0a1f0c;
+  --text-secondary: #4a634e;
   --text-inverse: #ffffff;
 
-  --link: #3a6b46;
-  --link-hover: #0f2415;
+  --link: #3b5a40;
+  --link-hover: #0a1f0c;
 
-  --accent-primary: #2E7D32;
-  --accent-primary-light: #4CAF50;
-  --accent-primary-dark: #1B5E20;
-  --accent-active: #C62828;
-  --accent-active-light: #EF5350;
-  --accent-active-dark: #8B0000;
+  --accent-primary: #008040;
+  --accent-primary-light: #2ecc71;
+  --accent-primary-dark: #005522;
+  --accent-active: #e31e24;
+  --accent-active-light: #ff4d52;
+  --accent-active-dark: #b31015;
 
-  --success: #2E7D32;
-  --success-light: #66BB6A;
-  --success-dark: #1B5E20;
-  --danger: #C62828;
-  --danger-light: #EF5350;
-  --danger-dark: #8B0000;
-  --warning: #E65100;
-  --warning-light: #FF9800;
-  --warning-dark: #BF360C;
-  --info: #1565C0;
-  --info-light: #42A5F5;
-  --info-dark: #0D47A1;
-  --neutral: #607D8B;
-  --neutral-light: #B0BEC5;
-  --neutral-dark: #37474F;
+  --success: #008040;
+  --success-light: #2ecc71;
+  --success-dark: #005522;
+  --danger: #d92b2b;
+  --danger-light: #ff5c5c;
+  --danger-dark: #a61c1c;
+  --warning: #ff8000;
+  --warning-light: #ffad55;
+  --warning-dark: #c86000;
+  --info: #0055bb;
+  --info-light: #3399ff;
+  --info-dark: #004499;
+  --neutral: #5c6c5f;
+  --neutral-light: #9ab2a0;
+  --neutral-dark: #334436;
 
-  --border-subtle: #d4e3d9;
-  --border-strong: #b0cfb8;
+  --border-subtle: #cbd6cb;
+  --border-strong: #9ab09c;
 
-  --shadow-sm: 0 1px 2px rgba(46,125,50,0.06);
-  --shadow-md: 0 4px 14px rgba(46,125,50,0.10);
-  --shadow-lg: 0 8px 28px rgba(46,125,50,0.14);
+  --shadow-sm: 0 1px 2px rgba(10,31,12,0.06);
+  --shadow-md: 0 2px 4px rgba(10,31,12,0.08);
+  --shadow-lg: 0 4px 8px rgba(10,31,12,0.1);
 }
 
 [data-theme="forest-dark"] {
-  --surface-0: #0a1f0f;
-  --surface-1: #0f2817;
-  --surface-2: #14301c;
-  --surface-3: #1a3a24;
-  --surface-4: #21452d;
-  --surface-black: #040d06;
+  --surface-0: #060906;
+  --surface-1: #0a0f0a;
+  --surface-2: #101610;
+  --surface-3: #182118;
+  --surface-4: #222d22;
+  --surface-black: #020402;
 
-  --text-primary: #e8f5eb;
-  --text-secondary: #8cb89a;
-  --text-inverse: #0a1f0f;
+  --text-primary: #dae5da;
+  --text-secondary: #7b907c;
+  --text-inverse: #0a0f0a;
 
-  --link: #8cb89a;
-  --link-hover: #e8f5eb;
+  --link: #7b907c;
+  --link-hover: #dae5da;
 
-  --accent-primary: #4CAF50;
-  --accent-primary-light: #81C784;
-  --accent-primary-dark: #388E3C;
-  --accent-active: #EF5350;
-  --accent-active-light: #EF9A9A;
-  --accent-active-dark: #D32F2F;
+  --accent-primary: #00b050;
+  --accent-primary-light: #2ecc71;
+  --accent-primary-dark: #008030;
+  --accent-active: #e31e24;
+  --accent-active-light: #ff4d52;
+  --accent-active-dark: #b31015;
 
-  --success: #66BB6A;
-  --success-light: #81C784;
-  --success-dark: #43A047;
-  --danger: #EF5350;
-  --danger-light: #EF9A9A;
-  --danger-dark: #C62828;
-  --warning: #FF9800;
-  --warning-light: #FFB74D;
-  --warning-dark: #E65100;
-  --info: #42A5F5;
-  --info-light: #90CAF9;
-  --info-dark: #1565C0;
-  --neutral: #78909C;
-  --neutral-light: #CFD8DC;
-  --neutral-dark: #455A64;
+  --success: #00b050;
+  --success-light: #2ecc71;
+  --success-dark: #008030;
+  --danger: #e31e24;
+  --danger-light: #ff4d52;
+  --danger-dark: #b31015;
+  --warning: #ff8000;
+  --warning-light: #ffad55;
+  --warning-dark: #c86000;
+  --info: #0088ff;
+  --info-light: #55aaff;
+  --info-dark: #0055bb;
+  --neutral: #5c6c5f;
+  --neutral-light: #abbbc0;
+  --neutral-dark: #3a493c;
 
-  --border-subtle: #1e3826;
-  --border-strong: #2c5037;
+  --border-subtle: #192219;
+  --border-strong: #273627;
 
-  --shadow-sm: 0 1px 2px rgba(0,0,0,0.30);
-  --shadow-md: 0 4px 14px rgba(0,0,0,0.40);
-  --shadow-lg: 0 8px 28px rgba(0,0,0,0.50);
+  --shadow-sm: 0 1px 2px rgba(0,0,0,0.3);
+  --shadow-md: 0 2px 5px rgba(0,0,0,0.4);
+  --shadow-lg: 0 4px 10px rgba(0,0,0,0.5);
 }
 
 /* ===================================
-   5. ROYAL TEMA (Mor Asil)
+   5. ROYAL TEMA (Çelik Mor) -> Endüstriyel Kurşun/Mor
    =================================== */
 [data-theme="royal"] {
-  --surface-0: #ffffff;
-  --surface-1: #f8f6fa;
+  --surface-0: #f5f4f6;
+  --surface-1: #ebeaf0;
   --surface-2: #ffffff;
-  --surface-3: #efeaf5;
-  --surface-4: #e0d8ed;
-  --surface-black: #120726;
+  --surface-3: #d7d5de;
+  --surface-4: #c4c2cd;
+  --surface-black: #11081e;
 
-  --text-primary: #1a0d2e;
-  --text-secondary: #6b5a7e;
+  --text-primary: #150a24;
+  --text-secondary: #534a63;
   --text-inverse: #ffffff;
 
-  --link: #5c3d8f;
-  --link-hover: #1a0d2e;
+  --link: #443b5a;
+  --link-hover: #150a24;
 
-  --accent-primary: #7B1FA2;
-  --accent-primary-light: #AB47BC;
-  --accent-primary-dark: #4A148C;
-  --accent-active: #C62828;
-  --accent-active-light: #EF5350;
-  --accent-active-dark: #8B0000;
+  --accent-primary: #6600cc;
+  --accent-primary-light: #9933ff;
+  --accent-primary-dark: #440099;
+  --accent-active: #e31e24;
+  --accent-active-light: #ff4d52;
+  --accent-active-dark: #b31015;
 
-  --success: #2E7D32;
-  --success-light: #4CAF50;
-  --success-dark: #1B5E20;
-  --danger: #C62828;
-  --danger-light: #EF5350;
-  --danger-dark: #8B0000;
-  --warning: #E65100;
-  --warning-light: #FF9800;
-  --warning-dark: #BF360C;
-  --info: #1565C0;
-  --info-light: #42A5F5;
-  --info-dark: #0D47A1;
-  --neutral: #78909C;
-  --neutral-light: #B0BEC5;
-  --neutral-dark: #37474F;
+  --success: #008040;
+  --success-light: #2ecc71;
+  --success-dark: #005522;
+  --danger: #d92b2b;
+  --danger-light: #ff5c5c;
+  --danger-dark: #a61c1c;
+  --warning: #ff8000;
+  --warning-light: #ffad55;
+  --warning-dark: #c86000;
+  --info: #0055bb;
+  --info-light: #3399ff;
+  --info-dark: #004499;
+  --neutral: #645c6c;
+  --neutral-light: #a49ab2;
+  --neutral-dark: #3b3344;
 
-  --border-subtle: #e0d8ed;
-  --border-strong: #c8b8dc;
+  --border-subtle: #cdcbd6;
+  --border-strong: #9c9ab0;
 
-  --shadow-sm: 0 1px 2px rgba(123,31,162,0.06);
-  --shadow-md: 0 4px 14px rgba(123,31,162,0.10);
-  --shadow-lg: 0 8px 28px rgba(123,31,162,0.14);
+  --shadow-sm: 0 1px 2px rgba(21,10,36,0.06);
+  --shadow-md: 0 2px 4px rgba(21,10,36,0.08);
+  --shadow-lg: 0 4px 8px rgba(21,10,36,0.1);
 }
 
 [data-theme="royal-dark"] {
-  --surface-0: #120726;
-  --surface-1: #180d30;
-  --surface-2: #1f1438;
-  --surface-3: #271a42;
-  --surface-4: #30224e;
-  --surface-black: #080315;
+  --surface-0: #08060a;
+  --surface-1: #0d0a0f;
+  --surface-2: #141017;
+  --surface-3: #1d1822;
+  --surface-4: #292230;
+  --surface-black: #030204;
 
-  --text-primary: #f0e8f8;
-  --text-secondary: #b8a0d4;
-  --text-inverse: #120726;
+  --text-primary: #e1dae5;
+  --text-secondary: #867b90;
+  --text-inverse: #0d0a0f;
 
-  --link: #b8a0d4;
-  --link-hover: #f0e8f8;
+  --link: #867b90;
+  --link-hover: #e1dae5;
 
-  --accent-primary: #AB47BC;
-  --accent-primary-light: #CE93D8;
-  --accent-primary-dark: #8E24AA;
-  --accent-active: #EF5350;
-  --accent-active-light: #EF9A9A;
-  --accent-active-dark: #D32F2F;
+  --accent-primary: #aa55ff;
+  --accent-primary-light: #cc99ff;
+  --accent-primary-dark: #7722cc;
+  --accent-active: #e31e24;
+  --accent-active-light: #ff4d52;
+  --accent-active-dark: #b31015;
 
-  --success: #66BB6A;
-  --success-light: #81C784;
-  --success-dark: #43A047;
-  --danger: #EF5350;
-  --danger-light: #EF9A9A;
-  --danger-dark: #C62828;
-  --warning: #FF9800;
-  --warning-light: #FFB74D;
-  --warning-dark: #E65100;
-  --info: #42A5F5;
-  --info-light: #90CAF9;
-  --info-dark: #1565C0;
-  --neutral: #78909C;
-  --neutral-light: #CFD8DC;
-  --neutral-dark: #455A64;
+  --success: #00b050;
+  --success-light: #2ecc71;
+  --success-dark: #008030;
+  --danger: #e31e24;
+  --danger-light: #ff4d52;
+  --danger-dark: #b31015;
+  --warning: #ff8000;
+  --warning-light: #ffad55;
+  --warning-dark: #c86000;
+  --info: #0088ff;
+  --info-light: #55aaff;
+  --info-dark: #0055bb;
+  --neutral: #645c6c;
+  --neutral-light: #bbb5c0;
+  --neutral-dark: #403a49;
 
-  --border-subtle: #2e1f4a;
-  --border-strong: #402d62;
+  --border-subtle: #1e1924;
+  --border-strong: #30273a;
 
-  --shadow-sm: 0 1px 2px rgba(0,0,0,0.30);
-  --shadow-md: 0 4px 14px rgba(0,0,0,0.40);
-  --shadow-lg: 0 8px 28px rgba(0,0,0,0.50);
+  --shadow-sm: 0 1px 2px rgba(0,0,0,0.3);
+  --shadow-md: 0 2px 5px rgba(0,0,0,0.4);
+  --shadow-lg: 0 4px 10px rgba(0,0,0,0.5);
 }
 
 /* ===================================
-   6. SUNSET TEMA (Turuncu Sıcak)
+   6. SUNSET TEMA (Güvenlik Turuncusu/Siyah)
    =================================== */
 [data-theme="sunset"] {
-  --surface-0: #ffffff;
-  --surface-1: #fefaf6;
+  --surface-0: #f6f5f4;
+  --surface-1: #edebe9;
   --surface-2: #ffffff;
-  --surface-3: #fdf2e8;
-  --surface-4: #fae7d4;
-  --surface-black: #1f0e00;
+  --surface-3: #dedbd5;
+  --surface-4: #cdc2b8;
+  --surface-black: #1e0e00;
 
-  --text-primary: #261400;
-  --text-secondary: #7a5e40;
+  --text-primary: #241400;
+  --text-secondary: #63534a;
   --text-inverse: #ffffff;
 
-  --link: #8c5a2b;
-  --link-hover: #261400;
+  --link: #5a443b;
+  --link-hover: #241400;
 
-  --accent-primary: #E65100;
-  --accent-primary-light: #FF9800;
-  --accent-primary-dark: #BF360C;
-  --accent-active: #C62828;
-  --accent-active-light: #EF5350;
-  --accent-active-dark: #8B0000;
+  --accent-primary: #e65100;
+  --accent-primary-light: #ff8000;
+  --accent-primary-dark: #b33600;
+  --accent-active: #e31e24;
+  --accent-active-light: #ff4d52;
+  --accent-active-dark: #b31015;
 
-  --success: #2E7D32;
-  --success-light: #4CAF50;
-  --success-dark: #1B5E20;
-  --danger: #C62828;
-  --danger-light: #EF5350;
-  --danger-dark: #8B0000;
-  --warning: #E65100;
-  --warning-light: #FF9800;
-  --warning-dark: #BF360C;
-  --info: #1565C0;
-  --info-light: #42A5F5;
-  --info-dark: #0D47A1;
-  --neutral: #8D6E63;
-  --neutral-light: #D7CCC8;
-  --neutral-dark: #5D4037;
+  --success: #008040;
+  --success-light: #2ecc71;
+  --success-dark: #005522;
+  --danger: #d92b2b;
+  --danger-light: #ff5c5c;
+  --danger-dark: #a61c1c;
+  --warning: #ff8000;
+  --warning-light: #ffad55;
+  --warning-dark: #c86000;
+  --info: #0055bb;
+  --info-light: #3399ff;
+  --info-dark: #004499;
+  --neutral: #6c5f5c;
+  --neutral-light: #b2a09a;
+  --neutral-dark: #443633;
 
-  --border-subtle: #fae7d4;
-  --border-strong: #f2cfaa;
+  --border-subtle: #d6cbd2;
+  --border-strong: #b09ca7;
 
-  --shadow-sm: 0 1px 2px rgba(230,81,0,0.06);
-  --shadow-md: 0 4px 14px rgba(230,81,0,0.10);
-  --shadow-lg: 0 8px 28px rgba(230,81,0,0.14);
+  --shadow-sm: 0 1px 2px rgba(36,20,0,0.06);
+  --shadow-md: 0 2px 4px rgba(36,20,0,0.08);
+  --shadow-lg: 0 4px 8px rgba(36,20,0,0.1);
 }
 
 [data-theme="sunset-dark"] {
-  --surface-0: #1f0e00;
-  --surface-1: #261400;
-  --surface-2: #2e1a05;
-  --surface-3: #38220c;
-  --surface-4: #422b14;
-  --surface-black: #0a0400;
+  --surface-0: #0a0806;
+  --surface-1: #0f0c0a;
+  --surface-2: #171310;
+  --surface-3: #221c17;
+  --surface-4: #30261f;
+  --surface-black: #040201;
 
-  --text-primary: #fef3e8;
-  --text-secondary: #d4a87c;
-  --text-inverse: #1f0e00;
+  --text-primary: #e5dacd;
+  --text-secondary: #907b6c;
+  --text-inverse: #0f0c0a;
 
-  --link: #d4a87c;
-  --link-hover: #fef3e8;
+  --link: #907b6c;
+  --link-hover: #e5dacd;
 
-  --accent-primary: #FF9800;
-  --accent-primary-light: #FFB74D;
-  --accent-primary-dark: #F57C00;
-  --accent-active: #EF5350;
-  --accent-active-light: #EF9A9A;
-  --accent-active-dark: #D32F2F;
+  --accent-primary: #ff8000;
+  --accent-primary-light: #ffad55;
+  --accent-primary-dark: #c86000;
+  --accent-active: #e31e24;
+  --accent-active-light: #ff4d52;
+  --accent-active-dark: #b31015;
 
-  --success: #66BB6A;
-  --success-light: #81C784;
-  --success-dark: #43A047;
-  --danger: #EF5350;
-  --danger-light: #EF9A9A;
-  --danger-dark: #C62828;
-  --warning: #FF9800;
-  --warning-light: #FFB74D;
-  --warning-dark: #E65100;
-  --info: #42A5F5;
-  --info-light: #90CAF9;
-  --info-dark: #1565C0;
-  --neutral: #8D6E63;
-  --neutral-light: #D7CCC8;
-  --neutral-dark: #5D4037;
+  --success: #00b050;
+  --success-light: #2ecc71;
+  --success-dark: #008030;
+  --danger: #e31e24;
+  --danger-light: #ff4d52;
+  --danger-dark: #b31015;
+  --warning: #ff8000;
+  --warning-light: #ffad55;
+  --warning-dark: #c86000;
+  --info: #0088ff;
+  --info-light: #55aaff;
+  --info-dark: #0055bb;
+  --neutral: #6c5f5c;
+  --neutral-light: #c0b5ab;
+  --neutral-dark: #49403a;
 
-  --border-subtle: #3e2410;
-  --border-strong: #5a3418;
+  --border-subtle: #241c19;
+  --border-strong: #3a2c27;
 
-  --shadow-sm: 0 1px 2px rgba(0,0,0,0.30);
-  --shadow-md: 0 4px 14px rgba(0,0,0,0.40);
-  --shadow-lg: 0 8px 28px rgba(0,0,0,0.50);
+  --shadow-sm: 0 1px 2px rgba(0,0,0,0.3);
+  --shadow-md: 0 2px 5px rgba(0,0,0,0.4);
+  --shadow-lg: 0 4px 10px rgba(0,0,0,0.5);
 }
 
 /* ===================================
-   7. SLATE TEMA (Gri Kurumsal)
+   7. SLATE TEMA (Endüstriyel Koyu Gri)
    =================================== */
 [data-theme="slate"] {
-  --surface-0: #ffffff;
-  --surface-1: #f5f6f8;
+  --surface-0: #f5f6f8;
+  --surface-1: #eaecf0;
   --surface-2: #ffffff;
-  --surface-3: #eeeff2;
-  --surface-4: #e0e2e7;
-  --surface-black: #0f1117;
+  --surface-3: #dce0e6;
+  --surface-4: #c9ccd3;
+  --surface-black: #0a0b0d;
 
-  --text-primary: #16181d;
-  --text-secondary: #5f646e;
+  --text-primary: #0f1115;
+  --text-secondary: #505662;
   --text-inverse: #ffffff;
 
-  --link: #4a4f59;
-  --link-hover: #16181d;
+  --link: #505662;
+  --link-hover: #0f1115;
 
-  --accent-primary: #455a64;
-  --accent-primary-light: #78909c;
-  --accent-primary-dark: #263238;
-  --accent-active: #c62828;
-  --accent-active-light: #ef5350;
-  --accent-active-dark: #8b0000;
+  --accent-primary: #475569;
+  --accent-primary-light: #64748b;
+  --accent-primary-dark: #334155;
+  --accent-active: #e31e24;
+  --accent-active-light: #ff4d52;
+  --accent-active-dark: #b31015;
 
-  --success: #2E7D32;
-  --success-light: #4CAF50;
-  --success-dark: #1B5E20;
-  --danger: #C62828;
-  --danger-light: #EF5350;
-  --danger-dark: #8B0000;
-  --warning: #E65100;
-  --warning-light: #FF9800;
-  --warning-dark: #BF360C;
-  --info: #1565C0;
-  --info-light: #42A5F5;
-  --info-dark: #0D47A1;
-  --neutral: #607D8B;
-  --neutral-light: #B0BEC5;
-  --neutral-dark: #37474F;
+  --success: #008040;
+  --success-light: #2ecc71;
+  --success-dark: #005522;
+  --danger: #d92b2b;
+  --danger-light: #ff5c5c;
+  --danger-dark: #a61c1c;
+  --warning: #ff8000;
+  --warning-light: #ffad55;
+  --warning-dark: #c86000;
+  --info: #0055bb;
+  --info-light: #3399ff;
+  --info-dark: #004499;
+  --neutral: #505662;
+  --neutral-light: #949aab;
+  --neutral-dark: #30343f;
 
-  --border-subtle: #e0e2e7;
-  --border-strong: #c8ccd4;
+  --border-subtle: #cbd0d8;
+  --border-strong: #9fa6b2;
 
-  --shadow-sm: 0 1px 2px rgba(69,90,100,0.06);
-  --shadow-md: 0 4px 14px rgba(69,90,100,0.10);
-  --shadow-lg: 0 8px 28px rgba(69,90,100,0.14);
+  --shadow-sm: 0 1px 2px rgba(15,17,21,0.06);
+  --shadow-md: 0 2px 4px rgba(15,17,21,0.08);
+  --shadow-lg: 0 4px 8px rgba(15,17,21,0.1);
 }
 
 [data-theme="slate-dark"] {
-  --surface-0: #0f1117;
-  --surface-1: #16181d;
-  --surface-2: #1c1f25;
-  --surface-3: #24272e;
-  --surface-4: #2c3038;
-  --surface-black: #050608;
+  --surface-0: #0a0b0d;
+  --surface-1: #0f1013;
+  --surface-2: #15171c;
+  --surface-3: #1d1f26;
+  --surface-4: #282b35;
+  --surface-black: #020304;
 
-  --text-primary: #e8eaef;
-  --text-secondary: #9a9faa;
-  --text-inverse: #0f1117;
+  --text-primary: #e2e4e8;
+  --text-secondary: #868c96;
+  --text-inverse: #0f1013;
 
-  --link: #9a9faa;
-  --link-hover: #e8eaef;
+  --link: #868c96;
+  --link-hover: #e2e4e8;
 
-  --accent-primary: #78909c;
-  --accent-primary-light: #b0bec5;
-  --accent-primary-dark: #546e7a;
-  --accent-active: #ef5350;
-  --accent-active-light: #ef9a9a;
-  --accent-active-dark: #d32f2f;
+  --accent-primary: #e31e24;
+  --accent-primary-light: #ff4d52;
+  --accent-primary-dark: #b31015;
+  --accent-active: #e31e24;
+  --accent-active-light: #ff4d52;
+  --accent-active-dark: #b31015;
 
-  --success: #66BB6A;
-  --success-light: #81C784;
-  --success-dark: #43A047;
-  --danger: #EF5350;
-  --danger-light: #EF9A9A;
-  --danger-dark: #C62828;
-  --warning: #FF9800;
-  --warning-light: #FFB74D;
-  --warning-dark: #E65100;
-  --info: #42A5F5;
-  --info-light: #90CAF9;
-  --info-dark: #1565C0;
-  --neutral: #78909C;
-  --neutral-light: #CFD8DC;
-  --neutral-dark: #455A64;
+  --success: #00b050;
+  --success-light: #2ecc71;
+  --success-dark: #008030;
+  --danger: #e31e24;
+  --danger-light: #ff4d52;
+  --danger-dark: #b31015;
+  --warning: #ff8000;
+  --warning-light: #ffad55;
+  --warning-dark: #c86000;
+  --info: #0088ff;
+  --info-light: #55aaff;
+  --info-dark: #0055bb;
+  --neutral: #5c626d;
+  --neutral-light: #abb0bb;
+  --neutral-dark: #3a3e47;
 
-  --border-subtle: #2c3038;
-  --border-strong: #404550;
+  --border-subtle: #1e2026;
+  --border-strong: #2f333c;
 
-  --shadow-sm: 0 1px 2px rgba(0,0,0,0.30);
-  --shadow-md: 0 4px 14px rgba(0,0,0,0.40);
-  --shadow-lg: 0 8px 28px rgba(0,0,0,0.50);
+  --shadow-sm: 0 1px 2px rgba(0,0,0,0.3);
+  --shadow-md: 0 2px 5px rgba(0,0,0,0.4);
+  --shadow-lg: 0 4px 10px rgba(0,0,0,0.5);
 }
 
 /* ===================================
    8. VURGU RENGİ OVERRIDE (data-accent)
-   Settings.html'deki renk seçici için
    =================================== */
 [data-accent="blue"] {
-  --accent-primary: #2196F3;
-  --accent-primary-light: #64B5F6;
-  --accent-primary-dark: #1565C0;
+  --accent-primary: #0088ff;
+  --accent-primary-light: #55aaff;
+  --accent-primary-dark: #0055bb;
 }
 
 [data-accent="red"] {
-  --accent-primary: #E53935;
-  --accent-primary-light: #EF5350;
-  --accent-primary-dark: #B71C1C;
+  --accent-primary: #e31e24;
+  --accent-primary-light: #ff4d52;
+  --accent-primary-dark: #b31015;
 }
 
 [data-accent="green"] {
-  --accent-primary: #43A047;
-  --accent-primary-light: #66BB6A;
-  --accent-primary-dark: #2E7D32;
+  --accent-primary: #00b050;
+  --accent-primary-light: #2ecc71;
+  --accent-primary-dark: #008030;
 }
 
 [data-accent="orange"] {
-  --accent-primary: #FB8C00;
-  --accent-primary-light: #FFA726;
-  --accent-primary-dark: #EF6C00;
+  --accent-primary: #ff8000;
+  --accent-primary-light: #ffad55;
+  --accent-primary-dark: #c86000;
 }
 
 [data-accent="purple"] {
-  --accent-primary: #8E24AA;
-  --accent-primary-light: #AB47BC;
-  --accent-primary-dark: #6A1B9A;
+  --accent-primary: #aa55ff;
+  --accent-primary-light: #cc99ff;
+  --accent-primary-dark: #7722cc;
 }
 
 [data-accent="cyan"] {
-  --accent-primary: #00ACC1;
-  --accent-primary-light: #4DD0E1;
-  --accent-primary-dark: #00838F;
+  --accent-primary: #00b0c0;
+  --accent-primary-light: #33cbd9;
+  --accent-primary-dark: #007682;
 }
 
 [data-accent="pink"] {
-  --accent-primary: #D81B60;
-  --accent-primary-light: #EC407A;
-  --accent-primary-dark: #AD1457;
+  --accent-primary: #d81b60;
+  --accent-primary-light: #ec407a;
+  --accent-primary-dark: #ad1457;
 }
+
 

@@ -19,58 +19,52 @@ body {
 }
 
 /* =========================================
-   ARKA PLAN DEKORASYON
-========================================= */
+   ARKA PLAN DEKORASYON (Teknik Arayüz)
+   ========================================= */
 .login-bg {
     position: fixed;
     inset: 0;
     z-index: 0;
     pointer-events: none;
-    overflow: hidden;
+    background-color: var(--surface-0);
+    background-image: 
+        linear-gradient(rgba(255, 255, 255, 0.015) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255, 255, 255, 0.015) 1px, transparent 1px);
+    background-size: 40px 40px;
+}
+
+/* Teknik Köşe İşaretçileri (Surveillance Reticle Corners) */
+.login-bg::before,
+.login-bg::after {
+    content: '';
+    position: absolute;
+    width: 20px;
+    height: 20px;
+    border: 2px solid var(--border-strong);
+    opacity: 0.15;
+}
+
+.login-bg::before {
+    top: 20px;
+    left: 20px;
+    border-right: none;
+    border-bottom: none;
+}
+
+.login-bg::after {
+    bottom: 20px;
+    right: 20px;
+    border-left: none;
+    border-top: none;
 }
 
 .login-bg-circle {
-    position: absolute;
-    border-radius: 50%;
-    opacity: 0.08;
-}
-
-.login-bg-circle.c1 {
-    width: 600px;
-    height: 600px;
-    background: var(--accent-primary);
-    top: -200px;
-    right: -150px;
-    animation: floatCircle 20s ease-in-out infinite;
-}
-
-.login-bg-circle.c2 {
-    width: 400px;
-    height: 400px;
-    background: var(--accent-active);
-    bottom: -100px;
-    left: -100px;
-    animation: floatCircle 25s ease-in-out infinite reverse;
-}
-
-.login-bg-circle.c3 {
-    width: 300px;
-    height: 300px;
-    background: var(--accent-primary-light);
-    top: 50%;
-    left: 60%;
-    animation: floatCircle 18s ease-in-out infinite 5s;
-}
-
-@keyframes floatCircle {
-    0%, 100% { transform: translate(0, 0) scale(1); }
-    33% { transform: translate(30px, -30px) scale(1.05); }
-    66% { transform: translate(-20px, 20px) scale(0.95); }
+    display: none; /* Çocuksu renk balonları kaldırıldı */
 }
 
 /* =========================================
-   SOL TARAF — MARKA
-========================================= */
+   SOL TARAF — MARKA (NVR Console Header)
+   ========================================= */
 .login-brand {
     position: relative;
     z-index: 1;
@@ -84,37 +78,38 @@ body {
 }
 
 .brand-icon {
-    width: 64px;
-    height: 64px;
-    border-radius: 18px;
-    background: linear-gradient(135deg, var(--accent-primary), var(--accent-primary-dark));
+    width: 60px;
+    height: 60px;
+    border-radius: var(--radius-md);
+    background: var(--accent-primary);
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 1.8rem;
-    color: white;
-    box-shadow: 0 8px 24px rgb(from var(--accent-primary) r g b / 0.3);
+    font-size: 1.6rem;
+    color: var(--text-inverse);
+    border: 1px solid var(--accent-primary-dark);
+    box-shadow: none;
     margin-bottom: 8px;
 }
 
 .brand-title {
-    font-size: 2.8rem;
-    font-weight: 800;
+    font-size: 2.4rem;
+    font-weight: 700;
     color: var(--text-primary);
-    letter-spacing: -1px;
+    letter-spacing: -0.5px;
     line-height: 1.1;
 }
 
 .brand-subtitle {
-    font-size: 1.1rem;
+    font-size: 0.95rem;
     font-weight: 600;
     color: var(--accent-primary);
-    letter-spacing: 2px;
+    letter-spacing: 3px;
     text-transform: uppercase;
 }
 
 .brand-desc {
-    font-size: 0.95rem;
+    font-size: 0.9rem;
     color: var(--text-secondary);
     line-height: 1.6;
     margin: 4px 0 12px;
@@ -131,7 +126,7 @@ body {
     display: flex;
     align-items: center;
     gap: 12px;
-    font-size: 0.88rem;
+    font-size: 0.85rem;
     color: var(--text-secondary);
     font-weight: 500;
 }
@@ -139,9 +134,10 @@ body {
 .brand-feature i {
     width: 24px;
     height: 24px;
-    border-radius: 6px;
-    background: rgb(from var(--accent-primary) r g b / 0.1);
-    color: var(--accent-primary);
+    border-radius: var(--radius-sm);
+    background: var(--surface-3);
+    color: var(--text-primary);
+    border: 1px solid var(--border-subtle);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -150,83 +146,88 @@ body {
 }
 
 /* =========================================
-   SAĞ TARAF — GİRİŞ PANELİ
-========================================= */
+   SAĞ TARAF — GİRİŞ PANELİ (Keskin NVR Panel)
+   ========================================= */
 .login-panel {
     position: relative;
     z-index: 1;
-    width: 440px;
+    width: 420px;
     background: var(--surface-2);
-    border: 1px solid var(--border-subtle);
-    border-radius: 24px;
-    padding: 48px 40px;
+    border: 1px solid var(--border-strong);
+    border-radius: var(--radius-lg);
+    padding: 40px 36px;
     box-shadow: var(--shadow-lg);
-    animation: panelIn 0.5s ease;
+    animation: panelIn 0.3s ease-out;
 }
 
 @keyframes panelIn {
-    from { opacity: 0; transform: translateX(30px); }
-    to { opacity: 1; transform: translateX(0); }
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
 }
 
 .login-header {
     text-align: center;
-    margin-bottom: 36px;
+    margin-bottom: 28px;
+    border-bottom: 1px solid var(--border-subtle);
+    padding-bottom: 20px;
 }
 
 .login-header-icon {
-    width: 56px;
-    height: 56px;
-    border-radius: 16px;
-    background: rgb(from var(--accent-primary) r g b / 0.1);
-    color: var(--accent-primary);
+    width: 48px;
+    height: 48px;
+    border-radius: var(--radius-md);
+    background: var(--surface-3);
+    color: var(--text-primary);
+    border: 1px solid var(--border-subtle);
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 1.4rem;
-    margin: 0 auto 16px;
+    font-size: 1.2rem;
+    margin: 0 auto 12px;
 }
 
 .login-title {
-    font-size: 1.6rem;
-    font-weight: 700;
+    font-size: 1.35rem;
+    font-weight: 600;
     color: var(--text-primary);
-    margin-bottom: 6px;
+    margin-bottom: 4px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
 }
 
 .login-desc {
-    font-size: 0.9rem;
+    font-size: 0.82rem;
     color: var(--text-secondary);
 }
 
 /* =========================================
-   FORM ALANLARI
-========================================= */
+   FORM ALANLARI (Endüstriyel Inputlar)
+   ========================================= */
 .login-form {
     display: flex;
     flex-direction: column;
-    gap: 20px;
+    gap: 16px;
 }
 
 .login-field {
     display: flex;
     flex-direction: column;
-    gap: 8px;
+    gap: 6px;
 }
 
 .login-field label {
-    font-size: 0.82rem;
+    font-size: 0.75rem;
     font-weight: 600;
     color: var(--text-secondary);
     display: flex;
     align-items: center;
     gap: 6px;
     text-transform: uppercase;
-    letter-spacing: 0.3px;
+    letter-spacing: 0.5px;
 }
 
 .login-field label i {
-    font-size: 0.8rem;
+    font-size: 0.75rem;
     color: var(--accent-primary);
 }
 
@@ -238,40 +239,35 @@ body {
 
 .login-input-wrapper input {
     width: 100%;
-    padding: 14px 16px;
-    background: var(--surface-3);
-    border: 1.5px solid var(--border-subtle);
-    border-radius: 10px;
+    padding: 10px 14px;
+    background: var(--surface-1);
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--radius-sm);
     color: var(--text-primary);
-    font-size: 0.95rem;
+    font-size: 0.9rem;
     font-family: inherit;
-    transition: all 0.25s ease;
+    transition: all var(--transition-fast);
     outline: none;
 }
 
 .login-input-wrapper input:focus {
     border-color: var(--accent-primary);
-    box-shadow: 0 0 0 3px rgb(from var(--accent-primary) r g b / 0.12);
     background: var(--surface-2);
+    box-shadow: 0 0 0 1px var(--accent-primary);
 }
 
 .login-input-wrapper input::placeholder {
     color: var(--text-secondary);
-    opacity: 0.5;
-}
-
-.login-input-wrapper input:valid + .input-check,
-.login-input-wrapper input:focus + .input-check {
-    opacity: 1;
+    opacity: 0.6;
 }
 
 .input-check {
     position: absolute;
-    right: 14px;
+    right: 12px;
     color: var(--success);
-    font-size: 1rem;
+    font-size: 0.9rem;
     opacity: 0;
-    transition: opacity 0.2s ease;
+    transition: opacity var(--transition-fast) ease;
     pointer-events: none;
 }
 
@@ -280,18 +276,18 @@ body {
     opacity: 1;
 }
 
-/* Şifre göster/gizle butonu */
+/* Şifre Göster/Gizle Butonu */
 .password-toggle {
     position: absolute;
-    right: 10px;
+    right: 6px;
     background: none;
     border: none;
     color: var(--text-secondary);
     cursor: pointer;
-    padding: 8px;
-    border-radius: 6px;
-    transition: all 0.2s ease;
-    font-size: 1rem;
+    padding: 6px;
+    border-radius: var(--radius-sm);
+    transition: all var(--transition-fast) ease;
+    font-size: 0.9rem;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -299,29 +295,29 @@ body {
 
 .password-toggle:hover {
     color: var(--text-primary);
-    background: var(--surface-4);
+    background: var(--surface-3);
 }
 
 /* =========================================
    SEÇENEKLER
-========================================= */
+   ========================================= */
 .login-options {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    margin: 4px 0;
+    margin: 2px 0;
 }
 
 .login-checkbox {
     display: flex;
     align-items: center;
-    gap: 10px;
-    font-size: 0.85rem;
+    gap: 8px;
+    font-size: 0.8rem;
     color: var(--text-secondary);
     cursor: pointer;
     user-select: none;
     position: relative;
-    padding-left: 4px;
+    padding-left: 2px;
 }
 
 .login-checkbox input {
@@ -333,15 +329,15 @@ body {
 }
 
 .checkmark {
-    width: 20px;
-    height: 20px;
-    border-radius: 5px;
-    border: 1.5px solid var(--border-strong);
-    background: var(--surface-3);
+    width: 16px;
+    height: 16px;
+    border-radius: var(--radius-sm);
+    border: 1px solid var(--border-strong);
+    background: var(--surface-1);
     display: flex;
     align-items: center;
     justify-content: center;
-    transition: all 0.2s ease;
+    transition: all var(--transition-fast) ease;
     flex-shrink: 0;
 }
 
@@ -354,15 +350,15 @@ body {
     content: "\f00c";
     font-family: "Font Awesome 6 Free";
     font-weight: 900;
-    color: white;
-    font-size: 0.65rem;
+    color: var(--text-inverse);
+    font-size: 0.6rem;
 }
 
 .login-forgot {
-    font-size: 0.85rem;
+    font-size: 0.8rem;
     color: var(--accent-primary);
-    font-weight: 500;
-    transition: color 0.2s ease;
+    font-weight: 600;
+    transition: color var(--transition-fast) ease;
     text-decoration: none;
 }
 
@@ -372,44 +368,33 @@ body {
 }
 
 /* =========================================
-   GİRİŞ BUTONU
-========================================= */
+   GİRİŞ BUTONU (Solid Cihaz Butonu)
+   ========================================= */
 .login-btn {
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 10px;
+    gap: 8px;
     width: 100%;
-    padding: 16px;
-    background: linear-gradient(135deg, var(--accent-primary), var(--accent-primary-dark));
-    color: white;
-    border: none;
-    border-radius: 10px;
-    font-size: 1rem;
+    padding: 12px;
+    background: var(--accent-primary);
+    color: var(--text-inverse);
+    border: 1px solid var(--accent-primary-dark);
+    border-radius: var(--radius-sm);
+    font-size: 0.95rem;
     font-weight: 600;
     font-family: inherit;
     cursor: pointer;
-    transition: all 0.25s ease;
+    transition: all var(--transition-fast) ease;
     position: relative;
     overflow: hidden;
 }
 
-.login-btn::before {
-    content: '';
-    position: absolute;
-    inset: 0;
-    background: linear-gradient(135deg, transparent, rgba(255,255,255,0.1));
-    opacity: 0;
-    transition: opacity 0.25s ease;
-}
-
 .login-btn:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 8px 24px rgb(from var(--accent-primary) r g b / 0.35);
-}
-
-.login-btn:hover::before {
-    opacity: 1;
+    background: var(--accent-primary-light);
+    border-color: var(--accent-primary);
+    transform: translateY(-1px);
+    box-shadow: 0 2px 6px rgb(from var(--accent-primary) r g b / 0.3);
 }
 
 .login-btn:active {
@@ -417,12 +402,12 @@ body {
 }
 
 .login-btn i {
-    font-size: 1rem;
-    transition: transform 0.25s ease;
+    font-size: 0.9rem;
+    transition: transform var(--transition-fast) ease;
 }
 
 .login-btn:hover i {
-    transform: translateX(4px);
+    transform: translateX(2px);
 }
 
 .login-btn.loading {
@@ -441,16 +426,16 @@ body {
 
 /* =========================================
    FOOTER
-========================================= */
+   ========================================= */
 .login-footer {
     text-align: center;
-    margin-top: 28px;
-    padding-top: 20px;
+    margin-top: 24px;
+    padding-top: 16px;
     border-top: 1px solid var(--border-subtle);
 }
 
 .login-footer p {
-    font-size: 0.85rem;
+    font-size: 0.8rem;
     color: var(--text-secondary);
 }
 
@@ -458,7 +443,7 @@ body {
     color: var(--accent-primary);
     font-weight: 600;
     text-decoration: none;
-    transition: color 0.2s ease;
+    transition: color var(--transition-fast) ease;
 }
 
 .login-footer a:hover {
@@ -468,23 +453,23 @@ body {
 
 /* =========================================
    HATA MESAJI
-========================================= */
+   ========================================= */
 .login-error {
     display: none;
     align-items: center;
     gap: 8px;
-    padding: 12px 16px;
+    padding: 10px 14px;
     background: rgb(from var(--danger) r g b / 0.08);
     border: 1px solid rgb(from var(--danger) r g b / 0.2);
-    border-radius: 8px;
+    border-radius: var(--radius-sm);
     color: var(--danger);
-    font-size: 0.85rem;
+    font-size: 0.8rem;
     font-weight: 500;
-    margin-top: -8px;
+    margin-top: -6px;
 }
 
 .login-error i {
-    font-size: 0.9rem;
+    font-size: 0.85rem;
 }
 
 .login-error.show {
@@ -493,7 +478,7 @@ body {
 
 /* =========================================
    RESPONSIVE
-========================================= */
+   ========================================= */
 @media (max-width: 900px) {
     body {
         flex-direction: column;
@@ -503,8 +488,8 @@ body {
 
     .login-brand {
         width: 100%;
-        max-width: 440px;
-        padding: 40px 20px 20px;
+        max-width: 420px;
+        padding: 30px 12px 12px;
         align-items: center;
         text-align: center;
     }
@@ -515,42 +500,28 @@ body {
 
     .login-panel {
         width: 100%;
-        max-width: 440px;
-        padding: 32px 24px;
+        max-width: 420px;
+        padding: 28px 24px;
         animation: none;
-    }
-
-    .login-bg-circle.c1 {
-        width: 300px;
-        height: 300px;
-        top: -100px;
-        right: -80px;
-    }
-    .login-bg-circle.c2 {
-        width: 200px;
-        height: 200px;
-    }
-    .login-bg-circle.c3 {
-        display: none;
     }
 }
 
 @media (max-width: 480px) {
     .login-panel {
-        padding: 24px 16px;
+        padding: 20px 16px;
     }
 
     .login-title {
-        font-size: 1.3rem;
+        font-size: 1.2rem;
     }
 
     .brand-title {
-        font-size: 2rem;
+        font-size: 1.8rem;
     }
 
     .login-options {
         flex-direction: column;
-        gap: 12px;
+        gap: 10px;
         align-items: flex-start;
     }
 }

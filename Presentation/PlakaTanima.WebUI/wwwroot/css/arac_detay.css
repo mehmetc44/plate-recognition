@@ -1,6 +1,6 @@
 /* =========================================
-   ARAÇ DETAY SAYFASI
-========================================= */
+   ARAÇ DETAY SAYFASI (Surveillance Console style)
+   ========================================= */
 
 /* Ana yapı */
 .detail-main {
@@ -19,103 +19,103 @@
     justify-content: space-between;
     background-color: var(--surface-3);
     border-bottom: 1px solid var(--border-subtle);
-    padding: 0 2rem;
-    height: 56px;
+    padding: 0 1.5rem;
+    height: 48px;
     flex-shrink: 0;
 }
 
 .topbar-left {
     display: flex;
     align-items: center;
-    gap: 16px;
+    gap: 12px;
 }
 
 .back-btn {
     display: flex;
     align-items: center;
-    gap: 8px;
-    padding: 8px 16px;
+    gap: 6px;
+    padding: 6px 12px;
     border: 1px solid var(--border-subtle);
     background: var(--surface-2);
     color: var(--text-primary);
-    border-radius: 8px;
-    font-size: 0.88rem;
+    border-radius: var(--radius-sm);
+    font-size: 0.82rem;
     font-weight: 500;
     font-family: inherit;
     cursor: pointer;
-    transition: all 0.2s ease;
+    transition: all var(--transition-fast) ease;
 }
 
 .back-btn:hover {
     background: var(--surface-4);
-    transform: translateY(-1px);
 }
 
 .topbar-info {
     display: flex;
     align-items: center;
-    gap: 14px;
+    gap: 10px;
 }
 
 .topbar-plate {
-    font-size: 1.2rem;
+    font-size: 1.1rem;
     font-weight: 700;
     color: var(--text-primary);
-    letter-spacing: 1px;
+    letter-spacing: 0.5px;
+    font-family: 'SF Mono', 'Consolas', monospace;
 }
 
 .topbar-location {
     display: flex;
     align-items: center;
-    gap: 6px;
-    font-size: 0.85rem;
+    gap: 4px;
+    font-size: 0.8rem;
     color: var(--text-secondary);
-    padding: 4px 12px;
+    padding: 2px 8px;
     background: var(--surface-2);
-    border-radius: 20px;
+    border-radius: var(--radius-sm);
     border: 1px solid var(--border-subtle);
 }
 
 .topbar-location i {
-    font-size: 0.8rem;
+    font-size: 0.75rem;
     color: var(--accent-primary);
 }
 
 .topbar-badge {
     display: inline-flex;
     align-items: center;
-    gap: 5px;
-    padding: 4px 12px;
-    border-radius: 20px;
-    font-size: 0.75rem;
+    gap: 4px;
+    padding: 2px 8px;
+    border-radius: var(--radius-sm);
+    font-size: 0.72rem;
     font-weight: 600;
-    background: rgb(from var(--warning) r g b / 0.15);
+    background: rgb(from var(--warning) r g b / 0.08);
     color: var(--warning);
-    border: 1px solid rgb(from var(--warning) r g b / 0.3);
+    border: 1px solid rgb(from var(--warning) r g b / 0.15);
 }
 
 .topbar-badge i {
-    font-size: 0.7rem;
+    font-size: 0.65rem;
 }
 
 .close-btn {
     display: flex;
     align-items: center;
     justify-content: center;
-    width: 36px;
-    height: 36px;
+    width: 28px;
+    height: 28px;
     border: 1px solid var(--border-subtle);
     background: var(--surface-2);
     color: var(--text-secondary);
-    border-radius: 8px;
+    border-radius: var(--radius-sm);
     cursor: pointer;
-    transition: all 0.2s ease;
-    font-size: 1rem;
+    transition: all var(--transition-fast) ease;
+    font-size: 0.85rem;
 }
 
 .close-btn:hover {
     background: var(--danger);
-    color: #fff;
+    color: var(--text-inverse);
     border-color: var(--danger);
 }
 
@@ -123,77 +123,77 @@
 .detail-content {
     flex: 1;
     overflow-y: auto;
-    padding: 24px 2rem;
+    padding: 16px 1.5rem;
     display: flex;
     flex-direction: column;
-    gap: 24px;
+    gap: 16px;
 }
 
 /* ---------- Üst Grid: Medya + Bilgi ---------- */
 .detail-top-grid {
     display: grid;
     grid-template-columns: 1.4fr 1fr;
-    gap: 24px;
+    gap: 16px;
     align-items: stretch;
 }
 
 /* =========================================
    MEDYA GÖRÜNTÜLEYİCİ
 ========================================= */
-
 .media-card {
     background: var(--surface-2);
     border: 1px solid var(--border-subtle);
-    border-radius: 12px;
+    border-radius: var(--radius-sm);
     overflow: hidden;
     display: flex;
     flex-direction: column;
-    min-height: 480px;
+    min-height: 400px;
 }
 
 .media-card-header {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: 12px 16px;
+    padding: 8px 12px;
     background: var(--surface-3);
     border-bottom: 1px solid var(--border-subtle);
 }
 
 .media-card-title {
-    font-size: 0.9rem;
+    font-size: 0.85rem;
     font-weight: 600;
     color: var(--text-primary);
     display: flex;
     align-items: center;
-    gap: 8px;
+    gap: 6px;
+    text-transform: uppercase;
 }
 
 .media-card-title i {
     color: var(--accent-primary);
-    font-size: 0.85rem;
+    font-size: 0.8rem;
 }
 
 .view-mode-tabs {
     display: flex;
-    gap: 4px;
+    gap: 2px;
     background: var(--surface-2);
-    border-radius: 8px;
-    padding: 3px;
+    border-radius: var(--radius-sm);
+    padding: 2px;
     border: 1px solid var(--border-subtle);
 }
 
 .view-mode-btn {
-    padding: 6px 14px;
+    padding: 4px 10px;
     border: none;
     background: transparent;
     color: var(--text-secondary);
-    font-size: 0.8rem;
+    font-size: 0.78rem;
     font-weight: 500;
     font-family: inherit;
-    border-radius: 6px;
+    border-radius: var(--radius-sm);
     cursor: pointer;
-    transition: all 0.2s ease;
+    transition: all var(--transition-fast) ease;
 }
 
 .view-mode-btn:hover {
@@ -204,7 +204,7 @@
     background: var(--surface-1);
     color: var(--text-primary);
     font-weight: 600;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    border: 1px solid var(--border-subtle);
 }
 
 .media-card-body {
@@ -214,7 +214,7 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    background: var(--surface-1);
+    background: var(--surface-0);
 }
 
 .viewer-img {
@@ -224,7 +224,7 @@
     height: 100%;
     opacity: 0;
     pointer-events: none;
-    transition: opacity 0.3s ease;
+    transition: opacity var(--transition-normal) ease;
     object-fit: contain;
 }
 
@@ -236,63 +236,63 @@
 /* =========================================
    BİLGİ PANELİ
 ========================================= */
-
 .info-card {
     background: var(--surface-2);
     border: 1px solid var(--border-subtle);
-    border-radius: 12px;
-    padding: 20px 24px;
+    border-radius: var(--radius-sm);
+    padding: 16px;
     display: flex;
     flex-direction: column;
-    gap: 20px;
+    gap: 16px;
 }
 
 .info-card-header {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding-bottom: 14px;
+    padding-bottom: 10px;
     border-bottom: 1px solid var(--border-subtle);
 }
 
 .info-plate {
-    font-size: 1.3rem;
+    font-size: 1.25rem;
     font-weight: 700;
     color: var(--text-primary);
-    letter-spacing: 1px;
+    letter-spacing: 0.5px;
+    font-family: 'SF Mono', 'Consolas', monospace;
 }
 
 .info-badge {
     display: inline-flex;
     align-items: center;
-    gap: 5px;
-    padding: 4px 12px;
-    border-radius: 20px;
-    font-size: 0.75rem;
+    gap: 4px;
+    padding: 2px 8px;
+    border-radius: var(--radius-sm);
+    font-size: 0.72rem;
     font-weight: 600;
-    background: rgb(from var(--warning) r g b / 0.15);
+    background: rgb(from var(--warning) r g b / 0.08);
     color: var(--warning);
-    border: 1px solid rgb(from var(--warning) r g b / 0.3);
+    border: 1px solid rgb(from var(--warning) r g b / 0.15);
 }
 
 .info-badge i {
-    font-size: 0.7rem;
+    font-size: 0.65rem;
 }
 
 .info-grid {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    gap: 16px;
+    gap: 12px;
 }
 
 .info-item {
     display: flex;
     flex-direction: column;
-    gap: 4px;
+    gap: 2px;
 }
 
 .info-label {
-    font-size: 0.73rem;
+    font-size: 0.68rem;
     color: var(--text-secondary);
     text-transform: uppercase;
     letter-spacing: 0.5px;
@@ -300,22 +300,23 @@
 }
 
 .info-value {
-    font-size: 0.92rem;
+    font-size: 0.85rem;
     color: var(--text-primary);
     font-weight: 500;
 }
 
 .info-value.monospace {
     font-family: 'SF Mono', 'Cascadia Code', 'Consolas', monospace;
-    font-size: 0.85rem;
+    font-size: 0.8rem;
     color: var(--accent-primary);
+    font-weight: 700;
 }
 
 /* Action Buttons */
 .info-actions {
     display: flex;
     flex-direction: column;
-    gap: 8px;
+    gap: 6px;
     margin-top: auto;
 }
 
@@ -323,38 +324,37 @@
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    gap: 8px;
-    padding: 10px 20px;
-    font-size: 0.88rem;
+    gap: 6px;
+    padding: 8px 16px;
+    font-size: 0.82rem;
     font-weight: 600;
     font-family: inherit;
-    border-radius: 8px;
+    border-radius: var(--radius-sm);
     cursor: pointer;
-    transition: all 0.2s ease;
+    transition: all var(--transition-fast) ease;
     background: var(--accent-primary);
-    color: #fff;
-    border: 1px solid var(--accent-primary);
+    color: var(--text-inverse);
+    border: 1px solid var(--accent-primary-dark);
     width: 100%;
 }
 
 .btn-primary-action:hover {
-    filter: brightness(1.1);
-    transform: translateY(-1px);
-    box-shadow: 0 4px 12px rgb(from var(--accent-primary) r g b / 0.3);
+    background: var(--accent-primary-light);
+    border-color: var(--accent-primary);
 }
 
 .btn-secondary-action {
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    gap: 8px;
-    padding: 10px 20px;
-    font-size: 0.88rem;
+    gap: 6px;
+    padding: 8px 16px;
+    font-size: 0.82rem;
     font-weight: 500;
     font-family: inherit;
-    border-radius: 8px;
+    border-radius: var(--radius-sm);
     cursor: pointer;
-    transition: all 0.2s ease;
+    transition: all var(--transition-fast) ease;
     background: var(--surface-3);
     color: var(--text-primary);
     border: 1px solid var(--border-subtle);
@@ -363,21 +363,20 @@
 
 .btn-secondary-action:hover {
     background: var(--surface-4);
-    transform: translateY(-1px);
 }
 
 .btn-danger-action {
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    gap: 8px;
-    padding: 10px 20px;
-    font-size: 0.88rem;
+    gap: 6px;
+    padding: 8px 16px;
+    font-size: 0.82rem;
     font-weight: 500;
     font-family: inherit;
-    border-radius: 8px;
+    border-radius: var(--radius-sm);
     cursor: pointer;
-    transition: all 0.2s ease;
+    transition: all var(--transition-fast) ease;
     background: transparent;
     color: var(--danger);
     border: 1px solid var(--danger);
@@ -385,39 +384,38 @@
 }
 
 .btn-danger-action:hover {
-    background: rgb(from var(--danger) r g b / 0.08);
-    transform: translateY(-1px);
+    background: rgb(from var(--danger) r g b / 0.05);
 }
 
 /* =========================================
    GEÇİŞ GEÇMİŞİ (ALT TABLO)
 ========================================= */
-
 .history-card {
     background: var(--surface-2);
     border: 1px solid var(--border-subtle);
-    border-radius: 12px;
+    border-radius: var(--radius-sm);
     overflow: hidden;
 }
 
 .history-card-header {
     display: flex;
     align-items: center;
-    gap: 10px;
-    padding: 14px 20px;
+    gap: 8px;
+    padding: 10px 16px;
     background: var(--surface-3);
     border-bottom: 1px solid var(--border-subtle);
 }
 
 .history-card-header i {
     color: var(--accent-primary);
-    font-size: 0.95rem;
+    font-size: 0.85rem;
 }
 
 .history-card-header span {
-    font-size: 0.95rem;
+    font-size: 0.85rem;
     font-weight: 600;
     color: var(--text-primary);
+    text-transform: uppercase;
 }
 
 .history-table-wrapper {
@@ -430,8 +428,8 @@
 }
 
 .history-table th {
-    padding: 12px 16px;
-    font-size: 0.75rem;
+    padding: 10px 14px;
+    font-size: 0.72rem;
     font-weight: 600;
     color: var(--text-secondary);
     text-transform: uppercase;
@@ -443,19 +441,19 @@
 }
 
 .history-table td {
-    padding: 12px 16px;
-    font-size: 0.88rem;
+    padding: 9px 14px;
+    font-size: 0.85rem;
     color: var(--text-primary);
-    border-bottom: 1px solid rgb(from var(--border-subtle) r g b / 0.5);
+    border-bottom: 1px solid rgb(from var(--border-subtle) r g b / 0.4);
     white-space: nowrap;
 }
 
 .history-table tbody tr {
-    transition: background 0.15s ease;
+    transition: background var(--transition-fast) ease;
 }
 
 .history-table tbody tr:hover {
-    background: rgb(from var(--accent-primary) r g b / 0.04);
+    background: rgb(from var(--accent-primary) r g b / 0.03);
 }
 
 .history-table tbody tr:last-child td {
@@ -464,7 +462,7 @@
 
 .history-table .monospace {
     font-family: 'SF Mono', 'Cascadia Code', 'Consolas', monospace;
-    font-size: 0.82rem;
+    font-size: 0.8rem;
     color: var(--text-primary);
 }
 
@@ -473,7 +471,7 @@
     font-weight: 500;
     display: inline-flex;
     align-items: center;
-    gap: 5px;
+    gap: 4px;
 }
 
 .text-danger {
@@ -481,64 +479,62 @@
     font-weight: 500;
     display: inline-flex;
     align-items: center;
-    gap: 5px;
+    gap: 4px;
 }
 
 .badge-status {
     display: inline-block;
-    padding: 3px 10px;
-    border-radius: 12px;
+    padding: 2px 8px;
+    border-radius: var(--radius-sm);
     font-size: 0.72rem;
     font-weight: 600;
-    background: rgb(from var(--warning) r g b / 0.12);
+    background: rgb(from var(--warning) r g b / 0.08);
     color: var(--warning);
-    border: 1px solid rgb(from var(--warning) r g b / 0.25);
+    border: 1px solid rgb(from var(--warning) r g b / 0.15);
 }
 
 .btn-icon-action {
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    width: 34px;
-    height: 34px;
+    width: 28px;
+    height: 28px;
     border: 1px solid var(--border-subtle);
     background: var(--surface-3);
     color: var(--text-secondary);
-    border-radius: 8px;
+    border-radius: var(--radius-sm);
     cursor: pointer;
-    transition: all 0.2s ease;
-    font-size: 0.9rem;
+    transition: all var(--transition-fast) ease;
+    font-size: 0.8rem;
 }
 
 .btn-icon-action:hover {
     background: var(--accent-primary);
-    color: #fff;
+    color: var(--text-inverse);
     border-color: var(--accent-primary);
-    transform: scale(1.05);
 }
 
 .btn-icon-action.text-info {
     color: var(--info);
-    border-color: rgb(from var(--info) r g b / 0.3);
+    border-color: rgb(from var(--info) r g b / 0.2);
 }
 
 .btn-icon-action.text-info:hover {
     background: var(--info);
-    color: #fff;
+    color: var(--text-inverse);
     border-color: var(--info);
 }
 
 /* =========================================
    RESPONSIVE
 ========================================= */
-
 @media (max-width: 1000px) {
     .detail-top-grid {
         grid-template-columns: 1fr;
     }
 
     .media-card {
-        min-height: 350px;
+        min-height: 320px;
     }
 
     .info-grid {
@@ -551,9 +547,9 @@
         padding: 0 1rem;
         flex-wrap: wrap;
         height: auto;
-        padding-top: 10px;
-        padding-bottom: 10px;
-        gap: 10px;
+        padding-top: 8px;
+        padding-bottom: 8px;
+        gap: 8px;
     }
 
     .topbar-info {
@@ -561,16 +557,16 @@
     }
 
     .detail-content {
-        padding: 16px 1rem;
-        gap: 16px;
+        padding: 12px 1rem;
+        gap: 12px;
     }
 
     .detail-top-grid {
-        gap: 16px;
+        gap: 12px;
     }
 
     .info-card {
-        padding: 16px;
+        padding: 12px;
     }
 
     .history-table th,

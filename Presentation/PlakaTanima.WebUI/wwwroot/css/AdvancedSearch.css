@@ -1,7 +1,6 @@
 /* =========================================
-   GELİŞMİŞ SORGU SAYFASI
-   Aynı tasarım dili: index / arac_detay / settings
-========================================= */
+   GELİŞMİŞ SORGU SAYFASI (Surveillance Console style)
+   ========================================= */
 
 /* ---------- Sayfa Yapısı ---------- */
 .page {
@@ -14,12 +13,12 @@
 
 /* =========================================
    İSTATİSTİK KARTLARI
-========================================= */
+   ========================================= */
 .stats-bar {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
-    gap: 14px;
-    padding: 16px 24px;
+    gap: 12px;
+    padding: 12px 20px;
     background: var(--surface-2);
     border-bottom: 1px solid var(--border-subtle);
     flex-shrink: 0;
@@ -28,41 +27,40 @@
 .stat-card {
     background: var(--surface-1);
     border: 1px solid var(--border-subtle);
-    border-radius: 10px;
-    padding: 16px 18px;
-    transition: all 0.2s ease;
+    border-radius: var(--radius-sm);
+    padding: 10px 14px;
+    transition: all var(--transition-fast) ease;
     display: flex;
     flex-direction: column;
-    gap: 6px;
+    gap: 4px;
 }
 
 .stat-card:hover {
-    transform: translateY(-2px);
-    border-color: var(--accent-primary);
-    box-shadow: 0 4px 14px rgb(from var(--accent-primary) r g b / 0.1);
+    border-color: var(--border-strong);
 }
 
 .stat-label {
-    font-size: 0.75rem;
+    font-size: 0.72rem;
     font-weight: 600;
     color: var(--text-secondary);
     text-transform: uppercase;
     letter-spacing: 0.5px;
     display: flex;
     align-items: center;
-    gap: 8px;
+    gap: 6px;
 }
 
 .stat-label i {
-    font-size: 0.9rem;
-    width: 18px;
+    font-size: 0.8rem;
+    width: 14px;
     text-align: center;
 }
 
 .stat-value {
-    font-size: 1.6rem;
+    font-size: 1.4rem;
     font-weight: 700;
     color: var(--text-primary);
+    font-family: 'SF Mono', 'Consolas', monospace;
 }
 
 .stat-value.text-warning { color: var(--warning); }
@@ -71,29 +69,29 @@
 
 /* =========================================
    ÜST BAR (Arama + Butonlar)
-========================================= */
+   ========================================= */
 .query-topbar {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 12px 24px;
+    padding: 10px 20px;
     background: var(--surface-2);
     border-bottom: 1px solid var(--border-subtle);
-    gap: 16px;
+    gap: 12px;
     flex-shrink: 0;
 }
 
 .query-topbar .search-box {
     display: flex;
     align-items: center;
-    gap: 10px;
-    padding: 10px 16px;
+    gap: 8px;
+    padding: 8px 12px;
     background: var(--surface-3);
     border: 1px solid var(--border-subtle);
-    border-radius: 8px;
-    transition: border-color 0.2s ease;
+    border-radius: var(--radius-sm);
+    transition: border-color var(--transition-fast) ease;
     flex: 1;
-    max-width: 500px;
+    max-width: 400px;
 }
 
 .query-topbar .search-box:focus-within {
@@ -102,7 +100,7 @@
 
 .query-topbar .search-box i {
     color: var(--text-secondary);
-    font-size: 0.9rem;
+    font-size: 0.85rem;
 }
 
 .query-topbar .search-box input {
@@ -110,7 +108,7 @@
     border: none;
     outline: none;
     color: var(--text-primary);
-    font-size: 0.88rem;
+    font-size: 0.85rem;
     font-family: inherit;
     width: 100%;
 }
@@ -121,42 +119,41 @@
 
 .topbar-actions {
     display: flex;
-    gap: 8px;
+    gap: 6px;
 }
 
 .btn-filter {
     display: inline-flex;
     align-items: center;
-    gap: 8px;
-    padding: 10px 20px;
-    font-size: 0.88rem;
+    gap: 6px;
+    padding: 8px 16px;
+    font-size: 0.85rem;
     font-weight: 600;
     font-family: inherit;
-    border-radius: 8px;
+    border-radius: var(--radius-sm);
     cursor: pointer;
-    transition: all 0.2s ease;
+    transition: all var(--transition-fast) ease;
     background: var(--accent-primary);
-    color: #fff;
-    border: 1px solid var(--accent-primary);
+    color: var(--text-inverse);
+    border: 1px solid var(--accent-primary-dark);
 }
 
 .btn-filter:hover {
-    filter: brightness(1.1);
-    transform: translateY(-1px);
-    box-shadow: 0 4px 12px rgb(from var(--accent-primary) r g b / 0.3);
+    background: var(--accent-primary-light);
+    border-color: var(--accent-primary);
 }
 
 .btn-clear {
     display: inline-flex;
     align-items: center;
-    gap: 8px;
-    padding: 10px 20px;
-    font-size: 0.88rem;
+    gap: 6px;
+    padding: 8px 16px;
+    font-size: 0.85rem;
     font-weight: 500;
     font-family: inherit;
-    border-radius: 8px;
+    border-radius: var(--radius-sm);
     cursor: pointer;
-    transition: all 0.2s ease;
+    transition: all var(--transition-fast) ease;
     background: var(--surface-3);
     color: var(--text-secondary);
     border: 1px solid var(--border-subtle);
@@ -165,12 +162,12 @@
 .btn-clear:hover {
     color: var(--danger);
     border-color: var(--danger);
-    background: rgb(from var(--danger) r g b / 0.06);
+    background: rgb(from var(--danger) r g b / 0.05);
 }
 
 /* =========================================
    ANA İÇERİK (Filtre + Tablo + Detay)
-========================================= */
+   ========================================= */
 .query-content {
     display: flex;
     flex: 1;
@@ -179,12 +176,12 @@
 
 /* =========================================
    SOL PANEL: FİLTRELER
-========================================= */
+   ========================================= */
 .filter-panel {
-    width: 270px;
+    width: 240px;
     background: var(--surface-2);
     border-right: 1px solid var(--border-subtle);
-    padding: 16px;
+    padding: 12px;
     display: flex;
     flex-direction: column;
     gap: 4px;
@@ -196,8 +193,8 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding-bottom: 12px;
-    margin-bottom: 8px;
+    padding-bottom: 10px;
+    margin-bottom: 6px;
     border-bottom: 1px solid var(--border-subtle);
     position: sticky;
     top: 0;
@@ -206,28 +203,28 @@
 }
 
 .filter-panel-header h4 {
-    font-size: 0.95rem;
+    font-size: 0.88rem;
     font-weight: 600;
     color: var(--text-primary);
     display: flex;
     align-items: center;
-    gap: 8px;
+    gap: 6px;
 }
 
 .filter-panel-header h4 i {
     color: var(--accent-primary);
-    font-size: 0.85rem;
-    width: 18px;
+    font-size: 0.8rem;
+    width: 16px;
     text-align: center;
 }
 
 .result-count {
-    font-size: 0.75rem;
+    font-size: 0.72rem;
     font-weight: 600;
     color: var(--text-secondary);
     background: var(--surface-3);
-    padding: 4px 10px;
-    border-radius: 12px;
+    padding: 2px 8px;
+    border-radius: var(--radius-sm);
     border: 1px solid var(--border-subtle);
 }
 
@@ -235,52 +232,52 @@
 .filter-chips {
     display: flex;
     flex-wrap: wrap;
-    gap: 6px;
-    padding: 4px 0 10px;
-    min-height: 6px;
+    gap: 4px;
+    padding: 2px 0 8px;
+    min-height: 4px;
 }
 
 .filter-chip {
     display: inline-flex;
     align-items: center;
-    gap: 5px;
-    padding: 5px 12px;
-    font-size: 0.75rem;
+    gap: 4px;
+    padding: 3px 8px;
+    font-size: 0.72rem;
     font-weight: 500;
-    border-radius: 20px;
+    border-radius: var(--radius-sm);
     background: var(--surface-3);
     border: 1px solid var(--border-subtle);
     color: var(--text-primary);
     cursor: pointer;
-    transition: all 0.15s ease;
+    transition: all var(--transition-fast) ease;
     font-family: inherit;
 }
 
 .filter-chip:hover {
     border-color: var(--danger);
     color: var(--danger);
-    background: rgb(from var(--danger) r g b / 0.08);
+    background: rgb(from var(--danger) r g b / 0.05);
 }
 
 /* Filtre Grupları (details/summary) */
 .filter-group {
-    border-bottom: 1px solid rgb(from var(--border-subtle) r g b / 0.5);
-    padding: 2px 0;
+    border-bottom: 1px solid rgb(from var(--border-subtle) r g b / 0.4);
+    padding: 1px 0;
 }
 
 .filter-group summary {
     cursor: pointer;
     font-weight: 600;
-    font-size: 0.88rem;
+    font-size: 0.82rem;
     color: var(--text-primary);
     list-style: none;
     display: flex;
     width: 100%;
     justify-content: space-between;
     align-items: center;
-    padding: 11px 8px;
-    border-radius: 8px;
-    transition: background 0.15s ease;
+    padding: 8px 6px;
+    border-radius: var(--radius-sm);
+    transition: background var(--transition-fast) ease;
 }
 
 .filter-group summary:hover {
@@ -291,9 +288,9 @@
     content: "\f054";
     font-family: "Font Awesome 6 Free";
     font-weight: 900;
-    font-size: 0.65rem;
+    font-size: 0.6rem;
     color: var(--text-secondary);
-    transition: transform 0.2s ease;
+    transition: transform var(--transition-fast) ease;
 }
 
 .filter-group[open] summary::after {
@@ -309,21 +306,21 @@
 .filter-content {
     display: flex;
     flex-direction: column;
-    gap: 2px;
-    padding: 4px 4px 12px 4px;
+    gap: 1px;
+    padding: 2px 2px 8px 2px;
 }
 
 .filter-content label {
     display: flex;
     align-items: center;
-    gap: 10px;
-    padding: 9px 10px;
-    border-radius: 8px;
+    gap: 8px;
+    padding: 6px 8px;
+    border-radius: var(--radius-sm);
     cursor: pointer;
-    font-size: 0.85rem;
+    font-size: 0.8rem;
     color: var(--text-primary);
     font-weight: 500;
-    transition: background 0.15s ease;
+    transition: background var(--transition-fast) ease;
     width: 100%;
     box-sizing: border-box;
 }
@@ -334,8 +331,8 @@
 
 .filter-content input[type="checkbox"],
 .filter-content input[type="radio"] {
-    width: 17px;
-    height: 17px;
+    width: 14px;
+    height: 14px;
     margin: 0;
     cursor: pointer;
     accent-color: var(--accent-primary);
@@ -346,25 +343,25 @@
 .date-range {
     display: flex;
     flex-direction: column;
-    gap: 8px;
-    padding-top: 8px;
+    gap: 6px;
+    padding-top: 6px;
     border-top: 1px solid var(--border-subtle);
-    margin-top: 4px;
+    margin-top: 2px;
 }
 
 .date-range input[type="date"] {
     width: 100%;
-    padding: 9px 12px;
-    border-radius: 8px;
+    padding: 6px 10px;
+    border-radius: var(--radius-sm);
     border: 1px solid var(--border-subtle);
     background: var(--surface-3);
     color: var(--text-primary);
     font-family: inherit;
-    font-size: 0.84rem;
+    font-size: 0.8rem;
     box-sizing: border-box;
     cursor: pointer;
     outline: none;
-    transition: border-color 0.2s ease;
+    transition: border-color var(--transition-fast) ease;
 }
 
 .date-range input[type="date"]:focus {
@@ -372,20 +369,20 @@
 }
 
 .date-range .btn-date-apply {
-    padding: 9px 14px;
-    border-radius: 8px;
-    border: 1px solid var(--accent-primary);
+    padding: 6px 12px;
+    border-radius: var(--radius-sm);
+    border: 1px solid var(--accent-primary-dark);
     background: var(--accent-primary);
-    color: #fff;
+    color: var(--text-inverse);
     cursor: pointer;
-    font-size: 0.82rem;
+    font-size: 0.8rem;
     font-weight: 600;
     font-family: inherit;
-    transition: all 0.2s ease;
+    transition: all var(--transition-fast) ease;
 }
 
 .date-range .btn-date-apply:hover {
-    filter: brightness(1.1);
+    background: var(--accent-primary-light);
 }
 
 /* Sıfırlama Butonu */
@@ -394,31 +391,31 @@
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    gap: 8px;
-    padding: 10px 16px;
-    border-radius: 8px;
+    gap: 6px;
+    padding: 8px 12px;
+    border-radius: var(--radius-sm);
     border: 1px solid var(--danger);
-    background: rgb(from var(--danger) r g b / 0.06);
+    background: rgb(from var(--danger) r g b / 0.05);
     color: var(--danger);
     cursor: pointer;
-    font-size: 0.84rem;
+    font-size: 0.8rem;
     font-weight: 600;
     font-family: inherit;
-    transition: all 0.2s ease;
+    transition: all var(--transition-fast) ease;
 }
 
 .btn-reset-filters:hover {
     background: var(--danger);
-    color: #fff;
+    color: var(--text-inverse);
 }
 
 /* =========================================
    ORTA: TABLO KARTI
-========================================= */
+   ========================================= */
 .table-section {
     flex: 1;
     overflow: hidden;
-    padding: 16px;
+    padding: 12px;
     display: flex;
     flex-direction: column;
 }
@@ -426,7 +423,7 @@
 .table-card {
     background: var(--surface-2);
     border: 1px solid var(--border-subtle);
-    border-radius: 12px;
+    border-radius: var(--radius-sm);
     overflow: hidden;
     display: flex;
     flex-direction: column;
@@ -448,10 +445,10 @@
     top: 0;
     z-index: 5;
     background: var(--surface-3);
-    padding: 12px 16px;
+    padding: 10px 14px;
     text-align: left;
     color: var(--text-secondary);
-    font-size: 0.75rem;
+    font-size: 0.72rem;
     font-weight: 600;
     text-transform: uppercase;
     letter-spacing: 0.5px;
@@ -460,24 +457,24 @@
 }
 
 .query-table tbody td {
-    padding: 12px 16px;
-    border-bottom: 1px solid rgb(from var(--border-subtle) r g b / 0.5);
+    padding: 9px 14px;
+    border-bottom: 1px solid rgb(from var(--border-subtle) r g b / 0.4);
     color: var(--text-primary);
-    font-size: 0.88rem;
+    font-size: 0.85rem;
     white-space: nowrap;
 }
 
 .query-table tbody tr {
     cursor: pointer;
-    transition: background 0.15s ease;
+    transition: background var(--transition-fast) ease;
 }
 
 .query-table tbody tr:hover {
-    background: rgb(from var(--accent-primary) r g b / 0.04);
+    background: rgb(from var(--accent-primary) r g b / 0.03);
 }
 
 .query-table tbody tr.active-row {
-    background: rgb(from var(--accent-primary) r g b / 0.08) !important;
+    background: rgb(from var(--accent-primary) r g b / 0.06) !important;
     border-left: 3px solid var(--accent-primary);
 }
 
@@ -487,7 +484,19 @@
 
 .query-table .monospace {
     font-family: 'SF Mono', 'Cascadia Code', 'Consolas', monospace;
-    font-size: 0.82rem;
+    font-size: 0.8rem;
+}
+
+/* Plaka Etiketi */
+.plate-label {
+    font-family: 'SF Mono', 'Cascadia Code', 'Consolas', monospace;
+    font-weight: 700;
+    background: var(--surface-3);
+    border: 1px solid var(--border-subtle);
+    padding: 2px 6px;
+    border-radius: var(--radius-sm);
+    color: var(--text-primary);
+    letter-spacing: 0.5px;
 }
 
 /* İkon buton */
@@ -495,48 +504,47 @@
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    width: 34px;
-    height: 34px;
-    border-radius: 8px;
+    width: 28px;
+    height: 28px;
+    border-radius: var(--radius-sm);
     border: 1px solid var(--border-subtle);
     background: var(--surface-3);
     color: var(--text-secondary);
     cursor: pointer;
-    font-size: 0.9rem;
-    transition: all 0.2s ease;
+    font-size: 0.8rem;
+    transition: all var(--transition-fast) ease;
 }
 
 .btn-icon:hover {
     background: var(--accent-primary);
-    color: #fff;
+    color: var(--text-inverse);
     border-color: var(--accent-primary);
-    transform: scale(1.05);
 }
 
 .btn-icon.text-info {
     color: var(--info);
-    border-color: rgb(from var(--info) r g b / 0.3);
+    border-color: rgb(from var(--info) r g b / 0.2);
 }
 
 .btn-icon.text-info:hover {
     background: var(--info);
-    color: #fff;
+    color: var(--text-inverse);
     border-color: var(--info);
 }
 
 /* =========================================
    SAĞ: DETAY PANELİ
-========================================= */
+   ========================================= */
 .detail-panel {
-    width: 310px;
+    width: 280px;
     background: var(--surface-2);
     border-left: 1px solid var(--border-subtle);
-    padding: 20px 18px;
+    padding: 16px 14px;
     overflow-y: auto;
     flex-shrink: 0;
     display: flex;
     flex-direction: column;
-    gap: 16px;
+    gap: 12px;
 }
 
 .detail-panel.hidden {
@@ -547,55 +555,56 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding-bottom: 14px;
+    padding-bottom: 10px;
     border-bottom: 1px solid var(--border-subtle);
 }
 
 .detail-panel-header h3 {
-    font-size: 1rem;
+    font-size: 0.88rem;
     font-weight: 600;
     color: var(--text-primary);
     display: flex;
     align-items: center;
-    gap: 10px;
+    gap: 8px;
+    text-transform: uppercase;
 }
 
 .detail-panel-header h3 i {
     color: var(--accent-primary);
-    font-size: 0.9rem;
+    font-size: 0.85rem;
 }
 
 .detail-close-btn {
     display: flex;
     align-items: center;
     justify-content: center;
-    width: 30px;
-    height: 30px;
+    width: 26px;
+    height: 26px;
     border: 1px solid var(--border-subtle);
     background: var(--surface-3);
     color: var(--text-secondary);
-    border-radius: 6px;
+    border-radius: var(--radius-sm);
     cursor: pointer;
-    transition: all 0.2s ease;
-    font-size: 0.8rem;
+    transition: all var(--transition-fast) ease;
+    font-size: 0.75rem;
 }
 
 .detail-close-btn:hover {
     background: var(--danger);
-    color: #fff;
+    color: var(--text-inverse);
     border-color: var(--danger);
 }
 
 .detail-info-grid {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    gap: 12px;
+    gap: 10px;
 }
 
 .detail-info-item {
     display: flex;
     flex-direction: column;
-    gap: 3px;
+    gap: 2px;
 }
 
 .detail-info-item.full-width {
@@ -603,7 +612,7 @@
 }
 
 .detail-info-label {
-    font-size: 0.7rem;
+    font-size: 0.68rem;
     color: var(--text-secondary);
     text-transform: uppercase;
     letter-spacing: 0.5px;
@@ -611,56 +620,57 @@
 }
 
 .detail-info-value {
-    font-size: 0.9rem;
+    font-size: 0.85rem;
     color: var(--text-primary);
     font-weight: 500;
 }
 
 .detail-info-value.monospace {
     font-family: 'SF Mono', 'Cascadia Code', 'Consolas', monospace;
-    font-size: 0.82rem;
+    font-size: 0.8rem;
     color: var(--accent-primary);
+    font-weight: 700;
 }
 
 .detail-divider {
     height: 1px;
     background: var(--border-subtle);
-    margin: 4px 0;
+    margin: 2px 0;
 }
 
 .detail-history-title {
-    font-size: 0.8rem;
+    font-size: 0.75rem;
     font-weight: 600;
     color: var(--text-secondary);
     text-transform: uppercase;
     letter-spacing: 0.5px;
     display: flex;
     align-items: center;
-    gap: 8px;
+    gap: 6px;
 }
 
 .detail-history-title i {
     color: var(--accent-primary);
-    font-size: 0.8rem;
+    font-size: 0.75rem;
 }
 
 .detail-history-list {
     display: flex;
     flex-direction: column;
-    gap: 6px;
+    gap: 4px;
 }
 
 .detail-history-item {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: 10px 12px;
+    padding: 8px 10px;
     background: var(--surface-3);
-    border-radius: 8px;
+    border-radius: var(--radius-sm);
     border: 1px solid var(--border-subtle);
-    font-size: 0.84rem;
+    font-size: 0.8rem;
     color: var(--text-primary);
-    transition: background 0.15s ease;
+    transition: background var(--transition-fast) ease;
     cursor: pointer;
 }
 
@@ -670,7 +680,7 @@
 
 .detail-history-item .time {
     font-family: 'SF Mono', 'Cascadia Code', 'Consolas', monospace;
-    font-size: 0.78rem;
+    font-size: 0.75rem;
     color: var(--text-secondary);
 }
 
@@ -679,19 +689,19 @@
 ========================================= */
 @media (max-width: 1200px) {
     .filter-panel {
-        width: 240px;
+        width: 200px;
     }
 
     .detail-panel {
-        width: 280px;
+        width: 240px;
     }
 }
 
 @media (max-width: 1000px) {
     .stats-bar {
         grid-template-columns: repeat(2, 1fr);
-        gap: 10px;
-        padding: 12px 16px;
+        gap: 8px;
+        padding: 10px 16px;
     }
 
     .query-content {
@@ -700,7 +710,7 @@
 
     .filter-panel {
         width: 100%;
-        max-height: 260px;
+        max-height: 220px;
         border-right: none;
         border-bottom: 1px solid var(--border-subtle);
         flex-shrink: 0;
@@ -708,7 +718,7 @@
 
     .detail-panel {
         width: 100%;
-        max-height: 360px;
+        max-height: 320px;
         border-left: none;
         border-top: 1px solid var(--border-subtle);
     }
@@ -717,23 +727,23 @@
 @media (max-width: 768px) {
     .stats-bar {
         grid-template-columns: repeat(2, 1fr);
-        padding: 10px 12px;
-        gap: 8px;
+        padding: 8px 10px;
+        gap: 6px;
     }
 
     .stat-card {
-        padding: 12px 14px;
+        padding: 10px 12px;
     }
 
     .stat-value {
-        font-size: 1.3rem;
+        font-size: 1.2rem;
     }
 
     .query-topbar {
         flex-direction: column;
         align-items: stretch;
-        padding: 10px 12px;
-        gap: 10px;
+        padding: 8px 10px;
+        gap: 8px;
     }
 
     .query-topbar .search-box {
@@ -751,7 +761,7 @@
     }
 
     .table-section {
-        padding: 8px;
+        padding: 6px;
     }
 
     .query-table th,

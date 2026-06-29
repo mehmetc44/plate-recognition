@@ -93,7 +93,7 @@
 
         <!-- KAMERA AYARLARI -->
         <section class="settings-panel" id="panel-camera">
-            @await Component.InvokeAsync("CameraSettings")
+            @await Html.PartialAsync("_CameraSettingsPartial")
         </section>
 
         <!-- KAYIT AYARLARI -->
@@ -123,6 +123,7 @@
     <link rel="stylesheet" href="~/css/Settings.css" />
 }
 @section PageScripts {
-    <script src="~/js/ApiService.js"></script>
-    <script src="~/js/Settings.js"></script>
+    <script src="~/js/services/api-service.js"></script>
+    <script src="~/js/services/settings-service.js"></script>
+    <script src="~/js/pages/settings.js"></script>
 }
