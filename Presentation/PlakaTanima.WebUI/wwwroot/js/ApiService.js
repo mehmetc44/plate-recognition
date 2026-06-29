@@ -1,6 +1,6 @@
 // cameraService.js - Tüm AJAX istekleri (API endpoint'leri)
 window.CameraService = (function() {
-    const BASE = '/Settings';
+    const BASE = '/Camera';
 
     // ----- LOKASYON CRUD (API) -----
     async function addLocation(name, description) {

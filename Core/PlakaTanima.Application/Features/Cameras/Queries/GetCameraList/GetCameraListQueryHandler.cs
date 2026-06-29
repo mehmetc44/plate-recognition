@@ -22,17 +22,21 @@ public sealed class GetCameraListQueryHandler
             await _cameraReadRepository
                 .GetAllWithLocationAsync();
 
-        return cameras.Select(x => new CameraListDto
-        {
-            Id = x.Id,
+        // GetCameraListQueryHandler.cs içerisinde manuel eşleme yapıyorsanız:
+var dtoList = cameras.Select(c => new CameraListDto
+{
+    Id = c.Id,
+    Name = c.Name,
+    IpAddress = c.IpAddress,
+    LocationName = c.Location.Name,
+    Status = c.Status,
+    
+    // EKLENMESİ GEREKEN ATAMALAR:
+    Port = c.Port,
+    Username = c.Username,
+    Password = c.Password
+}).ToList();
 
-            Name = x.Name,
-
-            IpAddress = x.IpAddress,
-
-            LocationName = x.Location.Name,
-
-            Status = x.Status
-        }).ToList();
+        return dtoList;
     }
 }

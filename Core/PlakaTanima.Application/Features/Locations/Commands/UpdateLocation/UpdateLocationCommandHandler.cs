@@ -36,6 +36,7 @@ public sealed class UpdateLocationCommandHandler
             throw new Exception("Bu isimde lokasyon mevcut.");
 
         location.Name = request.Name;
+        location.Description = request.Description;
         location.UpdatedAt = DateTime.UtcNow;
 
         _locationWriteRepository.Update(location);

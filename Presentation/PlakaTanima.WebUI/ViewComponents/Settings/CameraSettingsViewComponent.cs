@@ -18,7 +18,8 @@ namespace PlakaTanima.WebUI.ViewComponents.Settings
 
         public async Task<IViewComponentResult> InvokeAsync()
         {
-            return View();
+            var tree = await _mediator.Send(new GetLocationTreeQuery());
+            return View("/Views/Settings/CameraSettings/Default.cshtml", tree);
         }
     }
 }

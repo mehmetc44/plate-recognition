@@ -93,7 +93,7 @@
 
         <!-- KAMERA AYARLARI -->
         <section class="settings-panel" id="panel-camera">
-            
+            @await Component.InvokeAsync("CameraSettings")
         </section>
 
         <!-- KAYIT AYARLARI -->
@@ -118,34 +118,6 @@
     </div>
 </main>
 
-<!-- Modals (kamera & lokasyon ekleme/düzenleme) -->
-<div id="locationModal" class="modal" style="display:none;">
-    <div class="modal-content">
-        <div class="modal-header"><span>Lokasyon Ekle/Düzenle</span><span class="close-modal">&times;</span></div>
-        <div class="modal-body">
-            <input type="hidden" id="locationId" />
-            <div class="form-group"><label>Lokasyon Adı</label><input type="text" id="locationNameInput" class="modal-input" placeholder="Örn: Ana Giriş" /></div>
-            <div class="form-group"><label>Açıklama</label><textarea id="locationDescInput" class="modal-input" rows="3" placeholder="Lokasyon açıklaması"></textarea></div>
-        </div>
-        <div class="modal-footer"><button id="saveLocationBtn" class="btn-save-modal">Kaydet</button><button class="btn-cancel-modal">İptal</button></div>
-    </div>
-</div>
-
-<div id="cameraModal" class="modal" style="display:none;">
-    <div class="modal-content">
-        <div class="modal-header"><span>Kamera Ekle/Düzenle</span><span class="close-modal-cam">&times;</span></div>
-        <div class="modal-body">
-            <input type="hidden" id="cameraId" />
-            <input type="hidden" id="cameraLocationId" />
-            <div class="form-group"><label>Kamera Adı</label><input type="text" id="cameraNameInput" class="modal-input" /></div>
-            <div class="form-group"><label>IP Adresi</label><input type="text" id="cameraIpInput" class="modal-input" placeholder="192.168.1.100" /></div>
-            <div class="form-group"><label>Port</label><input type="number" id="cameraPortInput" class="modal-input" value="80" /></div>
-            <div class="form-group"><label>Kullanıcı Adı</label><input type="text" id="cameraUsernameInput" class="modal-input" /></div>
-            <div class="form-group"><label>Şifre</label><input type="password" id="cameraPasswordInput" class="modal-input" /></div>
-        </div>
-        <div class="modal-footer"><button id="saveCameraBtn" class="btn-save-modal">Kaydet</button><button class="btn-cancel-modal-cam">İptal</button></div>
-    </div>
-</div>
 
 @section PageStyles {
     <link rel="stylesheet" href="~/css/Settings.css" />

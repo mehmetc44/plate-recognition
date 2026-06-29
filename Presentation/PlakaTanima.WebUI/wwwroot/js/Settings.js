@@ -279,19 +279,13 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
-    // ---------- DİNAMİK KAMERA-LOKASYON CRUD (MOCK, ANINDA KAYIT) ----------
-    let locations = [
-        { id: 'loc1', name: 'Ana Giriş', description: 'Ana giriş kapısı', cameras: [
-            { id: 'cam1', name: 'Kamera 1', ip: '192.168.1.101', port: 80, username: 'admin', password: '123', status: 'online' },
-            { id: 'cam2', name: 'Kamera 2', ip: '192.168.1.102', port: 80, username: 'admin', password: '123', status: 'offline' }
-        ] },
-        { id: 'loc2', name: 'Otopark', description: 'Açık otopark alanı', cameras: [
-            { id: 'cam3', name: 'Otopark Giriş', ip: '192.168.1.201', port: 80, username: 'admin', password: '123', status: 'online' }
-        ] }
-    ];
+    // ==========================================================
+    // KAMERA & LOKASYON CRUD (GERÇEK BACKEND API)
+    // ==========================================================
+    let locations = [];
     let currentLocationId = null;
 
-    // DOM elemanları (null kontrolü ile)
+    // DOM elemanları
     const locationTree = document.getElementById('locationTree');
     const locationSearch = document.getElementById('locationSearchTree');
     const detailLocationName = document.getElementById('detailLocationName');
@@ -305,14 +299,48 @@ document.addEventListener('DOMContentLoaded', function() {
     // Modal elemanları
     const locationModal = document.getElementById('locationModal');
     const cameraModal = document.getElementById('cameraModal');
+    const editLocationModal = document.getElementById('editLocationModal');
     let editingLocationId = null;
     let editingCameraLocationId = null;
     let editingCameraId = null;
 
-    // Eğer gerekli DOM elemanları yoksa (kamera ayarları paneli dışında) çalışmayı durdur
     if (!locationTree) {
         console.warn('Kamera ayarları DOM elemanları bulunamadı, dinamik kısım atlanıyor.');
     } else {
+        // --- Veriyi sunucudan çek ---
+        async function loadTreeData() {
+            try {
+                const res = await fetch('/Camera/GetTree');
+                locations = await res.json();
+                // Alan adlarını normalize et: server'dan camelCase gelir
+                locations = locations.map(loc => ({
+                    id: loc.id,
+                    name: loc.name,
+                    description: loc.description || '',
+                    cameras: (loc.cameras || []).map(cam => ({
+                        id: cam.id,
+                        name: cam.name,
+                        ip: cam.ipAddress || '',
+                        port: cam.port || 80,
+                        username: cam.username || '',
+                        password: cam.password || '',
+                        status: cam.status || 'offline'
+                    }))
+                }));
+                renderLocationTree(locationSearch ? locationSearch.value : '');
+                if (locations.length > 0) {
+                    currentLocationId = locations[0].id;
+                    renderLocationTree(locationSearch ? locationSearch.value : '');
+                    renderLocationDetail(currentLocationId);
+                } else {
+                    renderLocationDetail(null);
+                }
+            } catch (err) {
+                console.error('Ağaç verisi yüklenemedi:', err);
+                showToast('Sunucudan veri alınamadı!', 'error');
+            }
+        }
+
         // --- Ağaç render ---
         function renderLocationTree(filterText = '') {
             const filter = filterText.toLowerCase();
@@ -320,6 +348,7 @@ document.addEventListener('DOMContentLoaded', function() {
             locationTree.innerHTML = '';
             filtered.forEach(loc => {
                 const li = document.createElement('li');
+                li.dataset.id = loc.id;
                 const nodeDiv = document.createElement('div');
                 nodeDiv.className = `tree-node ${currentLocationId === loc.id ? 'active' : ''}`;
                 nodeDiv.dataset.id = loc.id;
@@ -339,18 +368,21 @@ document.addEventListener('DOMContentLoaded', function() {
                 loc.cameras.forEach(cam => {
                     const leafLi = document.createElement('li');
                     leafLi.className = `camera-leaf ${cam.status}`;
+                    leafLi.dataset.camId = cam.id;
+                    leafLi.dataset.camName = cam.name;
+                    leafLi.dataset.ip = cam.ip;
+                    leafLi.dataset.port = cam.port;
+                    leafLi.dataset.username = cam.username;
+                    leafLi.dataset.password = cam.password;
+                    leafLi.dataset.status = cam.status;
                     leafLi.innerHTML = `<i class="fas fa-video"></i> ${cam.name}`;
-                    leafLi.addEventListener('click', (e) => {
-                        e.stopPropagation();
-                        alert(`Kamera: ${cam.name}\nIP: ${cam.ip}\nDurum: ${cam.status === 'online' ? 'Çevrimiçi' : 'Çevrimdışı'}`);
-                    });
                     ul.appendChild(leafLi);
                 });
                 li.appendChild(ul);
                 nodeDiv.addEventListener('click', (e) => {
                     e.stopPropagation();
                     currentLocationId = loc.id;
-                    renderLocationTree(filterText);
+                    renderLocationTree(locationSearch ? locationSearch.value : '');
                     renderLocationDetail(loc.id);
                 });
                 locationTree.appendChild(li);
@@ -367,6 +399,18 @@ document.addEventListener('DOMContentLoaded', function() {
                     }
                 });
             });
+            // İlk lokasyonun ağacını aç
+            if (!filterText) {
+                const firstCaret = document.querySelector('#locationTree .caret');
+                if (firstCaret) {
+                    const parentLi = firstCaret.closest('li');
+                    const nestedUl = parentLi.querySelector('.nested');
+                    if (nestedUl) {
+                        nestedUl.classList.add('open');
+                        firstCaret.classList.add('open');
+                    }
+                }
+            }
             if (currentLocationId && !locations.find(l => l.id === currentLocationId)) {
                 currentLocationId = null;
                 renderLocationDetail(null);
@@ -397,7 +441,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 detailCameraTableBody.innerHTML = '';
                 loc.cameras.forEach(cam => {
                     const row = detailCameraTableBody.insertRow();
-                    row.insertCell(0).textContent = cam.id;
+                    row.insertCell(0).textContent = cam.id.substring(0, 8) + '...';
                     row.insertCell(1).textContent = cam.name;
                     row.insertCell(2).textContent = cam.ip;
                     row.insertCell(3).textContent = cam.port;
@@ -415,13 +459,16 @@ document.addEventListener('DOMContentLoaded', function() {
                     });
                 });
                 document.querySelectorAll('#detailCameraTableBody .action-btn.delete').forEach(btn => {
-                    btn.addEventListener('click', () => {
+                    btn.addEventListener('click', async () => {
                         const camId = btn.dataset.camid;
                         if (confirm('Kamerayı silmek istediğinize emin misiniz?')) {
-                            loc.cameras = loc.cameras.filter(c => c.id !== camId);
-                            renderLocationTree(locationSearch ? locationSearch.value : '');
-                            renderLocationDetail(currentLocationId);
-                            showToast('Kamera silindi (mock)', 'info');
+                            try {
+                                await CameraService.deleteCamera(camId);
+                                showToast('Kamera silindi!', 'success');
+                                await loadTreeData();
+                            } catch (err) {
+                                showToast(err.message || 'Kamera silinemedi!', 'error');
+                            }
                         }
                     });
                 });
@@ -441,112 +488,162 @@ document.addEventListener('DOMContentLoaded', function() {
             locationModal.style.display = 'flex';
         }
         function closeLocationModal() { if (locationModal) locationModal.style.display = 'none'; }
+
+        function openEditLocationModal(loc = null) {
+            if (!editLocationModal) return;
+            editingLocationId = loc ? loc.id : null;
+            document.getElementById('editLocationId').value = editingLocationId || '';
+            document.getElementById('editLocationName').value = loc ? loc.name : '';
+            document.getElementById('editLocationDesc').value = loc ? (loc.description || '') : '';
+            editLocationModal.style.display = 'flex';
+        }
+        function closeEditLocationModal() { if (editLocationModal) editLocationModal.style.display = 'none'; }
+
         function openCameraModal(cam = null, locationId) {
             if (!cameraModal) return;
             editingCameraLocationId = locationId;
             editingCameraId = cam ? cam.id : null;
-            const camIdInput = document.getElementById('cameraId');
-            const camNameInput = document.getElementById('cameraNameInput');
-            const camIpInput = document.getElementById('cameraIpInput');
-            const camPortInput = document.getElementById('cameraPortInput');
-            const camUserInput = document.getElementById('cameraUsernameInput');
-            const camPassInput = document.getElementById('cameraPasswordInput');
-            if (camIdInput) camIdInput.value = editingCameraId || '';
-            if (camNameInput) camNameInput.value = cam ? cam.name : '';
-            if (camIpInput) camIpInput.value = cam ? cam.ip : '';
-            if (camPortInput) camPortInput.value = cam ? cam.port : 80;
-            if (camUserInput) camUserInput.value = cam ? cam.username : '';
-            if (camPassInput) camPassInput.value = cam ? cam.password : '';
+            document.getElementById('cameraId').value = editingCameraId || '';
+            document.getElementById('cameraLocationId').value = editingCameraLocationId || '';
+            document.getElementById('cameraNameInput').value = cam ? cam.name : '';
+            document.getElementById('cameraIpInput').value = cam ? cam.ip : '';
+            document.getElementById('cameraPortInput').value = cam ? cam.port : 80;
+            document.getElementById('cameraUsernameInput').value = cam ? cam.username : '';
+            document.getElementById('cameraPasswordInput').value = cam ? cam.password : '';
             cameraModal.style.display = 'flex';
         }
         function closeCameraModal() { if (cameraModal) cameraModal.style.display = 'none'; }
 
+        // --- Buton event'leri ---
         if (globalAddLocationBtn) globalAddLocationBtn.addEventListener('click', () => openLocationModal());
+
         if (editLocationBtn) editLocationBtn.addEventListener('click', () => {
             const loc = locations.find(l => l.id === currentLocationId);
-            if (loc) openLocationModal(loc);
+            if (loc) openEditLocationModal(loc);
         });
-        if (deleteLocationBtn) deleteLocationBtn.addEventListener('click', () => {
-            if (confirm('Lokasyon ve tüm kameraları silinecek. Devam?')) {
-                locations = locations.filter(l => l.id !== currentLocationId);
-                currentLocationId = null;
-                renderLocationTree(locationSearch ? locationSearch.value : '');
-                renderLocationDetail(null);
-                showToast('Lokasyon silindi (mock)', 'info');
-            }
-        });
+
+        if (deleteLocationBtn) {
+            deleteLocationBtn.addEventListener('click', async () => {
+                if (!currentLocationId) return;
+                if (confirm('Lokasyon silinecek. Devam etmek istediğinize emin misiniz?')) {
+                    try {
+                        await CameraService.deleteLocation(currentLocationId);
+                        showToast('Lokasyon silindi!', 'success');
+                        currentLocationId = null;
+                        await loadTreeData();
+                    } catch (err) {
+                        showToast(err.message || 'Lokasyon silinemedi!', 'error');
+                    }
+                }
+            });
+        }
+
         if (addCameraFromDetailBtn) addCameraFromDetailBtn.addEventListener('click', () => {
             if (currentLocationId) openCameraModal(null, currentLocationId);
         });
 
+        // --- Lokasyon Ekle (AJAX) ---
         const saveLocationBtn = document.getElementById('saveLocationBtn');
         if (saveLocationBtn) {
-            saveLocationBtn.addEventListener('click', () => {
+            saveLocationBtn.addEventListener('click', async () => {
                 const name = document.getElementById('locationNameInput')?.value.trim();
                 const desc = document.getElementById('locationDescInput')?.value || '';
                 if (!name) return alert('Lokasyon adı gerekli');
-                if (editingLocationId) {
-                    const loc = locations.find(l => l.id === editingLocationId);
-                    if (loc) { loc.name = name; loc.description = desc; }
-                } else {
-                    const newId = 'loc_' + Date.now();
-                    locations.push({ id: newId, name, description: desc, cameras: [] });
+                try {
+                    await CameraService.addLocation(name, desc);
+                    showToast('Lokasyon eklendi!', 'success');
+                    closeLocationModal();
+                    document.getElementById('locationNameInput').value = '';
+                    document.getElementById('locationDescInput').value = '';
+                    await loadTreeData();
+                } catch (err) {
+                    showToast(err.message || 'Lokasyon eklenemedi!', 'error');
                 }
-                renderLocationTree(locationSearch ? locationSearch.value : '');
-                if (currentLocationId) renderLocationDetail(currentLocationId);
-                closeLocationModal();
-                showToast('Lokasyon kaydedildi (mock)', 'success');
             });
         }
-        const closeModalBtns = document.querySelectorAll('#locationModal .close-modal, #locationModal .btn-cancel-modal');
-        closeModalBtns.forEach(btn => btn.addEventListener('click', closeLocationModal));
 
+        // --- Lokasyon Güncelle (AJAX) ---
+        const updateLocationBtn = document.getElementById('updateLocationBtn');
+        if (updateLocationBtn) {
+            updateLocationBtn.addEventListener('click', async () => {
+                const id = document.getElementById('editLocationId')?.value;
+                const name = document.getElementById('editLocationName')?.value.trim();
+                const desc = document.getElementById('editLocationDesc')?.value || '';
+                if (!name) return alert('Lokasyon adı gerekli');
+                try {
+                    await CameraService.updateLocation(id, name, desc);
+                    showToast('Lokasyon güncellendi!', 'success');
+                    closeEditLocationModal();
+                    await loadTreeData();
+                } catch (err) {
+                    showToast(err.message || 'Lokasyon güncellenemedi!', 'error');
+                }
+            });
+        }
+
+        // --- Kamera Ekle/Güncelle (AJAX) ---
         const saveCameraBtn = document.getElementById('saveCameraBtn');
         if (saveCameraBtn) {
-            saveCameraBtn.addEventListener('click', () => {
+            saveCameraBtn.addEventListener('click', async () => {
                 const name = document.getElementById('cameraNameInput')?.value.trim();
                 const ip = document.getElementById('cameraIpInput')?.value.trim();
-                const port = parseInt(document.getElementById('cameraPortInput')?.value, 10);
+                const port = parseInt(document.getElementById('cameraPortInput')?.value, 10) || 80;
                 const username = document.getElementById('cameraUsernameInput')?.value || '';
                 const password = document.getElementById('cameraPasswordInput')?.value || '';
                 if (!name || !ip) return alert('Kamera adı ve IP zorunlu');
-                const loc = locations.find(l => l.id === editingCameraLocationId);
-                if (!loc) return;
-                if (editingCameraId) {
-                    const cam = loc.cameras.find(c => c.id === editingCameraId);
-                    if (cam) { cam.name = name; cam.ip = ip; cam.port = port; cam.username = username; cam.password = password; }
-                } else {
-                    const newId = 'cam_' + Date.now();
-                    loc.cameras.push({ id: newId, name, ip, port, username, password, status: 'offline' });
+
+                const cameraData = {
+                    name,
+                    ipAddress: ip,
+                    port,
+                    username,
+                    password,
+                    streamChannel: 101
+                };
+
+                try {
+                    if (editingCameraId) {
+                        await CameraService.updateCamera(editingCameraId, {
+                            id: editingCameraId,
+                            locationId: editingCameraLocationId,
+                            ...cameraData
+                        });
+                        showToast('Kamera güncellendi!', 'success');
+                    } else {
+                        await CameraService.addCamera(editingCameraLocationId, cameraData);
+                        showToast('Kamera eklendi!', 'success');
+                    }
+                    closeCameraModal();
+                    await loadTreeData();
+                } catch (err) {
+                    showToast(err.message || 'Kamera kaydedilemedi!', 'error');
                 }
-                renderLocationTree(locationSearch ? locationSearch.value : '');
-                if (currentLocationId === editingCameraLocationId) renderLocationDetail(currentLocationId);
-                closeCameraModal();
-                showToast('Kamera kaydedildi (mock)', 'success');
             });
         }
-        const closeCamModalBtns = document.querySelectorAll('#cameraModal .close-modal-cam, #cameraModal .btn-cancel-modal-cam');
-        closeCamModalBtns.forEach(btn => btn.addEventListener('click', closeCameraModal));
 
+        // --- Modal kapatma butonları ---
+        document.querySelectorAll('#locationModal .close-modal, #locationModal .btn-cancel-modal')
+            .forEach(btn => btn.addEventListener('click', closeLocationModal));
+
+        document.querySelectorAll('#editLocationModal .close-modal, #editLocationModal .btn-cancel-modal')
+            .forEach(btn => btn.addEventListener('click', closeEditLocationModal));
+
+        document.querySelectorAll('#cameraModal .close-modal-cam, #cameraModal .btn-cancel-modal-cam')
+            .forEach(btn => btn.addEventListener('click', closeCameraModal));
+
+        // --- Arama ---
         if (locationSearch) {
             locationSearch.addEventListener('input', (e) => {
                 renderLocationTree(e.target.value);
-                if (currentLocationId && !locations.find(l => l.id === currentLocationId && l.name.toLowerCase().includes(e.target.value.toLowerCase()))) {
-                    renderLocationDetail(null);
-                } else if (currentLocationId) {
-                    renderLocationDetail(currentLocationId);
+                if (currentLocationId) {
+                    const found = locations.find(l => l.id === currentLocationId && l.name.toLowerCase().includes(e.target.value.toLowerCase()));
+                    if (!found) renderLocationDetail(null);
+                    else renderLocationDetail(currentLocationId);
                 }
             });
         }
 
-        // İlk yükleme
-        renderLocationTree('');
-        if (locations.length > 0) {
-            currentLocationId = locations[0].id;
-            renderLocationTree('');
-            renderLocationDetail(currentLocationId);
-        } else {
-            renderLocationDetail(null);
-        }
+        // İlk yükleme - sunucudan veri çek
+        loadTreeData();
     }
 });

@@ -3,7 +3,6 @@ using PlakaTanima.Infrastructure;
 using PlakaTanima.SignalR.Hubs;
 using PlakaTanima.SignalR;
 using PlakaTanima.WebUI;
-using PlakaTanima.Alarm;
 
 var builder = WebApplication.CreateBuilder(args);
 

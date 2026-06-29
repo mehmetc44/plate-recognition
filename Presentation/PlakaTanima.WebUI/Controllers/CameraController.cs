@@ -39,6 +39,9 @@ namespace PlakaTanima.WebUI.Controllers
                         c.Id,
                         c.Name,
                         c.IpAddress,
+                        c.Port,
+                        c.Username,
+                        c.Password,
                         c.LocationName,
                         Status = c.Status.ToString().ToLower()
                     })
@@ -91,6 +94,53 @@ namespace PlakaTanima.WebUI.Controllers
 
         [HttpPost]
         public async Task<IActionResult> DeleteCameraApi([FromBody] DeleteCameraCommand command)
+        {
+            try
+            {
+                await _mediator.Send(command);
+                return Json(new { success = true });
+            }
+            catch (Exception ex)
+            {
+                return Json(new { success = false, message = ex.Message });
+            }
+        }
+
+        // ========== LOCATION CRUD (JSON API) ==========
+        [HttpPost]
+        public async Task<IActionResult> AddLocationApi([FromBody] CreateLocationCommand command)
+        {
+            if (!ModelState.IsValid)
+                return Json(new { success = false, message = "Geçersiz veri." });
+            try
+            {
+                var id = await _mediator.Send(command);
+                return Json(new { success = true, id, name = command.Name });
+            }
+            catch (Exception ex)
+            {
+                return Json(new { success = false, message = ex.Message });
+            }
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> UpdateLocationApi([FromBody] UpdateLocationCommand command)
+        {
+            if (!ModelState.IsValid)
+                return Json(new { success = false, message = "Geçersiz veri." });
+            try
+            {
+                await _mediator.Send(command);
+                return Json(new { success = true });
+            }
+            catch (Exception ex)
+            {
+                return Json(new { success = false, message = ex.Message });
+            }
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> DeleteLocationApi([FromBody] DeleteLocationCommand command)
         {
             try
             {
