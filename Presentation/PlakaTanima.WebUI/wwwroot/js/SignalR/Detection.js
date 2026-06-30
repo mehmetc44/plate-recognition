@@ -1,11 +1,21 @@
 "use strict";
 
-var connection = new signalR.HubConnectionBuilder()
-    .withUrl("/plateHub")
-    .withAutomaticReconnect()
-    .build();
+// Multi-connection and handler duplication prevention (fixes duplicates caused by page transitions/Turbo reload)
+if (!window.signalrConnection) {
+    window.signalrConnection = new signalR.HubConnectionBuilder()
+        .withUrl("/plateHub")
+        .withAutomaticReconnect()
+        .build();
 
-connection.on("NewPlateDetected", function (data) {
+    window.signalrConnection.start().then(function () {
+        console.log("SignalR bağlantısı başarılı. Canlı plaka akışı dinleniyor...");
+    }).catch(err => console.error("SignalR başlatılamadı: " + err.toString()));
+}
+
+// Clear any previous listeners on the connection to prevent duplicate handling
+window.signalrConnection.off("NewPlateDetected");
+
+window.signalrConnection.on("NewPlateDetected", function (data) {
     const feed = document.getElementById("detectionFeed");
     if (!feed) return;
 
@@ -76,8 +86,16 @@ connection.on("NewPlateDetected", function (data) {
     if (feed.children.length > 20) {
         feed.lastElementChild.remove();
     }
-});
 
-connection.start().then(function () {
-    console.log("Bağlantı başarılı. Canlı plaka akışı dinleniyor...");
-}).catch(err => console.error("SignalR başlatılamadı: " + err.toString()));
+    // Attach click event dynamically to the newly added card (for detail redirection)
+    const newCard = feed.firstElementChild;
+    if (newCard) {
+        newCard.addEventListener("click", function () {
+            const plateEl = this.querySelector(".plate-label");
+            if (plateEl) {
+                const plate = plateEl.textContent.trim();
+                window.open(`/Home/VehicleDetails?plate=${encodeURIComponent(plate)}`, "_blank");
+            }
+        });
+    }
+});
