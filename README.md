@@ -54,13 +54,39 @@ PlakaTanima/Platar/
 
 ## ⚙️ Kurulum ve Çalıştırma
 
-### 1. Ön Gereksinimler
+Projenizi iki farklı yöntemle ayağa kaldırabilirsiniz: **Windows Servisi Olarak (Windows Server Production Ortamı)** veya **Docker ile (Geliştirme/Linux Ortamı)**.
+
+### 🚀 Yöntem A: Windows Servisleri ile Yayına Alma (Windows Server - Önerilen / Docker'sız)
+
+Windows Server 2019/2022 gibi Docker Desktop desteği olmayan veya Linux konteynerlerinin kararlı çalışmadığı Windows sunucularda, projenin tüm bileşenlerini yerel (native) Windows servisleri olarak arka planda çalıştırabilirsiniz.
+
+Proje kök dizininde bulunan [setup-windows-services.ps1](file:///home/mehmet/Desktop/Platar/setup-windows-services.ps1) betiği bu kurulumu tamamen otomatikleştirir:
+1. **NSSM (Non-Sucking Service Manager)** aracını indirir.
+2. **MinIO** ve **MediaMTX** yerel Windows (.exe) uygulamalarını indirir ve yapılandırır.
+3. WebUI projesini `Release` modda derleyip (`publish`) yayına hazırlar.
+4. Python bağımlılıklarını (`requirements.txt`) yükler.
+5. Tüm bileşenleri Windows Servisi olarak kaydeder ve arka planda otomatik başlatır.
+
+**Nasıl Çalıştırılır?**
+1. Kök dizindeki `.env` dosyasını sunucunuzun PostgreSQL şifresine ve ağ ayarlarına göre doldurun.
+2. PowerShell'i **Yönetici Olarak Çalıştır** (Run as Administrator) seçeneği ile açın.
+3. Proje dizinine gidip betiği çalıştırın:
+   ```powershell
+   .\setup-windows-services.ps1
+   ```
+4. Kurulum bittiğinde, Windows **Servisler** (`services.msc`) panelinden servisleri (`Platar-MinIO`, `Platar-MediaMTX`, `Platar-WebUI`, `Platar-PythonAlarm`) yönetebilirsiniz. Sunucu kapansa bile bu servisler arka planda otomatik olarak ayağa kalkacaktır.
+
+---
+
+### Yöntem B: Docker ile Çalıştırma (Geliştirme / Linux Ortamı)
+
+#### 1. Ön Gereksinimler
 * [Docker Desktop](https://www.docker.com/) yüklü ve çalışır durumda olmalıdır.
 * [.NET 8 SDK](https://dotnet.microsoft.com/download/dotnet/8.0) yüklü olmalıdır.
 * [Python 3.10+](https://www.python.org/downloads/) ve `pip` kurulu olmalıdır.
 * PostgreSQL sunucusu çalışıyor olmalıdır.
 
-### 2. Docker Servislerini Başlatın
+#### 2. Docker Servislerini Başlatın
 Kök dizinde terminal açarak MediaMTX ve MinIO nesne depolarını ayağa kaldırın:
 ```bash
 docker compose up -d
