@@ -1,27 +1,23 @@
 using System;
-using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using PlakaTanima.Application.DTOs.Cameras;
 using PlakaTanima.Application.DTOs.Locations;
-using PlakaTanima.Application.Repositories.CameraRepositories;
-using PlakaTanima.Application.Repositories.LocationRepositories;
-using PlakaTanima.Domain.Entities;
-using PlakaTanima.Domain.Enums;
+using PlakaTanima.Application.Services;
 
 namespace PlakaTanima.WebUI.Controllers
 {
     public class CameraController : Controller
     {
-        private readonly ICameraRepository _cameraRepository;
-        private readonly ILocationRepository _locationRepository;
+        private readonly ICameraService _cameraService;
+        private readonly ILocationService _locationService;
 
         public CameraController(
-            ICameraRepository cameraRepository,
-            ILocationRepository locationRepository)
+            ICameraService cameraService,
+            ILocationService locationService)
         {
-            _cameraRepository = cameraRepository;
-            _locationRepository = locationRepository;
+            _cameraService = cameraService;
+            _locationService = locationService;
         }
 
         // ========== JSON API: Tree verisi ==========
@@ -30,26 +26,7 @@ namespace PlakaTanima.WebUI.Controllers
         {
             try
             {
-                var locations = await _locationRepository.GetAllWithCamerasAsync();
-                var result = locations.Select(loc => new LocationDto
-                {
-                    Id = loc.Id,
-                    Name = loc.Name,
-                    Description = loc.Description,
-                    Cameras = loc.Cameras.Select(c => new CameraDto
-                    {
-                        Id = c.Id,
-                        Name = c.Name,
-                        LocationId = c.LocationId,
-                        IpAddress = c.IpAddress,
-                        Port = c.Port,
-                        Username = c.Username,
-                        Password = c.Password,
-                        StreamChannel = c.StreamChannel,
-                        Status = c.Status.ToString().ToLower()
-                    }).ToList()
-                }).ToList();
-
+                var result = await _locationService.GetTreeAsync();
                 return Json(result);
             }
             catch (Exception ex)
@@ -62,24 +39,11 @@ namespace PlakaTanima.WebUI.Controllers
         [HttpGet]
         public async Task<IActionResult> GetCameraDetail(Guid id)
         {
-            var camera = await _cameraRepository.GetByIdAsync(id);
+            var camera = await _cameraService.GetCameraByIdAsync(id);
             if (camera == null)
                 return NotFound();
 
-            var dto = new CameraDto
-            {
-                Id = camera.Id,
-                Name = camera.Name,
-                LocationId = camera.LocationId,
-                IpAddress = camera.IpAddress,
-                Port = camera.Port,
-                Username = camera.Username,
-                Password = camera.Password,
-                StreamChannel = camera.StreamChannel,
-                Status = camera.Status.ToString().ToLower()
-            };
-
-            return Json(dto);
+            return Json(camera);
         }
 
         // ========== CAMERA CRUD (JSON) ==========
@@ -90,30 +54,16 @@ namespace PlakaTanima.WebUI.Controllers
                 return Json(new { success = false, message = "Geçersiz veri." });
             try
             {
-                var location = await _locationRepository.GetByIdAsync(command.LocationId);
-                if (location == null)
+                var locationExists = await _locationService.ExistsByIdAsync(command.LocationId);
+                if (!locationExists)
                     return Json(new { success = false, message = "Lokasyon bulunamadı." });
 
-                var ipExists = await _cameraRepository.ExistsByIpAddressAsync(command.IpAddress);
+                var ipExists = await _cameraService.ExistsByIpAddressAsync(command.IpAddress);
                 if (ipExists)
                     return Json(new { success = false, message = "Bu IP adresi ile kayıtlı kamera mevcut." });
 
-                var camera = new Camera
-                {
-                    Name = command.Name,
-                    LocationId = command.LocationId,
-                    IpAddress = command.IpAddress,
-                    Port = command.Port,
-                    Username = command.Username,
-                    Password = command.Password,
-                    StreamChannel = command.StreamChannel,
-                    Status = CameraStatus.Offline
-                };
-
-                await _cameraRepository.AddAsync(camera);
-                await _cameraRepository.SaveAsync();
-
-                return Json(new { success = true, id = camera.Id, name = camera.Name });
+                var id = await _cameraService.AddCameraAsync(command);
+                return Json(new { success = true, id = id, name = command.Name });
             }
             catch (Exception ex)
             {
@@ -128,29 +78,17 @@ namespace PlakaTanima.WebUI.Controllers
                 return Json(new { success = false, message = "Geçersiz veri." });
             try
             {
-                var camera = await _cameraRepository.GetByIdAsync(command.Id, true);
-                if (camera == null)
-                    return Json(new { success = false, message = "Kamera bulunamadı." });
-
-                var location = await _locationRepository.GetByIdAsync(command.LocationId);
-                if (location == null)
+                var locationExists = await _locationService.ExistsByIdAsync(command.LocationId);
+                if (!locationExists)
                     return Json(new { success = false, message = "Lokasyon bulunamadı." });
 
-                var ipExists = await _cameraRepository.ExistsByIpAddressAsync(command.IpAddress, command.Id);
+                var ipExists = await _cameraService.ExistsByIpAddressAsync(command.IpAddress, command.Id);
                 if (ipExists)
                     return Json(new { success = false, message = "Bu IP adresi başka bir kamerada kullanılıyor." });
 
-                camera.Name = command.Name;
-                camera.LocationId = command.LocationId;
-                camera.IpAddress = command.IpAddress;
-                camera.Port = command.Port;
-                camera.Username = command.Username;
-                camera.Password = command.Password;
-                camera.StreamChannel = command.StreamChannel;
-                camera.UpdatedAt = DateTime.UtcNow;
-
-                _cameraRepository.Update(camera);
-                await _cameraRepository.SaveAsync();
+                var success = await _cameraService.UpdateCameraAsync(command);
+                if (!success)
+                    return Json(new { success = false, message = "Kamera bulunamadı." });
 
                 return Json(new { success = true });
             }
@@ -165,12 +103,7 @@ namespace PlakaTanima.WebUI.Controllers
         {
             try
             {
-                var camera = await _cameraRepository.GetByIdAsync(request.Id);
-                if (camera != null)
-                {
-                    _cameraRepository.Remove(camera);
-                    await _cameraRepository.SaveAsync();
-                }
+                await _cameraService.DeleteCameraAsync(request.Id);
                 return Json(new { success = true });
             }
             catch (Exception ex)
@@ -187,16 +120,8 @@ namespace PlakaTanima.WebUI.Controllers
                 return Json(new { success = false, message = "Geçersiz veri." });
             try
             {
-                var location = new Location
-                {
-                    Name = command.Name,
-                    Description = command.Description
-                };
-
-                await _locationRepository.AddAsync(location);
-                await _locationRepository.SaveAsync();
-
-                return Json(new { success = true, id = location.Id, name = location.Name });
+                var id = await _locationService.AddLocationAsync(command);
+                return Json(new { success = true, id = id, name = command.Name });
             }
             catch (Exception ex)
             {
@@ -211,16 +136,9 @@ namespace PlakaTanima.WebUI.Controllers
                 return Json(new { success = false, message = "Geçersiz veri." });
             try
             {
-                var location = await _locationRepository.GetByIdAsync(command.Id, true);
-                if (location == null)
+                var success = await _locationService.UpdateLocationAsync(command);
+                if (!success)
                     return Json(new { success = false, message = "Lokasyon bulunamadı." });
-
-                location.Name = command.Name;
-                location.Description = command.Description;
-                location.UpdatedAt = DateTime.UtcNow;
-
-                _locationRepository.Update(location);
-                await _locationRepository.SaveAsync();
 
                 return Json(new { success = true });
             }
@@ -235,18 +153,12 @@ namespace PlakaTanima.WebUI.Controllers
         {
             try
             {
-                var location = await _locationRepository.GetByIdAsync(request.Id);
-                if (location != null)
-                {
-                    // Check if has cameras
-                    var hasCameras = await _locationRepository.HasCameraAsync(request.Id);
-                    if (hasCameras)
-                        return Json(new { success = false, message = "Kamerası bulunan bir lokasyon silinemez." });
+                var hasCameras = await _locationService.HasCameraAsync(request.Id);
+                if (hasCameras)
+                    return Json(new { success = false, message = "Kamerası bulunan bir lokasyon silinemez." });
 
-                    _locationRepository.Remove(location);
-                    await _locationRepository.SaveAsync();
-                }
-                return Json(new { success = true });
+                var success = await _locationService.DeleteLocationAsync(request.Id);
+                return Json(new { success = success });
             }
             catch (Exception ex)
             {
@@ -262,10 +174,7 @@ namespace PlakaTanima.WebUI.Controllers
             if (!ModelState.IsValid)
                 return RedirectToAction("Index", "Settings");
 
-            var location = new Location { Name = command.Name, Description = command.Description };
-            await _locationRepository.AddAsync(location);
-            await _locationRepository.SaveAsync();
-
+            await _locationService.AddLocationAsync(command);
             return RedirectToAction("Index", "Settings");
         }
 
@@ -276,27 +185,14 @@ namespace PlakaTanima.WebUI.Controllers
             if (!ModelState.IsValid)
                 return RedirectToAction("Index", "Settings");
 
-            var location = await _locationRepository.GetByIdAsync(command.Id, true);
-            if (location != null)
-            {
-                location.Name = command.Name;
-                location.Description = command.Description;
-                _locationRepository.Update(location);
-                await _locationRepository.SaveAsync();
-            }
-
+            await _locationService.UpdateLocationAsync(command);
             return RedirectToAction("Index", "Settings");
         }
 
         [HttpPost]
         public async Task<IActionResult> DeleteLocation(DeleteRequest command)
         {
-            var location = await _locationRepository.GetByIdAsync(command.Id);
-            if (location != null)
-            {
-                _locationRepository.Remove(location);
-                await _locationRepository.SaveAsync();
-            }
+            await _locationService.DeleteLocationAsync(command.Id);
             return Ok();
         }
 
@@ -307,20 +203,7 @@ namespace PlakaTanima.WebUI.Controllers
             if (!ModelState.IsValid)
                 return RedirectToAction("Index", "Settings");
 
-            var camera = new Camera
-            {
-                Name = command.Name,
-                LocationId = command.LocationId,
-                IpAddress = command.IpAddress,
-                Port = command.Port,
-                Username = command.Username,
-                Password = command.Password,
-                StreamChannel = command.StreamChannel,
-                Status = CameraStatus.Offline
-            };
-            await _cameraRepository.AddAsync(camera);
-            await _cameraRepository.SaveAsync();
-
+            await _cameraService.AddCameraAsync(command);
             return RedirectToAction("Index", "Settings");
         }
 
@@ -331,20 +214,7 @@ namespace PlakaTanima.WebUI.Controllers
             if (!ModelState.IsValid)
                 return RedirectToAction("Index", "Settings");
 
-            var camera = await _cameraRepository.GetByIdAsync(command.Id, true);
-            if (camera != null)
-            {
-                camera.Name = command.Name;
-                camera.LocationId = command.LocationId;
-                camera.IpAddress = command.IpAddress;
-                camera.Port = command.Port;
-                camera.Username = command.Username;
-                camera.Password = command.Password;
-                camera.StreamChannel = command.StreamChannel;
-                _cameraRepository.Update(camera);
-                await _cameraRepository.SaveAsync();
-            }
-
+            await _cameraService.UpdateCameraAsync(command);
             return RedirectToAction("Index", "Settings");
         }
 
@@ -352,12 +222,7 @@ namespace PlakaTanima.WebUI.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteCamera(DeleteRequest command)
         {
-            var camera = await _cameraRepository.GetByIdAsync(command.Id);
-            if (camera != null)
-            {
-                _cameraRepository.Remove(camera);
-                await _cameraRepository.SaveAsync();
-            }
+            await _cameraService.DeleteCameraAsync(command.Id);
             return RedirectToAction("Index", "Settings");
         }
     }

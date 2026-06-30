@@ -1,7 +1,8 @@
 using Microsoft.Extensions.DependencyInjection;
 using PlakaTanima.Application.References;
 using PlakaTanima.Application.Models;
-
+using PlakaTanima.Application.Services;
+using PlakaTanima.WebUI.Services;
 
 namespace PlakaTanima.WebUI;
 
@@ -17,7 +18,9 @@ public static class DependencyInjection
     cfg.RegisterServicesFromAssembly(
         typeof(ApplicationAssemblyReference).Assembly);
 });
-        services.AddScoped<PlakaTanima.Application.Services.ILprProcessingJob, PlakaTanima.WebUI.Services.LprProcessingJob>();
+        services.AddScoped<ILprProcessingJob, LprProcessingJob>();
+        services.AddScoped<IAuthService, AuthService>();
+        services.AddScoped<ILprService, LprService>();
         return services;
     }
 }

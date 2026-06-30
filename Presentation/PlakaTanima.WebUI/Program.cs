@@ -5,6 +5,7 @@ using PlakaTanima.SignalR;
 using PlakaTanima.WebUI;
 using Hangfire;
 using Microsoft.AspNetCore.Identity;
+using AutoMapper;
 
 // --- LOAD ROOT .ENV FILE ---
 var rootDir = Directory.GetCurrentDirectory();
@@ -35,6 +36,14 @@ builder.Services.AddPersistenceDI(builder.Configuration);
 builder.Services.AddInfrastructureDI(builder.Configuration);
 builder.Services.AddSignalRDI();
 builder.Services.AddWebUIDI(builder.Configuration);
+
+// --- AUTOMAPPER CONFIGURATION ---
+var mapperConfig = new MapperConfiguration(mc =>
+{
+    mc.AddProfile(new PlakaTanima.Application.Mapping.MappingProfile());
+});
+IMapper mapper = mapperConfig.CreateMapper();
+builder.Services.AddSingleton(mapper);
 
 // --- IDENTITY & JWT CONFIGURATION ---
 builder.Services.AddIdentity<Microsoft.AspNetCore.Identity.IdentityUser, Microsoft.AspNetCore.Identity.IdentityRole>(options =>
