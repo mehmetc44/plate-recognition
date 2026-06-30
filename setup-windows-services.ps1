@@ -103,6 +103,22 @@ if (-not (Test-Path $EnvFile)) {
     Exit
 }
 
+# ------------------------------------------------------------------------------
+# 2. Eski Servisleri Durdurma ve Süreçleri Sonlandırma
+# ------------------------------------------------------------------------------
+# Derleme (Publish) işleminden önce eski servisleri durduruyoruz ki dosyalar kilitli kalmasın.
+Write-Host "Eski servis kalıntıları durduruluyor ve temizleniyor..." -ForegroundColor Gray
+Get-Service -Name "Platar-*" -ErrorAction SilentlyContinue | ForEach-Object {
+    Write-Host "Durduruluyor ve Siliniyor: $($_.Name)" -ForegroundColor Yellow
+    Stop-Service $_.Name -ErrorAction SilentlyContinue
+    & $NssmPath remove $_.Name confirm
+}
+
+# Eğer arka planda çalışan dotnet watch/run süreci varsa onu da sonlandırıyoruz.
+Write-Host "Çalışan eski PlakaTanima.WebUI süreçleri sonlandırılıyor..." -ForegroundColor Yellow
+Stop-Process -Name "PlakaTanima.WebUI" -Force -ErrorAction SilentlyContinue
+Start-Sleep -Seconds 2
+
 # WebUI Derleme (Publish)
 Write-Host "[4/4] WebUI projesi Release modunda derleniyor (Publish)..." -ForegroundColor Cyan
 $WebUiProj = Join-Path $ScriptDir "Presentation\PlakaTanima.WebUI\PlakaTanima.WebUI.csproj"
@@ -119,14 +135,6 @@ Write-Host ">> WebUI başarıyla derlendi: $PublishDir" -ForegroundColor Green
 # 3. Windows Servislerinin Kayıt Edilmesi ve Başlatılması
 # ------------------------------------------------------------------------------
 Write-Host "=== Windows Servisleri Kayıt Ediliyor ===" -ForegroundColor Green
-
-# Eski servisler varsa temizle
-Write-Host "Eski servis kalıntıları temizleniyor..." -ForegroundColor Gray
-Get-Service -Name "Platar-*" -ErrorAction SilentlyContinue | ForEach-Object {
-    Write-Host "Durduruluyor ve Siliniyor: $($_.Name)" -ForegroundColor Yellow
-    Stop-Service $_.Name -ErrorAction SilentlyContinue
-    & $NssmPath remove $_.Name confirm
-}
 
 # A. Platar-MinIO Servisi
 Write-Host "Kayıt ediliyor: Platar-MinIO" -ForegroundColor Cyan
