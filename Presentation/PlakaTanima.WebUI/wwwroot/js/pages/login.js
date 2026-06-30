@@ -39,13 +39,7 @@
 
         // Validasyon
         if (!email) {
-            showError('E-posta adresi gerekli.');
-            emailInput.focus();
-            return;
-        }
-
-        if (!isValidEmail(email)) {
-            showError('Geçerli bir e-posta adresi girin.');
+            showError('E-posta veya kullanıcı adı gerekli.');
             emailInput.focus();
             return;
         }
@@ -64,10 +58,14 @@
 
         // Set Loading state
         loginBtn.classList.add('loading');
-        const origSpan = loginBtn.querySelector('span').textContent;
-        const origIconClass = loginBtn.querySelector('i').className;
-        loginBtn.querySelector('span').textContent = 'Giriş yapılıyor...';
-        loginBtn.querySelector('i').className = 'fas fa-spinner spinner-icon';
+        const spanEl = loginBtn.querySelector('span');
+        const iconEl = loginBtn.querySelector('i');
+        
+        const origSpan = spanEl ? spanEl.textContent : 'Giriş Yap';
+        const origIconClass = iconEl ? iconEl.className : '';
+        
+        if (spanEl) spanEl.textContent = 'Giriş yapılıyor...';
+        if (iconEl) iconEl.className = 'fas fa-spinner spinner-icon';
 
         try {
             const response = await fetch('/api/auth/login', {
@@ -85,7 +83,7 @@
                 try {
                     localStorage.setItem('platar_user', JSON.stringify({
                         email: email,
-                        name: email === 'admin@gmail.com' ? 'Admin' : email.split('@')[0],
+                        name: email.includes('@') ? email.split('@')[0] : email,
                         role: 'Yönetici',
                         loggedIn: true,
                         loginTime: new Date().toISOString()
@@ -118,13 +116,11 @@
         errorMsg.classList.remove('show');
     }
 
-    function isValidEmail(email) {
-        return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
-    }
-
     function resetLoadingState(spanText, iconClass) {
         loginBtn.classList.remove('loading');
-        loginBtn.querySelector('span').textContent = spanText;
-        loginBtn.querySelector('i').className = iconClass;
+        const spanEl = loginBtn.querySelector('span');
+        const iconEl = loginBtn.querySelector('i');
+        if (spanEl) spanEl.textContent = spanText;
+        if (iconEl && iconClass) iconEl.className = iconClass;
     }
 })();

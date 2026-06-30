@@ -19,7 +19,8 @@ Sistem, gevsek bagli (loosely coupled) ve asenkron iletisim kuran iki ana katman
 Sistemde kesintisiz sekilde çalisan ve birbirleriyle iletisim halinde olan 5 servis bulunmaktadir:
 
 ### 1. ASP.NET Core WebUI (C#)
-* **Görevi:** Sistemdeki tüm REST API endpoint'lerini barındırır. Web paneli (Razor + Javascript) ve JWT tabanlı kimlik doğrulama servislerini (`/api/auth/login`) yönetir.
+* **Görevi:** Sistemdeki tüm REST API endpoint'lerini barındırır. Web paneli (Razor + Javascript) ve JWT / Refresh Token tabanlı kimlik doğrulama servislerini (`/api/auth/login`, `/api/auth/refresh`) yönetir.
+* **Giriş Bilgileri:** Varsayılan yönetici hesabı `admin@gmail.com` (şifre: `admin123`) olup kullanıcılar hem e-posta hem kullanıcı adı formatıyla giriş yapabilirler. Access Token süresi 1 saattir ve veritabanı kontrollü 5 günlük Refresh Token ile oturum tazelenir.
 * **Veri Yönetimi:** Gelişmiş filtreleme, sayfalama ve plaka yönetimi işlemlerinin veritabanına kaydedilmesini sağlar.
 * **SignalR:** İşlenen plaka geçişlerini anında tarayıcılara yayınlar.
 

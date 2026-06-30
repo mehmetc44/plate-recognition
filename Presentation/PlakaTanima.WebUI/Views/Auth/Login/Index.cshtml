@@ -13,93 +13,84 @@
     <style>
         :root {
             --bg-color: #0b0f19;
-            --card-bg: rgba(17, 24, 39, 0.7);
-            --card-border: rgba(255, 255, 255, 0.08);
-            --text-primary: #f3f4f6;
-            --text-secondary: #9ca3af;
-            --accent-color: #00c2ff;
-            --accent-glow: rgba(0, 194, 255, 0.15);
+            --card-bg: rgba(20, 30, 48, 0.45);
+            --card-border: rgba(255, 255, 255, 0.12);
+            --text-primary: #ffffff;
+            --text-secondary: #a0aec0;
+            --accent-color: #0084ff;
+            --accent-glow: rgba(0, 132, 255, 0.25);
             --error-color: #ef4444;
-            --error-bg: rgba(239, 68, 68, 0.1);
+            --error-bg: rgba(239, 68, 68, 0.15);
+            --input-bg: rgba(255, 255, 255, 0.05);
+            --input-border: rgba(255, 255, 255, 0.2);
         }
 
         * {
             box-sizing: border-box;
             margin: 0;
             padding: 0;
-            font-family: 'Outfit', 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
         }
 
         body {
-            background-color: var(--bg-color);
-            background-image: 
-                radial-gradient(at 0% 0%, rgba(0, 194, 255, 0.1) 0px, transparent 50%),
-                radial-gradient(at 100% 100%, rgba(0, 194, 255, 0.05) 0px, transparent 50%);
+            background: url('/img/login-bg.png') no-repeat center center fixed;
+            background-size: cover;
             height: 100vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
+            display: flex !important;
+            flex-direction: row !important; /* Overrides Utils.css flex-direction: column */
+            align-items: center !important;
+            justify-content: flex-end !important; /* Align card to the right */
+            padding-right: 12% !important; /* Perfect spacing to match screenshot */
             overflow: hidden;
             color: var(--text-primary);
+            position: relative;
+        }
+
+        /* Overlay for a slightly dark layer on the background */
+        body::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(11, 15, 25, 0.1);
+            z-index: 0;
         }
 
         .login-container {
             width: 100%;
             max-width: 440px;
-            padding: 20px;
-        }
-
-        .login-card {
-            background: var(--card-bg);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
-            border: 1px solid var(--card-border);
-            border-radius: 24px;
-            padding: 40px;
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4), 0 0 100px rgba(0, 194, 255, 0.03);
             position: relative;
             z-index: 1;
         }
 
+        .login-card {
+            background: var(--card-bg);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid var(--card-border);
+            border-radius: 16px;
+            padding: 40px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+        }
+
         .login-header {
             text-align: center;
-            margin-bottom: 35px;
+            margin-bottom: 30px;
         }
 
-        .login-logo {
-            font-size: 2.2rem;
-            font-weight: 800;
-            letter-spacing: -1px;
-            text-decoration: none;
-            color: #fff;
-            display: inline-block;
-            margin-bottom: 12px;
-        }
-
-        .login-logo span {
-            color: var(--accent-color);
-            text-shadow: 0 0 20px var(--accent-glow);
-        }
-
-        .login-subtitle {
-            font-size: 0.95rem;
-            color: var(--text-secondary);
-            font-weight: 400;
+        .login-title {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: #ffffff;
+            letter-spacing: 1px;
+            text-transform: uppercase;
         }
 
         .form-group {
-            margin-bottom: 24px;
+            margin-bottom: 20px;
             position: relative;
-        }
-
-        .form-label {
-            display: block;
-            font-size: 0.85rem;
-            font-weight: 500;
-            margin-bottom: 8px;
-            color: var(--text-secondary);
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
         }
 
         .input-wrapper {
@@ -118,20 +109,24 @@
 
         .form-input {
             width: 100%;
-            background: rgba(255, 255, 255, 0.03);
-            border: 1px solid rgba(255, 255, 255, 0.08);
-            border-radius: 12px;
+            background: var(--input-bg);
+            border: 1px solid var(--input-border);
+            border-radius: 8px;
             padding: 14px 16px 14px 48px;
-            color: #fff;
+            color: #ffffff;
             font-size: 1rem;
             outline: none;
             transition: all 0.3s ease;
         }
 
+        .form-input::placeholder {
+            color: rgba(255, 255, 255, 0.4);
+        }
+
         .form-input:focus {
             border-color: var(--accent-color);
-            background: rgba(255, 255, 255, 0.05);
-            box-shadow: 0 0 15px var(--accent-glow);
+            background: rgba(255, 255, 255, 0.08);
+            box-shadow: 0 0 10px var(--accent-glow);
         }
 
         .form-input:focus ~ .input-icon {
@@ -155,13 +150,49 @@
             color: var(--text-primary);
         }
 
+        /* Remember Me & Forgot Password Row */
+        .login-options {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+            font-size: 0.9rem;
+        }
+
+        .remember-me {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            cursor: pointer;
+            color: var(--text-secondary);
+            user-select: none;
+        }
+
+        .remember-me input {
+            cursor: pointer;
+            accent-color: var(--accent-color);
+            width: 15px;
+            height: 15px;
+        }
+
+        .forgot-password {
+            color: var(--accent-color);
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .forgot-password:hover {
+            color: #33a3ff;
+            text-decoration: underline;
+        }
+
         .login-btn {
             width: 100%;
             background: var(--accent-color);
-            color: #0b0f19;
+            color: #ffffff;
             border: none;
-            border-radius: 12px;
-            padding: 14px;
+            border-radius: 8px;
+            padding: 15px;
             font-size: 1rem;
             font-weight: 600;
             cursor: pointer;
@@ -170,14 +201,12 @@
             align-items: center;
             justify-content: center;
             gap: 10px;
-            box-shadow: 0 8px 24px rgba(0, 194, 255, 0.2);
-            margin-top: 10px;
+            box-shadow: 0 4px 15px rgba(0, 132, 255, 0.2);
         }
 
         .login-btn:hover {
-            background: #33d1ff;
-            transform: translateY(-1px);
-            box-shadow: 0 12px 28px rgba(0, 194, 255, 0.3);
+            background: #2695ff;
+            box-shadow: 0 6px 20px rgba(0, 132, 255, 0.3);
         }
 
         .login-btn:active {
@@ -192,12 +221,12 @@
 
         .login-error {
             background: var(--error-bg);
-            border: 1px solid rgba(239, 108, 108, 0.2);
+            border: 1px solid rgba(239, 108, 108, 0.25);
             color: var(--error-color);
             padding: 12px 16px;
-            border-radius: 12px;
+            border-radius: 8px;
             font-size: 0.9rem;
-            margin-bottom: 24px;
+            margin-bottom: 20px;
             display: none;
             align-items: center;
             gap: 10px;
@@ -221,29 +250,37 @@
         @@keyframes spin {
             100% { transform: rotate(360deg); }
         }
+
+        /* Responsive Layout */
+        @@media (max-width: 992px) {
+            body {
+                justify-content: center !important;
+                padding-right: 0 !important;
+            }
+            body::before {
+                background: rgba(11, 15, 25, 0.6);
+            }
+        }
     </style>
 </head>
 <body>
     <div class="login-container">
         <div class="login-card">
             <div class="login-header">
-                <a href="#" class="login-logo">Plaka<span>Göz</span></a>
-                <p class="login-subtitle">Lütfen yönetici hesabı bilgilerinizi girin.</p>
+                <h1 class="login-title">GİRİŞ YAP</h1>
             </div>
 
             <form id="loginForm" autocomplete="off">
                 <div class="form-group">
-                    <label class="form-label">E-POSTA ADRESİ</label>
                     <div class="input-wrapper">
-                        <input type="email" id="loginEmail" class="form-input" placeholder="admin@gmail.com" required>
-                        <i class="fas fa-envelope input-icon"></i>
+                        <input type="text" id="loginEmail" class="form-input" placeholder="Kullanıcı Adı veya E-posta" required>
+                        <i class="far fa-user input-icon"></i>
                     </div>
                 </div>
 
                 <div class="form-group">
-                    <label class="form-label">ŞİFRE</label>
                     <div class="input-wrapper">
-                        <input type="password" id="loginPassword" class="form-input" placeholder="••••••" required>
+                        <input type="password" id="loginPassword" class="form-input" placeholder="Şifre" required>
                         <i class="fas fa-lock input-icon"></i>
                         <button type="button" id="passwordToggle" class="password-toggle">
                             <i class="fas fa-eye"></i>
@@ -251,9 +288,16 @@
                     </div>
                 </div>
 
+                <div class="login-options">
+                    <label class="remember-me">
+                        <input type="checkbox" id="rememberMe">
+                        <span>Beni Hatırla</span>
+                    </label>
+                    <a href="#" class="forgot-password">Şifremi Unuttum?</a>
+                </div>
+
                 <button type="submit" id="loginBtn" class="login-btn">
                     <span>Giriş Yap</span>
-                    <i class="fas fa-sign-in-alt"></i>
                 </button>
             </form>
         </div>

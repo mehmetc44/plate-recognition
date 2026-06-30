@@ -40,6 +40,10 @@ namespace PlakaTanima.WebUI.Services
             var user = await _userManager.FindByEmailAsync(dto.Email);
             if (user == null)
             {
+                user = await _userManager.FindByNameAsync(dto.Email);
+            }
+            if (user == null)
+            {
                 return new AuthResultDto { Success = false, Message = "E-posta veya şifre hatalı." };
             }
 

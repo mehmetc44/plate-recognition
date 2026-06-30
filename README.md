@@ -36,7 +36,8 @@ Uygulamanın son sürümünde aşağıdaki gelişmiş yetenekler ve güvenlik ka
 ### 1. Kimlik Doğrulama & Güvenlik (Identity & JWT)
 * **ASP.NET Core Identity:** Kullanıcı ve rol yönetim altyapısı kurulmuş, tüm güvenlik tabloları PostgreSQL veritabanına eklenmiştir.
 * **Varsayılan Yönetici Seeding:** Uygulama ilk çalıştığında `admin@gmail.com` (şifre: `admin123`) kullanıcısı otomatik olarak veritabanına tohumlanır.
-* **JWT Bearer Authentication:** API koruması ve istemciler için `/api/auth/login` endpoint'i üzerinden 3 saat geçerli JWT token üretimi sağlanmıştır.
+* **Çift Yönlü Giriş Desteği:** Kullanıcılar sisteme hem **e-posta adresleri** (`admin@gmail.com`) hem de **kullanıcı adları** (`admin@gmail.com`) ile giriş yapabilirler.
+* **JWT & Refresh Token Mekanizması:** Güvenlik amacıyla Access Token süresi **1 saat** olarak sınırlandırılmıştır. Bu sürenin sonunda, veritabanı kontrollü ve iptal edilebilir (revocable) **5 gün geçerli** bir Refresh Token devreye girerek oturumu arka planda otomatik olarak yeniler.
 
 ### 2. Canlı Plaka Otomatik Kayıt Mekanizması
 * **Otomatik Plaka Ekleme:** Kameralardan geçen yeni ve veritabanında henüz kayıtlı olmayan herhangi bir plaka algılandığında, arka plan işçisi (`LprProcessingJob.cs`) tarafından otomatik olarak **Normal** kategoriyle (`Model: Bilinmeyen Araç`, `Sahip: Bilinmeyen Sürücü`) plaka yönetimi tablosuna kaydedilir. Böylece yeni araçlar için manuel kayıt açma zorunluluğu ortadan kalkar.
