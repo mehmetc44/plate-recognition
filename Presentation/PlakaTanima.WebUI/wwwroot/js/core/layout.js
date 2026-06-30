@@ -1,3 +1,67 @@
+// ==========================================
+// GLOBAL FETCH INTERCEPTOR FOR JWT REFRESH
+// ==========================================
+(function () {
+    const originalFetch = window.fetch;
+    let isRefreshing = false;
+    let refreshSubscribers = [];
+
+    function subscribeTokenRefresh(cb) {
+        refreshSubscribers.push(cb);
+    }
+
+    function onTokenRefreshed() {
+        refreshSubscribers.forEach(cb => cb());
+        refreshSubscribers = [];
+    }
+
+    window.fetch = async function (...args) {
+        let response = await originalFetch(...args);
+
+        // Intercept 401 Unauthorized
+        if (response.status === 401) {
+            const url = args[0];
+            // Avoid loop if refresh token endpoint fails
+            if (typeof url === 'string' && url.includes('/api/auth/refresh')) {
+                return response;
+            }
+
+            if (!isRefreshing) {
+                isRefreshing = true;
+                try {
+                    const refreshRes = await originalFetch('/api/auth/refresh', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' }
+                    });
+
+                    if (refreshRes.ok) {
+                        isRefreshing = false;
+                        onTokenRefreshed();
+                    } else {
+                        isRefreshing = false;
+                        localStorage.removeItem('platar_user');
+                        window.location.href = '/login';
+                        return response;
+                    }
+                } catch (err) {
+                    isRefreshing = false;
+                    localStorage.removeItem('platar_user');
+                    window.location.href = '/login';
+                    return response;
+                }
+            }
+
+            return new Promise((resolve) => {
+                subscribeTokenRefresh(async () => {
+                    resolve(await originalFetch(...args));
+                });
+            });
+        }
+
+        return response;
+    };
+})();
+
 document.addEventListener("turbo:load", () => {
   // ==========================================================
   // 1. AKTİF NAVBAR LİNK'İNİ BELİRLE
@@ -44,14 +108,20 @@ document.addEventListener("turbo:load", () => {
     // Çıkış Yap butonuna özel işlev
     const logoutBtn = userProfile.querySelector('.dropdown-item.danger');
     if (logoutBtn) {
-      logoutBtn.addEventListener('click', function (e) {
+      logoutBtn.addEventListener('click', async function (e) {
         e.preventDefault();
+        try {
+          // Sunucudaki oturumu kapat (refresh token'ı iptal et ve çerezleri temizle)
+          await fetch('/api/auth/logout', { method: 'POST' });
+        } catch (err) { /* ignore */ }
+        
         // localStorage'dan kullanıcı bilgilerini temizle
         try {
           localStorage.removeItem('platar_user');
         } catch (err) { /* ignore */ }
+        
         // Login sayfasına yönlendir
-        window.location.href = 'login.html';
+        window.location.href = '/login';
       });
     }
   }

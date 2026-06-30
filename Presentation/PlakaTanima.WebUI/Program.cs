@@ -77,7 +77,20 @@ builder.Services.AddAuthentication(options =>
         ValidateIssuerSigningKey = true,
         ValidIssuer = jwtIssuer,
         ValidAudience = jwtAudience,
-        IssuerSigningKey = new Microsoft.IdentityModel.Tokens.SymmetricSecurityKey(key)
+        IssuerSigningKey = new Microsoft.IdentityModel.Tokens.SymmetricSecurityKey(key),
+        ClockSkew = TimeSpan.Zero
+    };
+    options.Events = new Microsoft.AspNetCore.Authentication.JwtBearer.JwtBearerEvents
+    {
+        OnMessageReceived = context =>
+        {
+            var accessToken = context.Request.Cookies["access_token"];
+            if (!string.IsNullOrEmpty(accessToken))
+            {
+                context.Token = accessToken;
+            }
+            return Task.CompletedTask;
+        }
     };
 });
 
@@ -91,6 +104,34 @@ if (!app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 app.UseStaticFiles();
+
+// --- REDIRECT UNAUTHENTICATED VIEW REQUESTS ---
+app.Use(async (context, next) =>
+{
+    var path = context.Request.Path.Value?.ToLower();
+    
+    // Allow static files, api routes, and the login page
+    if (path != null && 
+        !path.StartsWith("/api") && 
+        !path.StartsWith("/css") && 
+        !path.StartsWith("/js") && 
+        !path.StartsWith("/lib") && 
+        !path.StartsWith("/img") && 
+        path != "/login" && 
+        path != "/auth/login")
+    {
+        var token = context.Request.Cookies["access_token"];
+        var refreshToken = context.Request.Cookies["refresh_token"];
+        
+        // If neither exists, redirect to login page
+        if (string.IsNullOrEmpty(token) && string.IsNullOrEmpty(refreshToken))
+        {
+            context.Response.Redirect("/login");
+            return;
+        }
+    }
+    await next();
+});
 
 app.UseRouting();
 

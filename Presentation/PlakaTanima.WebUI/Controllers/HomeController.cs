@@ -8,6 +8,18 @@ public class HomeController : Controller
         return View();
     }
 
+    [HttpGet("/login")]
+    public IActionResult Login()
+    {
+        var token = Request.Cookies["access_token"];
+        var refreshToken = Request.Cookies["refresh_token"];
+        if (!string.IsNullOrEmpty(token) || !string.IsNullOrEmpty(refreshToken))
+        {
+            return RedirectToAction("Index", "Home");
+        }
+        return View("~/Views/Auth/Login/Index.cshtml");
+    }
+
     [HttpGet("/PlateManagement")]
     public IActionResult PlateManagement()
     {

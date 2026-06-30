@@ -28,7 +28,7 @@
     // ==========================================================
     // 2. FORM VALİDASYON & GİRİŞ
     // ==========================================================
-    form.addEventListener('submit', function (e) {
+    form.addEventListener('submit', async function (e) {
         e.preventDefault();
 
         const email = emailInput.value.trim();
@@ -62,26 +62,46 @@
             return;
         }
 
-        // Başarılı giriş simülasyonu
+        // Set Loading state
         loginBtn.classList.add('loading');
+        const origSpan = loginBtn.querySelector('span').textContent;
+        const origIconClass = loginBtn.querySelector('i').className;
         loginBtn.querySelector('span').textContent = 'Giriş yapılıyor...';
-        loginBtn.querySelector('i').className = 'fas fa-spinner';
+        loginBtn.querySelector('i').className = 'fas fa-spinner spinner-icon';
 
-        setTimeout(function () {
-            // Kullanıcı bilgilerini localStorage'a kaydet
-            try {
-                localStorage.setItem('platar_user', JSON.stringify({
-                    email: email,
-                    name: email === 'admin@platar.com' ? 'Admin' : email.split('@')[0],
-                    role: 'Yönetici',
-                    loggedIn: true,
-                    loginTime: new Date().toISOString()
-                }));
-            } catch (e) { /* ignore */ }
+        try {
+            const response = await fetch('/api/auth/login', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ email, password })
+            });
 
-            // Ana sayfaya yönlendir
-            window.location.href = 'index.html';
-        }, 1200);
+            const data = await response.json();
+
+            if (response.ok && data.success) {
+                // Kullanıcı bilgilerini localStorage'a kaydet (UI için)
+                try {
+                    localStorage.setItem('platar_user', JSON.stringify({
+                        email: email,
+                        name: email === 'admin@gmail.com' ? 'Admin' : email.split('@')[0],
+                        role: 'Yönetici',
+                        loggedIn: true,
+                        loginTime: new Date().toISOString()
+                    }));
+                } catch (e) { /* ignore */ }
+
+                // Ana sayfaya yönlendir
+                window.location.href = '/';
+            } else {
+                showError(data.message || 'Giriş başarısız. Lütfen bilgilerinizi kontrol edin.');
+                resetLoadingState(origSpan, origIconClass);
+            }
+        } catch (err) {
+            showError('Sunucuya bağlanılamadı. Lütfen internet bağlantınızı kontrol edin.');
+            resetLoadingState(origSpan, origIconClass);
+        }
     });
 
     // ==========================================================
@@ -102,17 +122,9 @@
         return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
     }
 
-    // ==========================================================
-    // 4. EĞER ZATEN GİRİŞ YAPILMIŞSA YÖNLENDİR
-    // ==========================================================
-    try {
-        const userData = localStorage.getItem('platar_user');
-        if (userData) {
-            const user = JSON.parse(userData);
-            if (user.loggedIn) {
-                // Zaten giriş yapılmış, ana sayfaya yönlendir
-                window.location.href = 'index.html';
-            }
-        }
-    } catch (e) { /* ignore */ }
+    function resetLoadingState(spanText, iconClass) {
+        loginBtn.classList.remove('loading');
+        loginBtn.querySelector('span').textContent = spanText;
+        loginBtn.querySelector('i').className = iconClass;
+    }
 })();

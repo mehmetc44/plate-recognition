@@ -16,6 +16,7 @@ public class AppDbContext : IdentityDbContext<IdentityUser>
     public DbSet<Camera> Cameras { get; set; }
     public DbSet<AnprEvent> AnprEvents { get; set; }
     public DbSet<Vehicle> Vehicles { get; set; }
+    public DbSet<UserRefreshToken> UserRefreshTokens { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

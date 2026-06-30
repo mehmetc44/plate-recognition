@@ -1,5 +1,5 @@
 <header class="navbar">
-    <a href="index.html" class="logo">
+    <a asp-controller="Home" asp-action="Index" class="logo">
         Plaka<span style="color: #00c2ff;">Göz</span>
     </a>
     <ul class="nav-links" id="navLinks">
@@ -24,16 +24,16 @@
                     <span class="dropdown-user-email">admin@platar.com</span>
                 </div>
             </div>
-            <button class="dropdown-item" asp-controller="Home" asp-action="Settings">
+            <a class="dropdown-item" asp-controller="Home" asp-action="Settings">
                 <i class="fas fa-user-cog"></i> Profil Ayarları
-            </button>
-            <button class="dropdown-item" asp-controller="Home" asp-action="Security">
+            </a>
+            <a class="dropdown-item" asp-controller="Home" asp-action="Security">
                 <i class="fas fa-shield-alt"></i> Güvenlik
-            </button>
+            </a>
             <div class="dropdown-divider"></div>
-            <button class="dropdown-item danger" id="logoutBtn" asp-controller="Auth" asp-action="Login">
+            <a class="dropdown-item danger" id="logoutBtn" href="javascript:void(0)">
                 <i class="fas fa-sign-out-alt"></i> Çıkış Yap
-            </button>
+            </a>
         </div>
     </div>
 </header>
