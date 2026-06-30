@@ -29,6 +29,28 @@ Platar, temiz kod prensiplerine ve yüksek ölçeklenebilirliğe uygun olarak **
 
 ---
 
+## 🌟 Son Güncellemeler ve Yeni Özellikler
+
+Uygulamanın son sürümünde aşağıdaki gelişmiş yetenekler ve güvenlik katmanları sisteme entegre edilmiştir:
+
+### 1. Kimlik Doğrulama & Güvenlik (Identity & JWT)
+* **ASP.NET Core Identity:** Kullanıcı ve rol yönetim altyapısı kurulmuş, tüm güvenlik tabloları PostgreSQL veritabanına eklenmiştir.
+* **Varsayılan Yönetici Seeding:** Uygulama ilk çalıştığında `admin@gmail.com` (şifre: `admin123`) kullanıcısı otomatik olarak veritabanına tohumlanır.
+* **JWT Bearer Authentication:** API koruması ve istemciler için `/api/auth/login` endpoint'i üzerinden 3 saat geçerli JWT token üretimi sağlanmıştır.
+
+### 2. Canlı Plaka Otomatik Kayıt Mekanizması
+* **Otomatik Plaka Ekleme:** Kameralardan geçen yeni ve veritabanında henüz kayıtlı olmayan herhangi bir plaka algılandığında, arka plan işçisi (`LprProcessingJob.cs`) tarafından otomatik olarak **Normal** kategoriyle (`Model: Bilinmeyen Araç`, `Sahip: Bilinmeyen Sürücü`) plaka yönetimi tablosuna kaydedilir. Böylece yeni araçlar için manuel kayıt açma zorunluluğu ortadan kalkar.
+
+### 3. Gelişmiş Sorgu & Sayfalama (Pagination)
+* **Dinamik UX:** Arama sonuçları ilk etapta 50 kayıt listeler. Altındaki **Daha Fazla Göster** butonu ile sayfa yenilenmeden dinamik olarak sonraki 25 kayıt çekilerek listeye eklenir.
+* **Gerçek Zamanlı Filtreleme:** Sol filtre panelindeki tarih aralıkları veya durum seçimleri değiştirildiği anda veritabanına anında sorgu gönderilir.
+
+### 4. Plaka Yönetimi Hızlı İşlemleri (Plate Management UX)
+* **Tek Tıkla VIP & Kara Liste:** Tablo satırlarına entegre edilen yıldız (VIP) ve ban (Kara Liste) hızlı butonları sayesinde araçlar tek tıkla listelere eklenip çıkarılabilir, istatistikler ve rozetler anında güncellenir.
+* **Hızlı Plaka Girişi:** "Yeni Araç" modalında Marka/Model ve Sürücü alanları varsayılan olarak "Bilinmiyor" değeriyle yüklendiğinden, sadece plaka yazıp kaydetmek yeterlidir.
+
+---
+
 ## 📂 Proje Dizin Yapısı
 
 ```text

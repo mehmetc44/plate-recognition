@@ -4,6 +4,7 @@ using PlakaTanima.SignalR.Hubs;
 using PlakaTanima.SignalR;
 using PlakaTanima.WebUI;
 using Hangfire;
+using Microsoft.AspNetCore.Identity;
 
 // --- LOAD ROOT .ENV FILE ---
 var rootDir = Directory.GetCurrentDirectory();
@@ -35,6 +36,42 @@ builder.Services.AddInfrastructureDI(builder.Configuration);
 builder.Services.AddSignalRDI();
 builder.Services.AddWebUIDI(builder.Configuration);
 
+// --- IDENTITY & JWT CONFIGURATION ---
+builder.Services.AddIdentity<Microsoft.AspNetCore.Identity.IdentityUser, Microsoft.AspNetCore.Identity.IdentityRole>(options =>
+{
+    options.Password.RequireDigit = false;
+    options.Password.RequiredLength = 6;
+    options.Password.RequireLowercase = false;
+    options.Password.RequireUppercase = false;
+    options.Password.RequireNonAlphanumeric = false;
+})
+.AddEntityFrameworkStores<PlakaTanima.Persistence.Contexts.AppDbContext>()
+.AddDefaultTokenProviders();
+
+var jwtSecret = Environment.GetEnvironmentVariable("JWT_SECRET") ?? "PlatarSecretSecurityKeyThatNeedsToBeLongEnoughForHMACSHA256";
+var jwtIssuer = Environment.GetEnvironmentVariable("JWT_ISSUER") ?? "PlatarIssuer";
+var jwtAudience = Environment.GetEnvironmentVariable("JWT_AUDIENCE") ?? "PlatarAudience";
+var key = System.Text.Encoding.UTF8.GetBytes(jwtSecret);
+
+builder.Services.AddAuthentication(options =>
+{
+    options.DefaultAuthenticateScheme = Microsoft.AspNetCore.Authentication.JwtBearer.JwtBearerDefaults.AuthenticationScheme;
+    options.DefaultChallengeScheme = Microsoft.AspNetCore.Authentication.JwtBearer.JwtBearerDefaults.AuthenticationScheme;
+})
+.AddJwtBearer(options =>
+{
+    options.TokenValidationParameters = new Microsoft.IdentityModel.Tokens.TokenValidationParameters
+    {
+        ValidateIssuer = true,
+        ValidateAudience = true,
+        ValidateLifetime = true,
+        ValidateIssuerSigningKey = true,
+        ValidIssuer = jwtIssuer,
+        ValidAudience = jwtAudience,
+        IssuerSigningKey = new Microsoft.IdentityModel.Tokens.SymmetricSecurityKey(key)
+    };
+});
+
 
 var app = builder.Build();
 if (!app.Environment.IsDevelopment())
@@ -50,6 +87,7 @@ app.UseRouting();
 
 app.UseHangfireDashboard();
 
+app.UseAuthentication();
 app.UseAuthorization();
 
 

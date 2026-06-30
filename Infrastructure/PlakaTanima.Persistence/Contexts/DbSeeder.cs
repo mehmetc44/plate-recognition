@@ -169,6 +169,29 @@ namespace PlakaTanima.Persistence.Contexts
                 await context.AnprEvents.AddRangeAsync(events);
                 await context.SaveChangesAsync();
             }
+
+            // 6. Seed Admin User
+            var adminEmail = "admin@gmail.com";
+            var userTable = context.Set<Microsoft.AspNetCore.Identity.IdentityUser>();
+            if (!await userTable.AnyAsync(x => x.Email == adminEmail))
+            {
+                var adminUser = new Microsoft.AspNetCore.Identity.IdentityUser
+                {
+                    Id = Guid.NewGuid().ToString(),
+                    UserName = adminEmail,
+                    NormalizedUserName = adminEmail.ToUpperInvariant(),
+                    Email = adminEmail,
+                    NormalizedEmail = adminEmail.ToUpperInvariant(),
+                    EmailConfirmed = true,
+                    SecurityStamp = Guid.NewGuid().ToString()
+                };
+
+                var hasher = new Microsoft.AspNetCore.Identity.PasswordHasher<Microsoft.AspNetCore.Identity.IdentityUser>();
+                adminUser.PasswordHash = hasher.HashPassword(adminUser, "admin123");
+
+                await userTable.AddAsync(adminUser);
+                await context.SaveChangesAsync();
+            }
         }
     }
 }
