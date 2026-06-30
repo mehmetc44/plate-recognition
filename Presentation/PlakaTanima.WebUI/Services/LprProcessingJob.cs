@@ -54,7 +54,23 @@ namespace PlakaTanima.WebUI.Services
             var owner = "Bilinmeyen Sürücü";
             var model = "Bilinmeyen Araç";
 
-            if (vehicle != null)
+            if (vehicle == null)
+            {
+                // If it doesn't exist, create and save it automatically as a Normal vehicle
+                vehicle = new PlakaTanima.Domain.Entities.Vehicle
+                {
+                    Id = Guid.NewGuid(),
+                    Plate = plate.Trim().ToUpper(),
+                    Model = model,
+                    Owner = owner,
+                    Category = PlakaTanima.Domain.Entities.VehicleCategory.Normal,
+                    Note = "Geçiş esnasında otomatik kaydedildi",
+                    CreatedAt = DateTime.UtcNow
+                };
+                await context.Vehicles.AddAsync(vehicle);
+                await context.SaveChangesAsync();
+            }
+            else
             {
                 category = vehicle.Category.ToString().ToLower(); // "normal", "vip", "blacklist", "staff"
                 owner = vehicle.Owner;

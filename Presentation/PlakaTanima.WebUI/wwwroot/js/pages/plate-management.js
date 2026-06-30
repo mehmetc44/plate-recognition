@@ -116,7 +116,11 @@
         tableEmpty.style.display = 'none';
 
         // Satırları oluştur
-        tableBody.innerHTML = filtered.map(v => `
+        tableBody.innerHTML = filtered.map(v => {
+            const isVip = v.category === 'vip';
+            const isBlacklist = v.category === 'blacklist';
+            
+            return `
             <tr>
                 <td><span style="font-weight: 600; color: var(--text-primary); font-family: 'SF Mono', 'Consolas', monospace;">${v.plate}</span></td>
                 <td>${v.model}</td>
@@ -125,13 +129,20 @@
                 <td style="color: var(--text-secondary); font-size: 0.85rem;">${v.date}</td>
                 <td>
                     <div class="py-action-group">
+                        <button class="py-action-btn" data-action="toggle-vip" data-id="${v.id}" title="${isVip ? 'VIP Listesinden Çıkar' : 'VIP Listesine Ekle'}" style="${isVip ? 'color: var(--warning); border-color: var(--warning); background: rgb(from var(--warning) r g b / 0.1);' : ''}">
+                            <i class="${isVip ? 'fas' : 'far'} fa-star"></i>
+                        </button>
+                        <button class="py-action-btn" data-action="toggle-blacklist" data-id="${v.id}" title="${isBlacklist ? 'Kara Listeden Çıkar' : 'Kara Listeye Ekle'}" style="${isBlacklist ? 'color: var(--danger); border-color: var(--danger); background: rgb(from var(--danger) r g b / 0.1);' : ''}">
+                            <i class="fas fa-ban" style="${isBlacklist ? '' : 'opacity: 0.45;'}"></i>
+                        </button>
                         <button class="py-action-btn" data-action="view" data-id="${v.id}" title="Görüntüle"><i class="fas fa-eye"></i></button>
                         <button class="py-action-btn" data-action="edit" data-id="${v.id}" title="Düzenle"><i class="fas fa-edit"></i></button>
                         <button class="py-action-btn danger" data-action="delete" data-id="${v.id}" title="Sil"><i class="fas fa-trash"></i></button>
                     </div>
                 </td>
             </tr>
-        `).join('');
+            `;
+        }).join('');
 
         // Buton event'lerini bağla
         document.querySelectorAll('.py-action-btn').forEach(btn => {
@@ -142,6 +153,8 @@
                 if (action === 'view') viewVehicle(id);
                 else if (action === 'edit') editVehicle(id);
                 else if (action === 'delete') confirmDelete(id);
+                else if (action === 'toggle-vip') toggleVip(id);
+                else if (action === 'toggle-blacklist') toggleBlacklist(id);
             });
         });
     }
@@ -206,8 +219,8 @@
         } else {
             editId.value = '';
             formPlate.value = '';
-            formModel.value = '';
-            formOwner.value = '';
+            formModel.value = 'Bilinmiyor';
+            formOwner.value = 'Bilinmiyor';
             formCategory.value = 'normal';
             formNote.value = '';
         }
@@ -286,6 +299,56 @@
             if (e.key === 'Enter') saveVehicle();
         });
     });
+
+    // ==========================================================
+    // 8.5 HIZLI KATEGORİ DEĞİŞTİRME (VIP / KARA LİSTE)
+    // ==========================================================
+    async function toggleVip(id) {
+        const v = vehicles.find(x => x.id === id);
+        if (!v) return;
+
+        const newCategory = v.category === 'vip' ? 'normal' : 'vip';
+        await updateVehicleCategory(v, newCategory);
+    }
+
+    async function toggleBlacklist(id) {
+        const v = vehicles.find(x => x.id === id);
+        if (!v) return;
+
+        const newCategory = v.category === 'blacklist' ? 'normal' : 'blacklist';
+        await updateVehicleCategory(v, newCategory);
+    }
+
+    async function updateVehicleCategory(vehicle, newCategory) {
+        const payload = {
+            id: vehicle.id,
+            plate: vehicle.plate,
+            model: vehicle.model,
+            owner: vehicle.owner,
+            category: newCategory,
+            note: vehicle.note
+        };
+
+        try {
+            let url = '/Vehicle/UpdateVehicleApi';
+            const res = await fetch(url, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(payload)
+            });
+            const result = await res.json();
+
+            if (result.success) {
+                showToast(result.message || 'Kategori güncellendi!', 'success');
+                await loadVehicles();
+            } else {
+                showToast(result.message || 'Kategori güncellenemedi.', 'error');
+            }
+        } catch (err) {
+            console.error('Kategori güncelleme hatası:', err);
+            showToast('Sunucuyla iletişim kurulurken hata oluştu.', 'error');
+        }
+    }
 
     // ==========================================================
     // 9. GÖRÜNTÜLE

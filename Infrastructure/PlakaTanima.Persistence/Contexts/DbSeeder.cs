@@ -101,6 +101,74 @@ namespace PlakaTanima.Persistence.Contexts
                 await context.Vehicles.AddRangeAsync(vehicles);
                 await context.SaveChangesAsync();
             }
+
+            // 5. Seed AnprEvents
+            if (await context.AnprEvents.CountAsync() < 10)
+            {
+                var seededPlates = new[]
+                {
+                    "34 ABC 123",
+                    "06 XYZ 987",
+                    "35 VMS 404",
+                    "16 NMG 772",
+                    "53 KRM 112",
+                    "21 AAA 001",
+                    "38 AAA 543",
+                    "07 BLL 234"
+                };
+
+                var randomPlates = new[]
+                {
+                    "34 TURK 1923",
+                    "06 ANK 06",
+                    "35 IZM 35",
+                    "34 LPR 99",
+                    "61 TSM 61",
+                    "07 ANT 07",
+                    "41 KOC 41",
+                    "10 BAL 10",
+                    "26 ESK 26"
+                };
+
+                var events = new System.Collections.Generic.List<AnprEvent>();
+                var rand = new Random(42); // Seed random for consistency
+
+                for (int i = 0; i < 75; i++)
+                {
+                    // Alternate between seeded plates and random ones
+                    string plate = (i % 3 == 0) 
+                        ? randomPlates[rand.Next(randomPlates.Length)] 
+                        : seededPlates[rand.Next(seededPlates.Length)];
+
+                    // Camera and Direction mapping
+                    bool isGiris = (i % 2 == 0);
+                    string cameraName = isGiris ? "30Agustos_GIRIS" : "30Agustos_CIKIS";
+                    string direction = isGiris ? "forward" : "reverse";
+
+                    // Evenly distribute timestamps over the last 10 days
+                    DateTime timestamp = DateTime.UtcNow.AddDays(-10 * (double)i / 75.0).AddMinutes(-rand.Next(60));
+
+                    events.Add(new AnprEvent
+                    {
+                        Id = Guid.NewGuid(),
+                        Plate = plate,
+                        CameraName = cameraName,
+                        EventTimestamp = timestamp,
+                        Confidence = Math.Round(0.80 + rand.NextDouble() * 0.19, 2),
+                        VehicleType = rand.Next(4) == 0 ? "SUV" : "Sedan",
+                        VehicleColor = rand.Next(3) == 0 ? "Siyah" : (rand.Next(2) == 0 ? "Beyaz" : "Gri"),
+                        VehicleBrand = rand.Next(3) == 0 ? "Mercedes" : (rand.Next(2) == 0 ? "BMW" : "Audi"),
+                        Direction = direction,
+                        Country = "Turkey",
+                        PlateImagePath = null,
+                        VehicleImagePath = null,
+                        FullImagePath = null
+                    });
+                }
+
+                await context.AnprEvents.AddRangeAsync(events);
+                await context.SaveChangesAsync();
+            }
         }
     }
 }

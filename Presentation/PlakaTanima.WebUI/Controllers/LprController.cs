@@ -56,17 +56,7 @@ namespace PlakaTanima.WebUI.Controllers
         {
             try
             {
-                // Subquery to get the most recent timestamp for each plate
-                var subquery = from e in _context.AnprEvents
-                               group e by e.Plate into g
-                               select new
-                               {
-                                   Plate = g.Key,
-                                   MaxTimestamp = g.Max(x => x.EventTimestamp)
-                               };
-
                 var query = from e in _context.AnprEvents
-                            join s in subquery on new { e.Plate, e.EventTimestamp } equals new { s.Plate, EventTimestamp = s.MaxTimestamp }
                             join v in _context.Vehicles on e.Plate.Replace(" ", "").ToUpper() equals v.Plate.Replace(" ", "").ToUpper() into vehGroup
                             from v in vehGroup.DefaultIfEmpty()
                             select new

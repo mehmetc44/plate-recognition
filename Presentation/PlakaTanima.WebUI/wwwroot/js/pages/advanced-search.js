@@ -21,29 +21,6 @@
     const searchInput = document.getElementById("querySearchInput");
     const btnLoadMore = document.getElementById("btnLoadMore");
 
-    // Arama Girişi Event Listener'ı
-    if (searchInput) {
-        searchInput.addEventListener("input", function () {
-            filters.search = this.value;
-            // Arama değiştiğinde 1. sayfadan yeniden sorgula
-            updateResults(false);
-        });
-    }
-
-    // Temizle butonu dinleyicisi (Varsa sıfırlar)
-    const btnClear = document.querySelector(".btn-clear");
-    if (btnClear) {
-        btnClear.addEventListener("click", resetFilters);
-    }
-
-    // Yükle (Daha Fazla) Butonu Dinleyicisi
-    if (btnLoadMore) {
-        btnLoadMore.addEventListener("click", function () {
-            currentPage++;
-            updateResults(true); // Ekleme modunda sonraki sayfayı getir
-        });
-    }
-
     // ==========================================================
     // 1. DİNAMİK VERİ ÇEKME & TABLO GÜNCELLEME
     // ==========================================================
@@ -422,6 +399,40 @@
         }
     };
 
-    // Başlangıçta verileri yükle
+    // ==========================================================
+    // 5. EVENT LISTENERS INITIALIZATION
+    // ==========================================================
+    function initEventListeners() {
+        // Arama Girişi Event Listener'ı
+        if (searchInput) {
+            searchInput.addEventListener("input", function () {
+                filters.search = this.value;
+                updateResults(false);
+            });
+        }
+
+        // Temizle butonu dinleyicisi
+        const btnClear = document.querySelector(".btn-reset-filters");
+        if (btnClear) {
+            btnClear.addEventListener("click", window.resetFilters);
+        }
+
+        // Yükle (Daha Fazla) Butonu Dinleyicisi
+        if (btnLoadMore) {
+            btnLoadMore.addEventListener("click", function () {
+                currentPage++;
+                updateResults(true); // Ekleme modunda sonraki sayfayı getir
+            });
+        }
+
+        // Tarih Seçildiği Anda Sorgulama Event Listener'ları
+        const startDateInput = document.getElementById("startDate");
+        const endDateInput = document.getElementById("endDate");
+        if (startDateInput) startDateInput.addEventListener("change", window.applyDateRange);
+        if (endDateInput) endDateInput.addEventListener("change", window.applyDateRange);
+    }
+
+    // Başlat
+    initEventListeners();
     updateResults(false);
 })();
