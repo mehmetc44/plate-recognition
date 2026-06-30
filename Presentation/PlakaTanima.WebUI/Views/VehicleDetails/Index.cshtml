@@ -21,12 +21,12 @@
         <header class="detail-topbar">
             <div class="topbar-left">
                 <div class="topbar-info">
-                    <span class="topbar-plate">38 AAA 543</span>
-                    <span class="topbar-location">
-                        <i class="fas fa-map-marker-alt"></i> 30 Ağustos Çıkış
+                    <span class="topbar-plate" id="topbarPlate">-</span>
+                    <span class="topbar-location" id="topbarLocation">
+                        <i class="fas fa-map-marker-alt"></i> -
                     </span>
-                    <span class="topbar-badge">
-                        <i class="fas fa-star"></i> ÖZEL MİSAFİR
+                    <span class="topbar-badge" id="topbarBadge">
+                        -
                     </span>
                 </div>
             </div>
@@ -58,48 +58,48 @@
                     </div>
 
                     <div class="media-card-body">
-                        <img src="~/img/full.jpeg" class="viewer-img scene active-view" data-view="scene" alt="Sahne görünümü">
-                        <img src="~/img/vehicle.jpeg" class="viewer-img vehicle" data-view="vehicle" alt="Araç görünümü">
-                        <img src="~/img/plate.jpeg" class="viewer-img plate" data-view="plate" alt="Plaka görünümü">
+                        <img src="" class="viewer-img scene active-view" data-view="scene" id="imgScene" alt="Sahne görünümü" style="max-height: 400px; object-fit: contain;">
+                        <img src="" class="viewer-img vehicle" data-view="vehicle" id="imgVehicle" alt="Araç görünümü" style="max-height: 400px; object-fit: contain;">
+                        <img src="" class="viewer-img plate" data-view="plate" id="imgPlate" alt="Plaka görünümü" style="max-height: 400px; object-fit: contain;">
                     </div>
                 </div>
 
                 <!-- ========== BİLGİ KARTI ========== -->
                 <div class="info-card">
                     <div class="info-card-header">
-                        <span class="info-plate">35 VMS 404</span>
-                        <span class="info-badge">
-                            <i class="fas fa-star"></i> ÖZEL MİSAFİR
+                        <span class="info-plate" id="infoPlate">-</span>
+                        <span class="info-badge" id="infoBadge">
+                            -
                         </span>
                     </div>
 
                     <div class="info-grid">
                         <div class="info-item">
                             <span class="info-label">Marka / Model</span>
-                            <span class="info-value">Mercedes-Benz E200 / Siyah</span>
+                            <span class="info-value" id="infoModel">-</span>
                         </div>
                         <div class="info-item">
                             <span class="info-label">Sahip / Sürücü</span>
-                            <span class="info-value">Ahmet Yılmaz (Yönetim)</span>
+                            <span class="info-value" id="infoOwner">-</span>
                         </div>
                         <div class="info-item">
                             <span class="info-label">Kayıt Tarihi</span>
-                            <span class="info-value monospace">12.01.2025</span>
+                            <span class="info-value monospace" id="infoRecordDate">-</span>
                         </div>
                         <div class="info-item">
                             <span class="info-label">Son Görülme</span>
-                            <span class="info-value">Arka Kapı (Giriş)</span>
+                            <span class="info-value" id="infoLastSeen">-</span>
                         </div>
                     </div>
 
                     <div class="info-actions">
-                        <button class="btn-primary-action">
+                        <button class="btn-primary-action" id="btnPlayVideo" style="display:none;">
                             <i class="fas fa-play"></i> Son Videoyu Oynat
                         </button>
-                        <button class="btn-secondary-action">
-                            <i class="fas fa-file-export"></i> Rapor Al
+                        <button class="btn-secondary-action" onclick="window.print()">
+                            <i class="fas fa-print"></i> Rapor Al / Yazdır
                         </button>
-                        <button class="btn-danger-action">
+                        <button class="btn-danger-action" id="btnToggleBlacklist">
                             <i class="fas fa-ban"></i> Kara Listeye Ekle
                         </button>
                     </div>
@@ -110,7 +110,7 @@
             <div class="history-card">
                 <div class="history-card-header">
                     <i class="fas fa-history"></i>
-                    <span>Geçiş Geçmişi (Son 30 Gün)</span>
+                    <span>Geçiş Geçmişi (Son 10 Geçiş)</span>
                 </div>
 
                 <div class="history-table-wrapper">
@@ -121,65 +121,11 @@
                                 <th>Kamera Noktası</th>
                                 <th>Yön</th>
                                 <th>Durum</th>
-                                <th>Video</th>
+                                <th>Detay</th>
                             </tr>
                         </thead>
-                        <tbody>
-                            <tr>
-                                <td class="monospace">18.04.2026 13:15:22</td>
-                                <td>Arka Kapı</td>
-                                <td><span class="text-success"><i class="fas fa-arrow-right"></i> Giriş</span></td>
-                                <td><span class="badge-status">ÖZEL</span></td>
-                                <td>
-                                    <button class="btn-icon-action text-info" title="Videoyu Oynat">
-                                        <i class="fas fa-play-circle"></i>
-                                    </button>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td class="monospace">17.04.2026 18:30:45</td>
-                                <td>Ana Giriş</td>
-                                <td><span class="text-danger"><i class="fas fa-arrow-left"></i> Çıkış</span></td>
-                                <td><span class="badge-status">ÖZEL</span></td>
-                                <td>
-                                    <button class="btn-icon-action" title="Videoyu Oynat">
-                                        <i class="fas fa-play-circle"></i>
-                                    </button>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td class="monospace">17.04.2026 08:12:10</td>
-                                <td>Ana Giriş</td>
-                                <td><span class="text-success"><i class="fas fa-arrow-right"></i> Giriş</span></td>
-                                <td><span class="badge-status">ÖZEL</span></td>
-                                <td>
-                                    <button class="btn-icon-action text-info" title="Videoyu Oynat">
-                                        <i class="fas fa-play-circle"></i>
-                                    </button>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td class="monospace">16.04.2026 20:45:33</td>
-                                <td>Arka Kapı</td>
-                                <td><span class="text-danger"><i class="fas fa-arrow-left"></i> Çıkış</span></td>
-                                <td><span class="badge-status">ÖZEL</span></td>
-                                <td>
-                                    <button class="btn-icon-action" title="Videoyu Oynat">
-                                        <i class="fas fa-play-circle"></i>
-                                    </button>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td class="monospace">16.04.2026 09:05:17</td>
-                                <td>Ana Giriş</td>
-                                <td><span class="text-success"><i class="fas fa-arrow-right"></i> Giriş</span></td>
-                                <td><span class="badge-status">ÖZEL</span></td>
-                                <td>
-                                    <button class="btn-icon-action text-info" title="Videoyu Oynat">
-                                        <i class="fas fa-play-circle"></i>
-                                    </button>
-                                </td>
-                            </tr>
+                        <tbody id="historyTableBody">
+                            <!-- JS ile doldurulacak -->
                         </tbody>
                     </table>
                 </div>

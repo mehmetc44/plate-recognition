@@ -13,16 +13,16 @@ namespace PlakaTanima.WebUI.Services
     {
         private readonly IServiceScopeFactory _scopeFactory;
         private readonly IMinioStorageService _minioService;
-        private readonly IHubContext<PlateHub> _hubContext;
+        private readonly ISignalRService _signalRService;
 
         public LprProcessingJob(
             IServiceScopeFactory scopeFactory,
             IMinioStorageService minioService,
-            IHubContext<PlateHub> hubContext)
+            ISignalRService signalRService)
         {
             _scopeFactory = scopeFactory;
             _minioService = minioService;
-            _hubContext = hubContext;
+            _signalRService = signalRService;
         }
 
         public async Task ProcessEventAsync(Guid eventId, string plate, string cameraName, string timestamp)
@@ -94,17 +94,18 @@ namespace PlakaTanima.WebUI.Services
 
             // 4. Format timestamp and trigger SignalR Hub event
             var formattedTime = eventRecord.EventTimestamp.ToLocalTime().ToString("dd.MM.yyyy HH:mm:ss");
+            var direction = eventRecord.Direction.ToLower() == "forward" ? "Giriş" : (eventRecord.Direction.ToLower() == "reverse" ? "Çıkış" : eventRecord.Direction);
             
-            await _hubContext.Clients.All.SendAsync("NewPlateDetected", new
-            {
-                plate = eventRecord.Plate,
-                camera = eventRecord.CameraName,
-                fullTime = formattedTime,
-                imgVehicle = vehicleImageUrl,
-                category = category,
-                owner = owner,
-                model = model
-            });
+            await _signalRService.SendPlateDetectedAsync(
+                eventRecord.Plate,
+                eventRecord.CameraName,
+                direction,
+                formattedTime,
+                vehicleImageUrl,
+                category,
+                owner,
+                model
+            );
 
             Console.WriteLine($"[JOB] Successfully processed and broadcast plate: {eventRecord.Plate} (Category: {category})");
         }

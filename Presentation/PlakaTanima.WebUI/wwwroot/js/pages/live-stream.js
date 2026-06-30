@@ -11,18 +11,7 @@
     const rightPanel = document.getElementById('detectionFeed');
     const viewButtons = document.querySelectorAll(".view-button");
 
-    document.querySelectorAll(".nvr-toggle").forEach(node => {
-        node.addEventListener("click", () => {
-            const parentLi = node.closest("li");
-            const nested = parentLi.querySelector(".nested");
-            const caret = node.querySelector(".caret");
 
-            const willOpen = !nested.classList.contains("open");
-
-            nested.classList.toggle("open", willOpen);
-            caret.classList.toggle("open", willOpen);
-        });
-    });
 
     /* Ana Ekran - Canlı İzleme ve Plaka Akışı Arası Geçiş */
     function hideViewButtons() {
@@ -269,22 +258,73 @@
         });
     });
 
-    /* LİSTE AKIŞI TABLOSUNDAKİ İNCELE BUTONLARI */
-    document.querySelectorAll(".btn-table-action").forEach(btn => {
-        btn.addEventListener("click", function (e) {
-            e.stopPropagation();
-            const plate = this.dataset.plate;
-            if (plate) {
-                window.open(`/Home/VehicleDetails?plate=${encodeURIComponent(plate)}`, "_blank");
+    /* LİSTE AKIŞI TABLOSUNDAKİ İNCELE BUTONLARI (EVENT DELEGATION) */
+    const tableStreamBody = document.getElementById("liveTableStreamBody");
+    if (tableStreamBody) {
+        tableStreamBody.addEventListener("click", function (e) {
+            const btn = e.target.closest(".btn-table-action");
+            if (btn) {
+                e.stopPropagation();
+                const plate = btn.dataset.plate;
+                if (plate) {
+                    window.open(`/Home/VehicleDetails?plate=${encodeURIComponent(plate)}`, "_blank");
+                }
             }
         });
-    });
+    }
+
+    // Canlı Tablo Arama ve Filtreleme
+    const plateSearch = document.getElementById("plateSearch");
+    const tableFilterButtons = document.querySelectorAll(".filter-btn");
+
+    let currentFilter = "all";
+    let currentSearch = "";
+
+    function filterTableRows() {
+        if (!tableStreamBody) return;
+        const rows = tableStreamBody.querySelectorAll("tr");
+        rows.forEach(row => {
+            const plate = row.querySelector(".plate-label")?.textContent.toLowerCase() || "";
+            const type = row.dataset.type || "normal";
+            const matchFilter = currentFilter === "all" || type.toLowerCase() === currentFilter.toLowerCase();
+            const matchSearch = plate.includes(currentSearch);
+            row.style.display = (matchFilter && matchSearch) ? "" : "none";
+        });
+    }
+
+    if (plateSearch) {
+        plateSearch.addEventListener("input", (e) => {
+            currentSearch = e.target.value.toLowerCase();
+            filterTableRows();
+        });
+    }
+
+    if (tableFilterButtons.length > 0) {
+        tableFilterButtons.forEach(btn => {
+            btn.addEventListener("click", () => {
+                tableFilterButtons.forEach(b => b.classList.remove("active"));
+                btn.classList.add("active");
+                currentFilter = btn.dataset.filter;
+                filterTableRows();
+            });
+        });
+    }
+
+    // Expose helpers globally so Detection.js can read them when adding new rows
+    window.getCurrentTableFilters = function () {
+        return {
+            filter: currentFilter,
+            search: currentSearch
+        };
+    };
 
     // Kamera Arama Filtresi
     const cameraSearch = document.getElementById("cameraSearch");
     if (cameraSearch) {
         cameraSearch.addEventListener("input", (e) => {
             const text = e.target.value.toLowerCase();
+            
+            // 1. Kameraları filtrele
             document.querySelectorAll("#homeCameraTree .camera-item").forEach(item => {
                 const name = item.textContent.toLowerCase();
                 const ip = item.dataset.ip || "";
@@ -292,18 +332,20 @@
                 item.style.display = isMatch ? "" : "none";
             });
 
+            // 2. Klasörleri (details) filtrele ve arama yapılıyorsa otomatik aç
             document.querySelectorAll("#homeCameraTree > li").forEach(node => {
-                const total = node.querySelectorAll(".camera-item").length;
-                const hidden = node.querySelectorAll(".camera-item[style*='display: none']").length;
+                const details = node.querySelector("details");
+                if (!details) return;
+
+                const total = details.querySelectorAll(".camera-item").length;
+                const hidden = details.querySelectorAll(".camera-item[style*='display: none']").length;
+
                 if (total > 0 && total === hidden) {
                     node.style.display = "none";
                 } else {
                     node.style.display = "";
-                    const nested = node.querySelector(".nested");
-                    const caret = node.querySelector(".caret");
                     if (text.length > 0 && total > hidden) {
-                        nested.classList.add("open");
-                        caret.classList.add("open");
+                        details.open = true;
                     }
                 }
             });

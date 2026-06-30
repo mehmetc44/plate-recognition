@@ -6,42 +6,65 @@
         <i class="fas fa-search search-icon"></i>
         <input type="text" id="cameraSearch" placeholder="Kamera veya IP ara...">
     </div>
-    <ul class="camera-tree" id="homeCameraTree">
-        @foreach (var location in Model)
-        {
-            <li>
-                <div class="camera-tree-node nvr-toggle">
-                    <span class="caret"></span>
-                    <i class="fas fa-map-marker-alt"></i> @location.Name
-                </div>
-                <ul class="nested">
-                    @if (!location.Cameras.Any())
-                    {
-                        <li class="camera-item offline" style="opacity: 0.5; pointer-events: none; display: flex; align-items: center; gap: 6px;">
-                            <i class="fas fa-video-slash"></i>
-                            <span>Kamera Yok</span>
-                        </li>
-                    }
-                    else
-                    {
-                        @foreach (var camera in location.Cameras)
-                        {
-                            <li class="camera-item @camera.Status.ToString().ToLower()" 
-                                data-camera-id="@camera.Id" 
-                                data-ip="@camera.IpAddress" 
-                                data-port="@camera.Port" 
-                                data-channel="@camera.StreamChannel"
-                                style="display: flex; justify-content: space-between; align-items: center;">
-                                <span style="display: flex; align-items: center; gap: 6px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
-                                    <i class="fas fa-video"></i>
-                                    <span>@camera.Name</span>
-                                </span>
-                                <small style="font-family: monospace; font-size: 0.72rem; opacity: 0.6; margin-left: auto; padding-left: 6px;">@camera.IpAddress</small>
-                            </li>
-                        }
-                    }
-                </ul>
+    <div style="flex: 1; overflow-y: auto; width: 100%;">
+        <ul class="tree-menu" id="homeCameraTree">
+            
+            <li class="tree-item" id="mapNode">
+                <i class="fa-solid fa-map"></i> Harita Görünümü
             </li>
-        }
-    </ul>
+
+            @foreach (var location in Model)
+            {
+                var onlineCount = location.Cameras.Count(c => c.Status.ToString().ToLower() == "online");
+                var totalCount = location.Cameras.Count;
+                var hasOffline = location.Cameras.Any(c => c.Status.ToString().ToLower() == "offline");
+
+                <li>
+                    <details open>
+                        <summary class="tree-item">
+                            <span class="icon-wrapper">
+                                <i class="fa-solid fa-server"></i>
+                                @if (hasOffline)
+                                {
+                                    <span class="badge red">!</span>
+                                }
+                            </span>
+                            @location.Name (@onlineCount/@totalCount)
+                        </summary>
+                        <ul class="tree-nested">
+                            @if (!location.Cameras.Any())
+                            {
+                                <li class="tree-item offline" style="opacity: 0.5; pointer-events: none; padding-left: 29px;">
+                                    <i class="fa-solid fa-video-slash"></i> Kamera Yok
+                                </li>
+                            }
+                            else
+                            {
+                                @foreach (var camera in location.Cameras)
+                                {
+                                    var isOnline = camera.Status.ToString().ToLower() == "online";
+                                    var iconClass = isOnline ? "fa-video" : "fa-circle-exclamation";
+                                    var iconColor = isOnline ? "#62c462" : "#e74c3c";
+
+                                    <li class="tree-item camera-item @camera.Status.ToString().ToLower()" 
+                                        data-camera-id="@camera.Id" 
+                                        data-ip="@camera.IpAddress" 
+                                        data-port="@camera.Port" 
+                                        data-channel="@camera.StreamChannel"
+                                        style="display: flex; justify-content: space-between; align-items: center; padding-left: 29px;">
+                                        <span style="display: flex; align-items: center; gap: 6px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
+                                            <i class="fa-solid @iconClass" style="color: @iconColor; margin-right: 8px;"></i>
+                                            <span>@camera.Name</span>
+                                        </span>
+                                        <small style="font-family: monospace; font-size: 0.72rem; opacity: 0.6; margin-left: auto; padding-left: 6px;">@camera.IpAddress</small>
+                                    </li>
+                                }
+                            }
+                        </ul>
+                    </details>
+                </li>
+            }
+
+        </ul>
+    </div>
 </aside>

@@ -98,4 +98,54 @@ window.signalrConnection.on("NewPlateDetected", function (data) {
             }
         });
     }
+
+    // 4. Update Live Table Stream
+    const tableBody = document.getElementById("liveTableStreamBody");
+    if (tableBody) {
+        const isDirGiris = data.direction === "Giriş" || data.direction === "forward";
+        const dirColor = isDirGiris ? "text-success" : "text-danger";
+        const dirIcon = isDirGiris ? "fa-arrow-right" : "fa-arrow-left";
+        const dirText = isDirGiris ? "Giriş" : (data.direction === "Çıkış" || data.direction === "reverse" ? "Çıkış" : (data.direction || "Giriş"));
+
+        const tr = document.createElement("tr");
+        tr.dataset.type = categoryLower;
+
+        tr.innerHTML = `
+            <td><span class="plate-label">${data.plate}</span></td>
+            <td>${data.camera}</td>
+            <td><span class="${dirColor}"><i class="fas ${dirIcon}"></i> ${dirText}</span></td>
+            <td class="monospace">${data.fullTime}</td>
+            <td><span class="badge ${categoryLower === 'vip' ? 'vip' : (categoryLower === 'blacklist' ? 'blacklist' : (categoryLower === 'staff' ? 'staff' : 'normal'))}">${badgeText}</span></td>
+            <td>
+                <button class="btn-table-action" data-plate="${data.plate}" title="Detayı Gör">
+                    <i class="fas fa-eye"></i> İncele
+                </button>
+            </td>
+        `;
+
+        // Apply active filters on the new row
+        if (typeof window.getCurrentTableFilters === "function") {
+            const filters = window.getCurrentTableFilters();
+            const plateLower = data.plate.toLowerCase();
+            const matchFilter = filters.filter === "all" || categoryLower === filters.filter.toLowerCase();
+            const matchSearch = plateLower.includes(filters.search);
+            if (!matchFilter || !matchSearch) {
+                tr.style.display = "none";
+            }
+        }
+
+        tableBody.insertBefore(tr, tableBody.firstChild);
+
+        // Limit active table rows to 50
+        if (tableBody.children.length > 50) {
+            tableBody.lastElementChild.remove();
+        }
+
+        // Auto scroll if checked
+        const autoScroll = document.getElementById("autoScrollToggle");
+        const scrollable = document.getElementById("liveTableStreamScrollable");
+        if (autoScroll && autoScroll.checked && scrollable) {
+            scrollable.scrollTop = 0;
+        }
+    }
 });

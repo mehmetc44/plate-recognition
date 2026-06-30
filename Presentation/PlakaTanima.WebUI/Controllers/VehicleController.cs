@@ -46,6 +46,51 @@ namespace PlakaTanima.WebUI.Controllers
             }
         }
 
+        // GET: /Vehicle/GetVehicleByPlateApi
+        [HttpGet]
+        public async Task<IActionResult> GetVehicleByPlateApi([FromQuery] string plate)
+        {
+            if (string.IsNullOrWhiteSpace(plate))
+                return Json(new { success = false, message = "Plaka belirtilmedi." });
+
+            try
+            {
+                var normalizedPlate = plate.Replace(" ", "").ToUpper();
+                var vehicle = await _vehicleRepository.GetAll(tracking: false)
+                    .FirstOrDefaultAsync(v => v.Plate.Replace(" ", "").ToUpper() == normalizedPlate);
+
+                if (vehicle == null)
+                {
+                    return Json(new { 
+                        success = true,
+                        exists = false,
+                        plate = plate.Trim().ToUpper(),
+                        model = "Bilinmeyen Araç",
+                        owner = "Bilinmeyen Sürücü",
+                        category = "normal",
+                        note = "Sistemde kayıtlı değil.",
+                        date = "-"
+                    });
+                }
+
+                return Json(new {
+                    success = true,
+                    exists = true,
+                    id = vehicle.Id,
+                    plate = vehicle.Plate,
+                    model = vehicle.Model,
+                    owner = vehicle.Owner,
+                    category = MapCategoryToString(vehicle.Category),
+                    note = vehicle.Note ?? "",
+                    date = vehicle.CreatedAt.ToString("dd.MM.yyyy")
+                });
+            }
+            catch (Exception ex)
+            {
+                return Json(new { success = false, message = ex.Message });
+            }
+        }
+
         // POST: /Vehicle/AddVehicleApi
         [HttpPost]
         public async Task<IActionResult> AddVehicleApi([FromBody] CreateVehicleDto command)

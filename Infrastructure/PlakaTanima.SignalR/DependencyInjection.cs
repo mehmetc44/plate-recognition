@@ -1,15 +1,17 @@
 using Microsoft.Extensions.DependencyInjection;
+using PlakaTanima.Application.Services;
+using PlakaTanima.SignalR.Services;
 
-namespace PlakaTanima.SignalR;
-
-public static class DependencyInjection
+namespace PlakaTanima.SignalR
 {
-    public static IServiceCollection AddSignalRDI(
-        this IServiceCollection services)
+    public static class DependencyInjection
     {
-        services.AddSignalR();
+        public static IServiceCollection AddSignalRDI(this IServiceCollection services)
+        {
+            services.AddSignalR();
+            services.AddTransient<ISignalRService, SignalRService>();
 
-
-        return services;
+            return services;
+        }
     }
 }
