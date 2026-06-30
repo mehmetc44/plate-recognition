@@ -65,7 +65,7 @@ if (-not (Test-Path $NssmPath)) {
 # B. MinIO
 if (-not (Test-Path $MinioExePath)) {
     Write-Host "[2/4] MinIO (.exe) indiriliyor..." -ForegroundColor Cyan
-    Invoke-WebRequest -Uri "https://dl.min.is/server/minio/release/windows-amd64/minio.exe" -OutFile $MinioExePath
+    Invoke-WebRequest -Uri "https://dl.min.io/server/minio/release/windows-amd64/minio.exe" -OutFile $MinioExePath
     Write-Host ">> MinIO başarıyla indirildi: $MinioExePath" -ForegroundColor Green
 } else {
     Write-Host ">> MinIO zaten mevcut." -ForegroundColor Gray
