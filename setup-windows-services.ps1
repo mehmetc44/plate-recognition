@@ -157,6 +157,7 @@ Write-Host "Kayıt ediliyor: Platar-WebUI" -ForegroundColor Cyan
 $WebUiExe = Join-Path $PublishDir "PlakaTanima.WebUI.exe"
 & $NssmPath install Platar-WebUI $WebUiExe
 & $NssmPath set Platar-WebUI AppDirectory $PublishDir
+& $NssmPath set Platar-WebUI AppEnvironmentVars "ASPNETCORE_URLS=http://*:5233"
 & $NssmPath set Platar-WebUI Start SERVICE_AUTO_START
 & $NssmPath set Platar-WebUI DisplayName "Platar ASP.NET Web Console"
 Start-Service Platar-WebUI
