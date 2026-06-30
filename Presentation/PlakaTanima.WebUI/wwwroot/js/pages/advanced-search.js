@@ -227,7 +227,7 @@
                 if (cb) cb.checked = false;
                 window.toggleFilter("direction", filters.direction);
             });
-        });
+        }
 
         // Zaman chipleri
         if (filters.time) {
