@@ -56,10 +56,17 @@ namespace PlakaTanima.WebUI.Controllers
         {
             try
             {
-                // 1. Get total database count of all events
-                var totalCount = await _context.AnprEvents.CountAsync();
+                // Subquery to get the most recent timestamp for each plate
+                var subquery = from e in _context.AnprEvents
+                               group e by e.Plate into g
+                               select new
+                               {
+                                   Plate = g.Key,
+                                   MaxTimestamp = g.Max(x => x.EventTimestamp)
+                               };
 
                 var query = from e in _context.AnprEvents
+                            join s in subquery on new { e.Plate, e.EventTimestamp } equals new { s.Plate, EventTimestamp = s.MaxTimestamp }
                             join v in _context.Vehicles on e.Plate.Replace(" ", "").ToUpper() equals v.Plate.Replace(" ", "").ToUpper() into vehGroup
                             from v in vehGroup.DefaultIfEmpty()
                             select new
@@ -127,8 +134,11 @@ namespace PlakaTanima.WebUI.Controllers
                     query = query.Where(x => x.EventTimestamp <= endDate.Value.ToUniversalTime());
                 }
 
-                // 2. Get filtered total count
+                // 1. Get filtered total count of unique plates
                 var filteredCount = await query.CountAsync();
+
+                // 2. Get total database count of all events
+                var totalCount = await _context.AnprEvents.CountAsync();
 
                 // 3. Paginate
                 var events = await query
@@ -172,6 +182,51 @@ namespace PlakaTanima.WebUI.Controllers
                     filteredCount,
                     events = resultList
                 });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { success = false, message = ex.Message });
+            }
+        }
+
+        [HttpGet("history")]
+        public async Task<IActionResult> GetPlateHistory([FromQuery] string plate)
+        {
+            if (string.IsNullOrWhiteSpace(plate))
+            {
+                return BadRequest(new { success = false, message = "Plaka belirtilmedi." });
+            }
+
+            try
+            {
+                var normalizedPlate = plate.Replace(" ", "").ToUpper();
+                var passes = await _context.AnprEvents
+                    .Where(x => x.Plate.Replace(" ", "").ToUpper() == normalizedPlate)
+                    .OrderByDescending(x => x.EventTimestamp)
+                    .Take(10)
+                    .ToListAsync();
+
+                var result = new List<object>();
+                foreach (var p in passes)
+                {
+                    var plateImgUrl = await GetImageUrlAsync(p.PlateImagePath);
+                    var vehicleImgUrl = await GetImageUrlAsync(p.VehicleImagePath);
+                    var fullImgUrl = await GetImageUrlAsync(p.FullImagePath);
+
+                    result.Add(new
+                    {
+                        id = p.Id,
+                        plate = p.Plate,
+                        cameraName = p.CameraName,
+                        eventTimestamp = p.EventTimestamp.ToLocalTime().ToString("dd.MM.yyyy HH:mm:ss"),
+                        direction = p.Direction.ToLower() == "forward" ? "Giriş" : (p.Direction.ToLower() == "reverse" ? "Çıkış" : p.Direction),
+                        plateImg = plateImgUrl,
+                        vehicleImg = vehicleImgUrl,
+                        fullImg = fullImgUrl
+                    });
+                }
+
+                return Ok(result);
             }
             catch (Exception ex)
             {

@@ -372,29 +372,47 @@
             vehicleImgEl.onclick = () => window.open(e.fullImg || e.vehicleImg || "/img/no-car.png", "_blank");
         }
 
-        // GEÇİŞ GEÇMİŞİ (Sorgulanan genel geçişler arasından filtreleme)
+        // GEÇİŞ GEÇMİŞİ (API'den plaka bazlı tarihsel geçişleri çek)
         const historyList = document.querySelector(".detail-history-list");
         if (historyList) {
-            historyList.innerHTML = "";
-            const plateHistory = allEvents
-                .filter(x => x.plate.replace(" ", "").toUpperCase() === e.plate.replace(" ", "").toUpperCase())
-                .slice(0, 5);
+            historyList.innerHTML = `
+                <div style="text-align: center; padding: 15px; color: var(--text-secondary); font-size: 0.8rem;">
+                    <i class="fas fa-spinner fa-spin" style="margin-right: 6px;"></i> Geçmiş yükleniyor...
+                </div>`;
 
-            historyList.innerHTML = plateHistory.map(h => {
-                const isEntry = h.direction === "Giriş";
-                const dotColor = isEntry ? "var(--success)" : "var(--danger)";
-                const dirIcon = isEntry ? "fa-arrow-right" : "fa-arrow-left";
-                
-                return `
-                    <div class="detail-history-item" style="display:flex; justify-content:space-between; padding:8px 0; border-bottom:1px solid var(--border-color); font-size:0.85rem;">
-                        <span>
-                            <i class="fas fa-circle" style="font-size:0.5rem; color:${dotColor}; margin-right:8px;"></i>
-                            <strong>${h.cameraName}</strong>
-                            <span style="color:var(--text-secondary); margin-left:4px;">(<i class="fas ${dirIcon}"></i>)</span>
-                        </span>
-                        <span class="time" style="color:var(--text-secondary); font-family:monospace;">${h.eventTimestamp.split(' ')[1]}</span>
-                    </div>`;
-            }).join('');
+            fetch(`/api/lpr/history?plate=${encodeURIComponent(e.plate)}`)
+                .then(res => res.json())
+                .then(historyData => {
+                    if (Array.isArray(historyData) && historyData.length > 0) {
+                        historyList.innerHTML = historyData.map(h => {
+                            const isEntry = h.direction === "Giriş";
+                            const dotColor = isEntry ? "var(--success)" : "var(--danger)";
+                            const dirIcon = isEntry ? "fa-arrow-right" : "fa-arrow-left";
+                            
+                            return `
+                                <div class="detail-history-item" style="display:flex; justify-content:space-between; padding:8px 0; border-bottom:1px solid var(--border-color); font-size:0.85rem;">
+                                    <span>
+                                        <i class="fas fa-circle" style="font-size:0.5rem; color:${dotColor}; margin-right:8px;"></i>
+                                        <strong>${h.cameraName}</strong>
+                                        <span style="color:var(--text-secondary); margin-left:4px;">(<i class="fas ${dirIcon}"></i>)</span>
+                                    </span>
+                                    <span class="time" style="color:var(--text-secondary); font-family:monospace;">${h.eventTimestamp}</span>
+                                </div>`;
+                        }).join('');
+                    } else {
+                        historyList.innerHTML = `
+                            <div style="text-align: center; padding: 10px; color: var(--text-secondary); font-size: 0.8rem;">
+                                Geçmiş geçiş kaydı bulunamadı.
+                            </div>`;
+                    }
+                })
+                .catch(err => {
+                    console.error("Geçiş geçmişi yüklenemedi:", err);
+                    historyList.innerHTML = `
+                        <div style="text-align: center; padding: 10px; color: var(--danger); font-size: 0.8rem;">
+                            Geçmiş yüklenirken hata oluştu.
+                        </div>`;
+                });
         }
     };
 

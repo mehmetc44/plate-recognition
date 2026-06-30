@@ -58,6 +58,7 @@ app.MapHub<PlateHub>("/plateHub");
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");
+app.MapControllers();
 
 // --- DATABASE MIGRATION & SEEDING ---
 using (var scope = app.Services.CreateScope())
