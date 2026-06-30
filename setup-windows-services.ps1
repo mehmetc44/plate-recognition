@@ -139,7 +139,7 @@ Write-Host "=== Windows Servisleri Kayıt Ediliyor ===" -ForegroundColor Green
 # A. Platar-MinIO Servisi
 Write-Host "Kayıt ediliyor: Platar-MinIO" -ForegroundColor Cyan
 & $NssmPath install Platar-MinIO $MinioExePath "server `"$MinioDataDir`" --address :9000 --console-address :9001"
-& $NssmPath set Platar-MinIO AppEnvironmentVars "MINIO_ROOT_USER=minioadmin" "MINIO_ROOT_PASSWORD=minioadmin"
+& $NssmPath set Platar-MinIO AppEnvironmentExtra "MINIO_ROOT_USER=minioadmin" "MINIO_ROOT_PASSWORD=minioadmin"
 & $NssmPath set Platar-MinIO Start SERVICE_AUTO_START
 & $NssmPath set Platar-MinIO DisplayName "Platar MinIO Storage Service"
 Start-Service Platar-MinIO
@@ -157,7 +157,7 @@ Write-Host "Kayıt ediliyor: Platar-WebUI" -ForegroundColor Cyan
 $WebUiExe = Join-Path $PublishDir "PlakaTanima.WebUI.exe"
 & $NssmPath install Platar-WebUI $WebUiExe
 & $NssmPath set Platar-WebUI AppDirectory $PublishDir
-& $NssmPath set Platar-WebUI AppEnvironmentVars "ASPNETCORE_URLS=http://*:5233"
+& $NssmPath set Platar-WebUI AppEnvironmentExtra "ASPNETCORE_URLS=http://*:5233"
 & $NssmPath set Platar-WebUI Start SERVICE_AUTO_START
 & $NssmPath set Platar-WebUI DisplayName "Platar ASP.NET Web Console"
 Start-Service Platar-WebUI
