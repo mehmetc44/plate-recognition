@@ -2,7 +2,10 @@
 // Platar - Gelişmiş Sorgu JS (AJAX Entegrasyonu ve Dinamik Arayüz)
 // ==============================================================================
 (function () {
-    let allEvents = []; // Filtrelenmemiş tüm olaylar (Geçiş geçmişi için kullanılacak)
+    let allEvents = []; // Birleştirilmiş tüm olaylar (Geçiş geçmişi ve genel arama için)
+    let currentPage = 1;
+    const pageSize = 50;
+    
     let filters = {
         search: "",
         type: [],
@@ -15,45 +18,61 @@
     const tableBody = document.querySelector(".query-table tbody");
     const resultCountEl = document.getElementById("resultCount");
     const detailPanel = document.getElementById("detailPanel");
-    const searchInput = document.querySelector(".search-box input");
-    
+    const searchInput = document.getElementById("querySearchInput");
+    const btnLoadMore = document.getElementById("btnLoadMore");
+
     // Arama Girişi Event Listener'ı
     if (searchInput) {
-        // Arama kutusuna id veriyoruz dinamik olarak
-        searchInput.id = "querySearchInput";
         searchInput.addEventListener("input", function () {
             filters.search = this.value;
-            updateResults();
+            // Arama değiştiğinde 1. sayfadan yeniden sorgula
+            updateResults(false);
         });
     }
 
-    // Arama butonu ve temizle butonu dinleyicileri
-    const btnFilter = document.querySelector(".btn-filter");
+    // Temizle butonu dinleyicisi (Varsa sıfırlar)
     const btnClear = document.querySelector(".btn-clear");
-    if (btnFilter) {
-        btnFilter.addEventListener("click", updateResults);
-    }
     if (btnClear) {
         btnClear.addEventListener("click", resetFilters);
+    }
+
+    // Yükle (Daha Fazla) Butonu Dinleyicisi
+    if (btnLoadMore) {
+        btnLoadMore.addEventListener("click", function () {
+            currentPage++;
+            updateResults(true); // Ekleme modunda sonraki sayfayı getir
+        });
     }
 
     // ==========================================================
     // 1. DİNAMİK VERİ ÇEKME & TABLO GÜNCELLEME
     // ==========================================================
-    async function updateResults() {
+    async function updateResults(append = false) {
         if (!tableBody) return;
 
-        // Yükleniyor durumu göster
-        tableBody.innerHTML = `
-            <tr>
-                <td colspan="6" style="text-align: center; padding: 40px; color: var(--text-secondary);">
-                    <i class="fas fa-spinner fa-spin" style="font-size: 1.5rem; margin-bottom: 10px;"></i>
-                    <p>Veriler sorgulanıyor, lütfen bekleyin...</p>
-                </td>
-            </tr>`;
+        if (!append) {
+            currentPage = 1;
+            // Yükleniyor durumu göster
+            tableBody.innerHTML = `
+                <tr>
+                    <td colspan="6" style="text-align: center; padding: 40px; color: var(--text-secondary);">
+                        <i class="fas fa-spinner fa-spin" style="font-size: 1.5rem; margin-bottom: 10px;"></i>
+                        <p>Veriler sorgulanıyor, lütfen bekleyin...</p>
+                    </td>
+                </tr>`;
+            if (btnLoadMore) btnLoadMore.style.display = "none";
+        } else {
+            if (btnLoadMore) {
+                btnLoadMore.disabled = true;
+                btnLoadMore.innerHTML = `<i class="fas fa-spinner fa-spin"></i> Yükleniyor...`;
+            }
+        }
 
         // URL Parametrelerini oluştur
         const url = new URL('/api/lpr/query', window.location.origin);
+        url.searchParams.append('page', currentPage);
+        url.searchParams.append('pageSize', pageSize);
+
         if (filters.search) url.searchParams.append('search', filters.search);
         if (filters.type.length > 0) url.searchParams.append('categories', filters.type.join(','));
         if (filters.direction) url.searchParams.append('direction', filters.direction);
@@ -64,9 +83,30 @@
             const res = await fetch(url);
             const data = await res.json();
 
-            if (Array.isArray(data)) {
-                allEvents = data;
-                renderTable(data);
+            // Yükle butonunu eski haline getir
+            if (btnLoadMore) {
+                btnLoadMore.disabled = false;
+                btnLoadMore.innerHTML = `<i class="fas fa-chevron-down"></i> Daha Fazla Göster`;
+            }
+
+            if (data && Array.isArray(data.events)) {
+                if (append) {
+                    allEvents = allEvents.concat(data.events);
+                    appendTableRows(data.events);
+                } else {
+                    allEvents = data.events;
+                    renderTable(data.events);
+                }
+
+                // Toplam / Filtrelenmiş sonuç sayılarını sol tarafa bas
+                resultCountEl.textContent = `${data.filteredCount} / ${data.totalCount} Sonuç`;
+
+                // Daha fazla göster butonu görünürlük kontrolü
+                if (data.filteredCount > currentPage * pageSize) {
+                    if (btnLoadMore) btnLoadMore.style.display = "inline-flex";
+                } else {
+                    if (btnLoadMore) btnLoadMore.style.display = "none";
+                }
             } else {
                 tableBody.innerHTML = `
                     <tr>
@@ -78,6 +118,10 @@
             }
         } catch (err) {
             console.error("Sorgu hatası:", err);
+            if (btnLoadMore) {
+                btnLoadMore.disabled = false;
+                btnLoadMore.innerHTML = `<i class="fas fa-chevron-down"></i> Daha Fazla Göster`;
+            }
             tableBody.innerHTML = `
                 <tr>
                     <td colspan="6" style="text-align: center; padding: 40px; color: var(--danger);">
@@ -92,8 +136,6 @@
     // 2. TABLO HTML RENDER
     // ==========================================================
     function renderTable(events) {
-        resultCountEl.textContent = `${events.length} sonuç listelendi`;
-
         if (events.length === 0) {
             tableBody.innerHTML = `
                 <tr>
@@ -106,7 +148,23 @@
             return;
         }
 
-        tableBody.innerHTML = events.map(e => {
+        tableBody.innerHTML = generateRowsHtml(events);
+        bindRowClickHandlers();
+    }
+
+    function appendTableRows(newEvents) {
+        const tempContainer = document.createElement("tbody");
+        tempContainer.innerHTML = generateRowsHtml(newEvents);
+        
+        // Mevcut satırların sonuna ekle
+        while (tempContainer.firstChild) {
+            tableBody.appendChild(tempContainer.firstChild);
+        }
+        bindRowClickHandlers();
+    }
+
+    function generateRowsHtml(events) {
+        return events.map(e => {
             const categoryLower = (e.category || 'normal').toLowerCase();
             
             // Kategori Sınıfları
@@ -120,9 +178,6 @@
             const isEntry = e.direction === "Giriş";
             const dirClass = isEntry ? "text-success" : "text-danger";
             const dirIcon = isEntry ? "fa-arrow-right" : "fa-arrow-left";
-
-            // Click Handler string parametrelerini düzgün kaçırmak için JSON kullanımı
-            const detailParam = JSON.stringify(e).replace(/"/g, '&quot;');
 
             return `
                 <tr style="cursor:pointer;" onclick="window.openAdvancedDetail('${e.id}')">
@@ -140,6 +195,16 @@
         }).join('');
     }
 
+    function bindRowClickHandlers() {
+        // Satırlara tıklandığında active row class'ı ekleme (görsel efekt)
+        document.querySelectorAll(".query-table tbody tr").forEach(row => {
+            row.addEventListener("click", function () {
+                document.querySelectorAll(".query-table tbody tr").forEach(r => r.classList.remove("active-row"));
+                this.classList.add("active-row");
+            });
+        });
+    }
+
     // ==========================================================
     // 3. FİLTRE YÖNETİMİ
     // ==========================================================
@@ -152,17 +217,15 @@
             }
         }
         if (category === "direction") {
-            // Yön filtre eşleşmeleri
             filters.direction = filters.direction === value ? null : value;
             
-            // Diğer yönün checkbox işaretini kaldır
             const otherVal = value === "entry" ? "exit" : "entry";
             const otherCb = document.querySelector(`.filter-content input[onclick*="toggleFilter('direction','${otherVal}')"]`) ||
                             document.querySelector(`.filter-content input[onchange*="toggleFilter('direction','${otherVal}')"]`);
             if (otherCb) otherCb.checked = false;
         }
         renderChips();
-        updateResults();
+        updateResults(false);
     };
 
     window.setQuickTime = function (type) {
@@ -178,7 +241,6 @@
             start.setDate(now.getDate() - 30);
         }
 
-        // input değerlerini temizle
         document.getElementById("startDate").value = "";
         document.getElementById("endDate").value = "";
 
@@ -186,22 +248,21 @@
         filters.range.end = now.toISOString().split('T')[0];
 
         renderChips();
-        updateResults();
+        updateResults(false);
     };
 
     window.applyDateRange = function () {
-        filters.time = null; // quick time'ı sıfırla
+        filters.time = null;
         const startVal = document.getElementById("startDate").value;
         const endVal = document.getElementById("endDate").value;
 
-        // Radyo butonlarını temizle
         document.querySelectorAll("input[name='time']").forEach(rb => rb.checked = false);
 
         filters.range.start = startVal ? startVal : null;
         filters.range.end = endVal ? endVal : null;
 
         renderChips();
-        updateResults();
+        updateResults(false);
     };
 
     function renderChips() {
@@ -209,7 +270,6 @@
         if (!box) return;
         box.innerHTML = "";
 
-        // Tip chipleri
         filters.type.forEach(t => {
             const label = t === "vip" ? "VIP" : (t === "blacklist" ? "Kara Liste" : (t === "staff" ? "Personel" : "Normal"));
             addChip(box, `Tür: ${label}`, () => {
@@ -219,7 +279,6 @@
             });
         });
 
-        // Yön chipleri
         if (filters.direction) {
             const label = filters.direction === "entry" ? "Giriş" : "Çıkış";
             addChip(box, `Yön: ${label}`, () => {
@@ -229,7 +288,6 @@
             });
         }
 
-        // Zaman chipleri
         if (filters.time) {
             const label = filters.time === "today" ? "Bugün" : (filters.time === "7d" ? "Son 7 Gün" : "Son 30 Gün");
             addChip(box, `Zaman: ${label}`, () => {
@@ -237,7 +295,7 @@
                 filters.range = { start: null, end: null };
                 document.querySelectorAll("input[name='time']").forEach(rb => rb.checked = false);
                 renderChips();
-                updateResults();
+                updateResults(false);
             });
         } else if (filters.range.start || filters.range.end) {
             addChip(box, "Tarih Aralığı", () => {
@@ -245,7 +303,7 @@
                 document.getElementById("startDate").value = "";
                 document.getElementById("endDate").value = "";
                 renderChips();
-                updateResults();
+                updateResults(false);
             });
         }
     }
@@ -270,7 +328,6 @@
             range: { start: null, end: null }
         };
 
-        // Form girdilerini sıfırla
         if (searchInput) searchInput.value = "";
         document.querySelectorAll(".filter-content input[type=checkbox]").forEach(cb => cb.checked = false);
         document.querySelectorAll(".filter-content input[type=radio]").forEach(rb => rb.checked = false);
@@ -278,7 +335,7 @@
         document.getElementById("endDate").value = "";
 
         renderChips();
-        updateResults();
+        updateResults(false);
     };
 
     // ==========================================================
@@ -307,22 +364,20 @@
         const statusContainer = document.getElementById("detailStatus");
         statusContainer.innerHTML = `<span class="${badgeClass}">${categoryLabel}</span>`;
 
-        // Görsel Yükleme (Detay paneline resim kutusu ekledik)
+        // Görsel Yükleme
         const vehicleImgEl = document.getElementById("detailVehicleImg");
         if (vehicleImgEl) {
             vehicleImgEl.src = e.vehicleImg || "/img/no-car.png";
-            // Tıklayınca tam boy resmi yeni sekmede açsın
             vehicleImgEl.style.cursor = "pointer";
             vehicleImgEl.onclick = () => window.open(e.fullImg || e.vehicleImg || "/img/no-car.png", "_blank");
         }
 
-        // GEÇİŞ GEÇMİŞİ (Aynı plakalı diğer tüm olayları listeler)
+        // GEÇİŞ GEÇMİŞİ (Sorgulanan genel geçişler arasından filtreleme)
         const historyList = document.querySelector(".detail-history-list");
         if (historyList) {
             historyList.innerHTML = "";
             const plateHistory = allEvents
                 .filter(x => x.plate.replace(" ", "").toUpperCase() === e.plate.replace(" ", "").toUpperCase())
-                // En güncel 5 geçişi göster
                 .slice(0, 5);
 
             historyList.innerHTML = plateHistory.map(h => {
@@ -350,5 +405,5 @@
     };
 
     // Başlangıçta verileri yükle
-    updateResults();
+    updateResults(false);
 })();

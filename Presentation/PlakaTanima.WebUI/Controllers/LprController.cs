@@ -50,10 +50,15 @@ namespace PlakaTanima.WebUI.Controllers
             [FromQuery] string? categories, // comma-separated: e.g. "vip,blacklist"
             [FromQuery] string? direction,
             [FromQuery] DateTime? startDate,
-            [FromQuery] DateTime? endDate)
+            [FromQuery] DateTime? endDate,
+            [FromQuery] int page = 1,
+            [FromQuery] int pageSize = 50)
         {
             try
             {
+                // 1. Get total database count of all events
+                var totalCount = await _context.AnprEvents.CountAsync();
+
                 var query = from e in _context.AnprEvents
                             join v in _context.Vehicles on e.Plate.Replace(" ", "").ToUpper() equals v.Plate.Replace(" ", "").ToUpper() into vehGroup
                             from v in vehGroup.DefaultIfEmpty()
@@ -122,8 +127,14 @@ namespace PlakaTanima.WebUI.Controllers
                     query = query.Where(x => x.EventTimestamp <= endDate.Value.ToUniversalTime());
                 }
 
+                // 2. Get filtered total count
+                var filteredCount = await query.CountAsync();
+
+                // 3. Paginate
                 var events = await query
                     .OrderByDescending(x => x.EventTimestamp)
+                    .Skip((page - 1) * pageSize)
+                    .Take(pageSize)
                     .ToListAsync();
 
                 var resultList = new List<object>();
@@ -155,7 +166,12 @@ namespace PlakaTanima.WebUI.Controllers
                     });
                 }
 
-                return Ok(resultList);
+                return Ok(new
+                {
+                    totalCount,
+                    filteredCount,
+                    events = resultList
+                });
             }
             catch (Exception ex)
             {
